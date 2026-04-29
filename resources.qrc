@@ -1,0 +1,12 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/">
+    <file>assets/images/brass_key.png</file>
+    <file>assets/images/chest_closed.png</file>
+    <file>assets/images/chest_open.png</file>
+    <file>assets/images/player.png</file>
+    <file>data/levels/level1.json</file>
+    <file>data/levels/level2.json</file>
+    <file>data/levels/level3.json</file>
+  </qresource>
+</RCC>

@@ -124,6 +124,8 @@ private:
     // Returns a raw pointer to an entity by its id, or nullptr
     GameObject*          findById(const QString& id);
     InteractiveObject*   findInteractableById(const QString& id);
+    void triggerInteraction(InteractiveObject* obj);
+    void processInteractionResult(const InteractionResult& result, InteractiveObject* obj);
 
     // ── Subsystems (Game owns these) ──────────────────────────
     std::unique_ptr<GameStateManager>  m_stateManager;
