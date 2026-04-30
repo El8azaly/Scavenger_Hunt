@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "core/Game.h"
 
 // ── Entity headers ────────────────────────────────────────────
 #include "entities/GameObject.h"
@@ -28,6 +28,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <algorithm>
+#include <QMap>
 
 // ─────────────────────────────────────────────────────────────
 //  Constructor / Destructor

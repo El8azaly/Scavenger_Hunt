@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QSet>
+#include <optional>
 
 // ─────────────────────────────────────────────────────────────
 //  InputHandler  —  translates raw Qt key codes into game actions

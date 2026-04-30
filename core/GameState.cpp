@@ -1,4 +1,4 @@
-#include "GameState.h"
+#include "core/GameState.h"
 #include <QDebug>
 
 GameStateManager::GameStateManager(QObject* parent)

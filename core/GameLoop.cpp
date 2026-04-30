@@ -1,4 +1,4 @@
-#include "GameLoop.h"
+#include "core/GameLoop.h"
 
 GameLoop::GameLoop(QObject* parent)
     : QObject(parent)
