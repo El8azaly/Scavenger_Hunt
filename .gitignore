@@ -1,0 +1,14 @@
+# Qt build artifacts
+build/
+*.pro.user
+*.pro.user.*
+
+# Compiled output
+*.o
+*.obj
+*.exe
+*.app
+
+# CMake (if ever used)
+CMakeLists.txt.user
+cmake-build-*/
