@@ -1,5 +1,6 @@
 #include "ui/MainWindow.h"
 #include "ui/GameWidget.h"
+#include "UISpriteSheet.h"
 #include "ui/MainMenuScreen.h"
 #include "ui/PauseScreen.h"
 #include "ui/GameOverScreen.h"
@@ -7,12 +8,14 @@
 #include "core/Constants.h"
 #include <QVBoxLayout>
 
+
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setFixedSize(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
     m_game     = new Game(this);
     m_gameLoop = new GameLoop(this);
     buildUI();
     connectSignals();
+    UISpriteSheet::init(":/assets/sprites/ui/ui_theme.png", ":/assets/sprites/ui/ui_theme.json");
 }
 
 void MainWindow::buildUI() {
