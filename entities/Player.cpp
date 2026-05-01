@@ -1,76 +1,82 @@
 #include "entities/Player.h"
 #include <QPainter>
-#include <cmath>
 
-/**
- * Player Constructor
- * Initializes the entity dimensions and loads the animated sprite using the
- * specific resource paths defined in the .qrc file.
- */
 Player::Player(float x, float y, InputHandler* input)
-    : Entity(x, y, 40, 60), m_input(input)
+    : Entity(x, y, 40, 60), m_input(input), m_wasOnGround(true)
 {
-    // Load the sprite and JSON from the Qt Resource System
+    // Player Setup
     m_sprite = new AnimatedSprite(":/assets/sprites/player/captain.json",
                                   ":/assets/sprites/player/captain.png");
-
-    // The Captain Clown Nose sprite sheet uses 96x96 frames.
-    // We set these dimensions and calculate offsets to align the 96x96 visual
-    // with the 40x60 physical hitbox.
     m_spriteWidth = 96;
     m_spriteHeight = 64;
-
-    // Horizontal offset: Center the 96px sprite over the 40px hitbox
     m_spriteOffsetX = (m_w - m_spriteWidth) / 2.0f;
-
-    // Vertical offset: Align the bottom of the sprite (feet) with the bottom of the hitbox
     m_spriteOffsetY = (m_h - m_spriteHeight);
+
+    // Dust Setup
+    m_dustSprite = new AnimatedSprite(":/assets/sprites/player/dust.json",
+                                      ":/assets/sprites/player/dust.png");
 }
 
-/**
- * update()
- * Handles physics integration and updates the animation state machine.
- */
-// Player.cpp
-// Player.cpp
-void Player::update() {
-    Entity::update(); // Handle physics only
+Player::~Player() {
+    delete m_dustSprite;
+}
 
+void Player::update() {
+    Entity::update(); // Handle physics
     if (m_velX > 0) m_facingRight = true;
     else if (m_velX < 0) m_facingRight = false;
 }
 
 void Player::updateAnimation() {
-    if (!m_sprite) return;
+    if (!m_sprite || !m_dustSprite) return;
 
-    // This logic now runs AFTER collisions have been resolved in Game.cpp
+    // Player Animations
     if (!m_onGround) {
         m_sprite->setState(m_velY < 0 ? "Jump" : "Fall");
-    }
-    else if (std::abs(m_velX) > 0.1f) {
+    } else if (std::abs(m_velX) > 0.1f) {
         m_sprite->setState("Run");
-    }
-    else {
+    } else {
         m_sprite->setState("Idle");
     }
-
     m_sprite->update(16);
+
+    // Dust Animation Logic
+    bool landed = !m_wasOnGround && m_onGround;
+    bool jumping = m_wasOnGround && !m_onGround && m_velY < 0;
+    bool running = m_onGround && std::abs(m_velX) > 0.1f;
+
+    if (landed) {
+        m_dustSprite->setState("Fall"); // Uses "Fall" tag (frames 13-18)
+    } else if (jumping) {
+        m_dustSprite->setState("Jump"); // Uses "Jump" tag (frames 6-12)
+    } else if (running) {
+        // Only set to Run if a priority animation (Jump/Fall) isn't playing
+        if (m_dustSprite->currentState() != "Fall" && m_dustSprite->currentState() != "Jump") {
+            m_dustSprite->setState("Run");
+        }
+    } else {
+        m_dustSprite->setState(""); // Hide dust when idle
+    }
+
+    m_dustSprite->update(16);
+    m_wasOnGround = m_onGround;
 }
 
-/**
- * draw()
- * Renders the sprite to the screen using the camera-relative position
- * and handling horizontal flipping.
- */
-void Player::draw(QPainter& painter, float camX, float camY)
-{
-    // drawSprite is a protected helper in GameObject that applies
-    // world-to-screen conversion and sprite offsets.
-    drawSprite(painter, camX, camY, !m_facingRight);
+void Player::draw(QPainter& painter, float camX, float camY) {
+    // 1. Draw Dust (Rendered first so it appears behind/under the player)
+    if (m_dustSprite && !m_dustSprite->currentState().isEmpty()) {
+        // Calculate center position: (Hitbox Center) - (Half Dust Size)
+        float centerX = m_x + (m_w / 2.0f);
+        float centerY = m_y + (m_h / 2.0f);
 
-    // Debug: Uncomment to visualize the 40x60 physical hitbox
-    /*
-    painter.setPen(Qt::red);
-    painter.drawRect(m_x - camX, m_y - camY, m_w, m_h);
-    */
+        QRectF destRect(centerX - (DUST_W / 2.0f) - camX,
+                        centerY - (DUST_H / 2.0f) - camY + 20,
+                        DUST_W, DUST_H);
+
+        // Use the existing draw() method from AnimatedSprite
+        m_dustSprite->draw(painter, destRect, !m_facingRight);
+    }
+
+    // 2. Draw Player
+    drawSprite(painter, camX, camY, !m_facingRight);
 }

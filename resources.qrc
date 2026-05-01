@@ -5,11 +5,10 @@
     <file>assets/images/chest_closed.png</file>
     <file>assets/images/chest_open.png</file>
     <file>assets/images/player.png</file>
-    <file>data/levels/level1.json</file>
-    <file>data/levels/level2.json</file>
-    <file>data/levels/level3.json</file>
     <file>assets/sprites/player/captain.png</file>
     <file>assets/sprites/player/captain.json</file>
+    <file>assets/sprites/player/dust.png</file>
+    <file>assets/sprites/player/dust.json</file>
     <file>assets/sprites/items/key.json</file>
     <file>assets/sprites/items/key.png</file>
     <file>assets/sprites/ui/font.png</file>
@@ -17,5 +16,7 @@
     <file>assets/sprites/ui/ui_theme.png</file>
     <file>assets/sprites/sky/water.json</file>
     <file>assets/sprites/sky/water.png</file>
+    <file>assets/sprites/levels/level0_collision_data.json</file>
+    <file>assets/sprites/levels/level0.png</file>
   </qresource>
 </RCC>

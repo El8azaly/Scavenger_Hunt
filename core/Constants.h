@@ -8,10 +8,14 @@
 
 namespace Constants
 {
+    // #define DEBUG_DRAW_COLLISIONS
+
     // ── Window ───────────────────────────────────────────────
     constexpr int WINDOW_WIDTH  = 1280;
     constexpr int WINDOW_HEIGHT = 720;
     constexpr int UI_SCALE = 3;
+    constexpr int GAME_SCALE = 2;
+
 
     // ── World / Tile grid ────────────────────────────────────
     constexpr int   TILE_SIZE      = 48;   // pixels per tile cell

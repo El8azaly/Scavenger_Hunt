@@ -43,7 +43,7 @@ void MainWindow::connectSignals() {
 
     // Menu buttons
     connect(m_menuScreen, &MainMenuScreen::startRequested,
-            this, [this](){ m_game->startNewGame(1); m_gameLoop->start(); });
+            this, [this](){ m_game->startNewGame(0); m_gameLoop->start(); });
 
     // Pause buttons
     connect(m_pauseScreen, &PauseScreen::resumeRequested,

@@ -1,0 +1,192 @@
+{ "frames": [
+   {
+    "filename": "Dust Particles 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 1.aseprite",
+    "frame": { "x": 52, "y": 0, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 2.aseprite",
+    "frame": { "x": 104, "y": 0, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 3.aseprite",
+    "frame": { "x": 156, "y": 0, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 4.aseprite",
+    "frame": { "x": 208, "y": 0, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 5.aseprite",
+    "frame": { "x": 0, "y": 20, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 6.aseprite",
+    "frame": { "x": 52, "y": 20, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 7.aseprite",
+    "frame": { "x": 104, "y": 20, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 8.aseprite",
+    "frame": { "x": 156, "y": 20, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 9.aseprite",
+    "frame": { "x": 208, "y": 20, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 10.aseprite",
+    "frame": { "x": 0, "y": 40, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 11.aseprite",
+    "frame": { "x": 52, "y": 40, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 12.aseprite",
+    "frame": { "x": 208, "y": 0, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 5000
+   },
+   {
+    "filename": "Dust Particles 13.aseprite",
+    "frame": { "x": 104, "y": 40, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 14.aseprite",
+    "frame": { "x": 156, "y": 40, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 15.aseprite",
+    "frame": { "x": 208, "y": 40, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 16.aseprite",
+    "frame": { "x": 0, "y": 60, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 17.aseprite",
+    "frame": { "x": 52, "y": 60, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "Dust Particles 18.aseprite",
+    "frame": { "x": 208, "y": 0, "w": 52, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 52, "h": 20 },
+    "sourceSize": { "w": 52, "h": 20 },
+    "duration": 5000
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "dust.png",
+  "format": "RGBA8888",
+  "size": { "w": 260, "h": 80 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Run", "from": 0, "to": 5, "direction": "forward", "color": "#000000ff" },
+   { "name": "Jump", "from": 6, "to": 12, "direction": "forward", "color": "#000000ff" },
+   { "name": "Fall", "from": 13, "to": 18, "direction": "forward", "color": "#000000ff" }
+  ],
+  "layers": [
+   { "name": "Dust Particles", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
