@@ -175,17 +175,21 @@ ScoreManager*    Game::score()        const { return m_score.get(); }
 // ─────────────────────────────────────────────────────────────
 //  Per-frame update  (called by GameWidget via GameLoop::tick)
 // ─────────────────────────────────────────────────────────────
-void Game::update()
-{
+void Game::update() {
     if (!m_stateManager->isPlaying()) return;
 
-    processInput();     // 1. read held keys → move player
-    updateEntities();   // 2. advance physics for all entities
-    runCollision();     // 3. detect & resolve collisions
-    advanceCamera();    // 4. follow player with camera
-    removeInactiveEntities(); // 5. purge dead/collected objects
+    processInput();
+    updateEntities();   // Player physics happens here
+    runCollision();     // m_onGround is corrected here[cite: 14]
 
-    m_input->endFrame(); // 6. clear "just pressed" flags for next frame
+    // NEW: Tell the player to choose an animation now that we know if they are on ground
+    if (m_player) {
+        m_player->updateAnimation();
+    }
+
+    advanceCamera();
+    removeInactiveEntities();
+    m_input->endFrame();
 }
 
 // ── 1. Input processing ───────────────────────────────────────

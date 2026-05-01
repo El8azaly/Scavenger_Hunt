@@ -6,11 +6,11 @@ class Entity : public GameObject {
 public:
     Entity(float x, float y, float w, float h);
     void update() override;
-    void draw(QPainter&, float, float) override = 0; // still abstract
+    void draw(QPainter& painter, float camX, float camY) override = 0;
 
-    void land();           // called by Game on fromTop collision
-    void stopVertical();   // called by Game on fromBottom collision
-    void stopHorizontal(); // called by Game on fromLeft/Right collision
+    void land();
+    void stopVertical();
+    void stopHorizontal();
     void jump(float velocity);
 
     void setVelocityX(float vx) { m_velX = vx; }
