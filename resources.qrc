@@ -1,10 +1,6 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource prefix="/">
-    <file>assets/images/brass_key.png</file>
-    <file>assets/images/chest_closed.png</file>
-    <file>assets/images/chest_open.png</file>
-    <file>assets/images/player.png</file>
     <file>assets/sprites/player/captain.png</file>
     <file>assets/sprites/player/captain.json</file>
     <file>assets/sprites/player/dust.png</file>
