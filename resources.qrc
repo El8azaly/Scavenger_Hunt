@@ -8,5 +8,12 @@
     <file>data/levels/level1.json</file>
     <file>data/levels/level2.json</file>
     <file>data/levels/level3.json</file>
+    <file>assets/sprites/player/captain.png</file>
+    <file>assets/sprites/player/captain.json</file>
+    <file>assets/sprites/items/key.json</file>
+    <file>assets/sprites/items/key.png</file>
+    <file>assets/sprites/ui/font.png</file>
+    <file>assets/sprites/ui/ui_theme.json</file>
+    <file>assets/sprites/ui/ui_theme.png</file>
   </qresource>
 </RCC>
