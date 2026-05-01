@@ -16,7 +16,7 @@ struct Item {
     // NEW: Custom Sprite Sizes (Defaults to 36x36 if not overridden)
     float   spriteWidth  = 36.0f;
     float   spriteHeight = 36.0f;
-
+    QString spriteState; // Optional: specific animation state to play (e.g. "Sword Idle")
     bool    isQuestTarget = false; // true = QuestSystem watches for this
 
     bool isNull() const { return id.isEmpty(); }

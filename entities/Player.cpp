@@ -26,18 +26,44 @@ void Player::update() {
     if (m_velX > 0) m_facingRight = true;
     else if (m_velX < 0) m_facingRight = false;
 }
+void Player::attack() {
+    // Prevent attacking if no sword, or if an attack animation is already playing
+    if (!m_hasSword || m_attackTimer > 0) return;
+
+    m_attackTimer = 25; // Roughly the duration of 3 frames @ 16ms + visual lingering
+
+    if (!m_onGround) {
+        // Air attacks
+        m_sprite->setState(rand() % 2 == 0 ? "Air Attack 1" : "Air Attack 2");
+    } else {
+        // Ground attacks
+        int r = rand() % 3;
+        if (r == 0) m_sprite->setState("Attack 1");
+        else if (r == 1) m_sprite->setState("Attack 2");
+        else m_sprite->setState("Attack 3");
+    }
+}
 
 void Player::updateAnimation() {
     if (!m_sprite || !m_dustSprite) return;
 
-    // Player Animations
-    if (!m_onGround) {
-        m_sprite->setState(m_velY < 0 ? "Jump" : "Fall");
-    } else if (std::abs(m_velX) > 0.1f) {
-        m_sprite->setState("Run");
+    // --- Player Animations ---
+    QString suffix = m_hasSword ? " S" : "";
+
+    if (m_attackTimer > 0) {
+        // Tick down the attack timer. Don't overwrite the attack animation state!
+        m_attackTimer--;
     } else {
-        m_sprite->setState("Idle");
+        // Normal movement animations
+        if (!m_onGround) {
+            m_sprite->setState((m_velY < 0 ? "Jump" : "Fall") + suffix);
+        } else if (std::abs(m_velX) > 0.1f) {
+            m_sprite->setState("Run" + suffix);
+        } else {
+            m_sprite->setState("Idle" + suffix);
+        }
     }
+
     m_sprite->update(16);
 
     // Dust Animation Logic

@@ -9,6 +9,9 @@ public:
 protected:
     void paintEvent(QPaintEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+
+    void mousePressEvent(QMouseEvent *event);
+
     void keyReleaseEvent(QKeyEvent* event) override;
 private:
     Game* m_game;  // non-owning

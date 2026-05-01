@@ -17,6 +17,9 @@ void GameWidget::paintEvent(QPaintEvent*) {
 void GameWidget::keyPressEvent(QKeyEvent* e) {
     m_game->handleKeyPress(e->key());
 }
+void GameWidget::mousePressEvent(QMouseEvent *event) {
+    m_game->handleMousePress(event->button());
+}
 
 void GameWidget::keyReleaseEvent(QKeyEvent* e) {
     m_game->handleKeyRelease(e->key());

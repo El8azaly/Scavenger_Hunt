@@ -18,5 +18,7 @@
     <file>assets/sprites/sky/water.png</file>
     <file>assets/sprites/levels/level0_collision_data.json</file>
     <file>assets/sprites/levels/level0.png</file>
+    <file>assets/sprites/items/sword.json</file>
+    <file>assets/sprites/items/sword.png</file>
   </qresource>
 </RCC>

@@ -160,6 +160,15 @@ void Game::processInput()
         m_player->jump(Constants::JUMP_VELOCITY);
 }
 
+// Add the new mouse handling method
+void Game::handleMousePress(int qtMouseButton) {
+    if (m_stateManager->isPlaying() && m_player && qtMouseButton == Qt::LeftButton) {
+        m_player->attack();
+    }
+}
+
+
+
 void Game::updateEntities()
 {
     for (GameObject* obj : m_entities) {
@@ -214,10 +223,16 @@ void Game::resolveProximity(const QVector<GameObject*>& nearby)
                 m_inventory->addItem(item->item());
                 m_score->addScore(Constants::SCORE_ITEM_FOUND);
                 emit itemCollected(item->item().id);
+
+                if (item->item().id == "sword") {
+                    m_player->equipSword();
+                }
+
                 item->markCollected();
             }
             continue;
         }
+
         if (obj->isInteractable()) m_nearestInteractable = static_cast<InteractiveObject*>(obj);
     }
 

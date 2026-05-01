@@ -13,8 +13,27 @@ static LevelData buildLevel0() {
     d.playerStartX = 50;  // Adjust based on your Level 0 layout
     d.playerStartY = 50;
 
-    // NOTE: We do not add "floor" or "platforms" here!
-    // Game.cpp will automatically generate them from level0_collision_data.json.
+
+    Item sword;
+    sword.id = "sword";
+    sword.name = "Captain's Sword";
+    sword.description = "A trusty blade for slaying enemies.";
+    sword.spriteJsonPath = ":/assets/sprites/items/sword.json";
+    sword.spriteImagePath = ":/assets/sprites/items/sword.png";
+    sword.spriteWidth = 14.0f;
+    sword.spriteHeight = 19*2;
+    d.itemLibrary.append(sword);
+
+    EntitySpawnData swd;
+    swd.type = "collectible";
+    swd.id = "sword_1";
+    swd.x = 200;
+    swd.y = 175;
+    swd.w = 36;
+    swd.h = 36;
+    swd.properties["itemId"] = "sword";
+    d.entities.append(swd);
+
 
     Item key;
     key.id="brass_key";

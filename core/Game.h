@@ -35,6 +35,7 @@ public:
 
     void handleKeyPress(int qtKey);
     void handleKeyRelease(int qtKey);
+    void handleMousePress(int qtMouseButton);
 
     void startNewGame(int levelNumber = 1);
     void restartLevel();

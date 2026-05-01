@@ -10,6 +10,8 @@ public:
     void update() override;
     void draw(QPainter& painter, float camX, float camY) override;
     void updateAnimation();
+    void equipSword() { m_hasSword = true; }
+    void attack();
 
 private:
     InputHandler* m_input;
@@ -19,4 +21,6 @@ private:
     // Dust dimensions from dust.json
     const float DUST_W = 52.0f;
     const float DUST_H = 20.0f;
+    bool m_hasSword = false;
+    int m_attackTimer = 0; // Locks other animations while attacking
 };
