@@ -3,9 +3,15 @@
 #include "ui/SpriteButton.h"
 #include "core/Constants.h"
 #include <QPainter>
+#include <QTimer>
 
 constexpr auto ui = Constants::UI_SCALE;
 MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p), m_background("window_bg") {
+    m_skyBg = new SkyBackground();
+    m_animationTimer = new QTimer(this);
+    connect(m_animationTimer, &QTimer::timeout, this, [this]{ m_skyBg->update(16); this->update(); });
+    m_animationTimer->start(16);
+
     auto* titlePanel = SpriteButton::createPaper("paper_blank", "main menu", this);
     titlePanel->setText("main menu", 1, PixelFont::Dark);
     int titleW = 98 * ui;
@@ -46,7 +52,7 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p), m_background("window_bg
 
 void MainMenuScreen::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
-
+    m_skyBg->draw(painter, width(), height());
     int bgSize = 96 * ui;
     int bgX = (width() - bgSize) / 2;
     int bgY = (height() - bgSize) / 2;

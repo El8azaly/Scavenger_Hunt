@@ -3,7 +3,6 @@
 AnimatedSprite::AnimatedSprite(const QString& jsonPath, const QString& imagePath) {
     m_spriteSheet.load(imagePath);
     loadData(jsonPath);
-    // Default to the first tag found, usually "Idle"
     if (!m_tags.isEmpty()) {
         setState(m_tags.begin().key());
     }
@@ -20,7 +19,6 @@ void AnimatedSprite::loadData(const QString& jsonPath) {
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QJsonObject root = doc.object();
 
-    // Debug: Check if we actually found frames
     QJsonArray framesArr = root["frames"].toArray();
     qDebug() << "Loaded" << framesArr.size() << "frames from" << jsonPath;
 
@@ -40,35 +38,30 @@ void AnimatedSprite::loadData(const QString& jsonPath) {
         QJsonObject t = v.toObject();
         m_tags[t["name"].toString()] = { t["from"].toInt(), t["to"].toInt() };
     }
+    if (m_tags.isEmpty() && m_frames.size() > 0) {
+        m_tags["Default"] = {0, (int)m_frames.size() - 1};
+    }
 }
 void AnimatedSprite::setState(const QString& stateName) {
-    // IMPORTANT: If we are already in this state, do nothing!
-    // Without this line, the animation resets to the first frame every frame.
     if (m_currentState == stateName) return;
 
     if (!m_tags.contains(stateName)) return;
 
     m_currentState = stateName;
     m_currentFrameIndex = m_tags[m_currentState].from;
-    m_elapsedTime = 0; // Reset timer for the new animation
+    m_elapsedTime = 0;
 }
 
 void AnimatedSprite::update(int deltaTimeMs) {
     if (m_frames.isEmpty() || !m_tags.contains(m_currentState)) return;
 
     m_elapsedTime += deltaTimeMs;
-
-    // Safely get duration
     int duration = m_frames[m_currentFrameIndex].duration;
-
-    // Prevent infinite loop if JSON duration is 0
     if (duration <= 0) duration = 100;
 
     while (m_elapsedTime >= duration) {
         m_elapsedTime -= duration;
         m_currentFrameIndex++;
-
-        // Wrap within the current tag
         if (m_currentFrameIndex > m_tags[m_currentState].to) {
             m_currentFrameIndex = m_tags[m_currentState].from;
         }
@@ -82,8 +75,6 @@ void AnimatedSprite::draw(QPainter& painter, const QRectF& destRect, bool flipX)
     if (m_currentFrameIndex < 0 || m_currentFrameIndex >= m_frames.size()) {
         return;
     }
-
-    // Use the rect from the specific frame index
     QRect sourceRect = m_frames[m_currentFrameIndex].rect;
 
     if (flipX) {

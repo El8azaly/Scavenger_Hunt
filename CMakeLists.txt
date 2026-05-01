@@ -22,16 +22,7 @@ list(APPEND PROJECT_SOURCES
 )
 
 add_executable(ScavengerHunt ${PROJECT_SOURCES}
-        engine/AnimatedSprite.cpp
-        engine/AnimatedSprite.h
-        ui/PixelFont.cpp
-        ui/PixelFont.h
-        ui/UISpriteSheet.cpp
-        ui/UISpriteSheet.h
-        ui/SlicedSprite.cpp
-        ui/SlicedSprite.h
-        ui/SpriteButton.cpp
-        ui/SpriteButton.h)
+)
 target_include_directories(ScavengerHunt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ScavengerHunt PRIVATE
         Qt6::Core
