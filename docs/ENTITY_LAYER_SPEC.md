@@ -1,436 +1,328 @@
-# Entity Layer — Developer Specification
-**Owner: Person 2**
+# Entity Layer — Complete Implementation Guide
 **Folder: `entities/`**
 
-> Read this entire document before writing any code.
-> Read `entities/GameObject.h` and `entities/InteractionResult.h` — both are already written. Your classes extend and use them.
-> Do NOT include any Qt UI headers (QWidget, QDialog, QLabel, etc.) in any entity file.
-> Do NOT call InventorySystem, QuestSystem, or any system directly. Game.cpp handles all of that.
+---
+
+## What You Are Working On
+
+You are implementing the things that exist inside the game world — the player, the floor, the chests, the items on the ground, the hidden areas. Every one of these is a class that already has its `.h` and `.cpp` file in the repo. Some are **fully done**, some are **stubs that need real implementation**.
+
+**The one rule you must never break:** Do NOT `#include` any UI file (`QWidget`, `QDialog`, `QLabel`, etc.) inside any entity file. Entities are pure game logic. They paint themselves with `QPainter` but they never open windows or dialogs.
 
 ---
 
-## The OOP Hierarchy You Are Building
+## What Is Already Done — Do Not Touch
 
-```
-GameObject           (already written — do not modify)
-  ├── Entity         ← you write this
-  │     └── Player   ← you write this
-  ├── InteractiveObject ← you write this (abstract)
-  │     ├── Container    ← you write this
-  │     └── HiddenArea   ← you write this
-  ├── CollectibleItem  ← you write this
-  └── StaticPlatform   ← you write this
-```
+### `GameObject.h` / `GameObject.cpp` — COMPLETE, DO NOT MODIFY
 
-Your professor will look at this hierarchy for the OOP grade (35 pts).
-Make sure `virtual`, `override`, and `= 0` are used correctly.
+This is the base class that every entity inherits from. It is fully written. You only read it to understand what your classes have access to.
 
----
+**What it gives every entity:**
+- `m_x, m_y` — world-space position (top-left corner of the entity)
+- `m_w, m_h` — width and height in pixels
+- `m_id` — a unique string name set by the level loader
+- `m_active` — when you set this to `false`, Game.cpp will delete this entity next frame
+- `boundingBox()` — returns a `QRectF` of the entity's rectangle, used by CollisionEngine
+- `setPosition(x, y)` — moves the entity to a new world position
+- `centreX()`, `centreY()` — the centre point of the entity (used by Camera)
+- Three virtual flags: `isSolid()`, `isInteractable()`, `isCollectible()` — all return `false` by default, your subclasses override the relevant one to return `true`
 
-## File 1: `entities/Entity.h` and `Entity.cpp`
+### `Entity.h` / `Entity.cpp` — COMPLETE, DO NOT MODIFY
 
-### What it IS
-The base class for anything that MOVES under physics (gravity + velocity).
-Currently only Player inherits from it, but future NPCs would too.
+Adds physics on top of `GameObject`. Already implemented. You inherit from this for the Player.
 
-### What to include
-```cpp
-#include "entities/GameObject.h"
-#include "core/Constants.h"
-```
+**What it gives the Player class:**
+- `m_velX, m_velY` — velocity applied every frame
+- `m_onGround` — true when standing on a platform, false otherwise
+- `m_facingRight` — use this to flip the sprite when moving left
+- `update()` — already applies gravity, clamps fall speed, moves the entity. Calls this in Player::update() with `Entity::update()`
+- `land()` — called by Game.cpp when the player touches a platform from above. Sets velY=0 and onGround=true
+- `stopVertical()` — called by Game.cpp on ceiling hit. Sets velY=0
+- `stopHorizontal()` — called by Game.cpp on wall hit. Sets velX=0
+- `jump(velocity)` — sets velY to the given negative value (upward)
+- `setVelocityX(vx)` — called by Game.cpp every frame with the movement speed
+- `isOnGround()` — Game.cpp checks this before allowing a jump
 
-### Member variables (all protected, so Player can access them)
-```cpp
-float m_velX = 0;       // horizontal velocity in pixels/frame
-float m_velY = 0;       // vertical velocity (positive = downward)
-bool  m_onGround = false; // true when standing on a solid platform
-bool  m_facingRight = true; // used by draw() to flip sprite
-```
+### `InteractiveObject.h` / `InteractiveObject.cpp` — COMPLETE, DO NOT MODIFY
 
-### Methods to implement
+The base class for Container and HiddenArea. Already implemented.
 
-**`void update() override`**
-Call this order every frame:
-1. Apply gravity: `m_velY += Constants::GRAVITY;`
-2. Clamp fall speed: `if (m_velY > Constants::MAX_FALL_SPEED) m_velY = Constants::MAX_FALL_SPEED;`
-3. Apply velocity to position: `m_x += m_velX; m_y += m_velY;`
-4. Mark as not on ground at start of each frame: `m_onGround = false;`
-   (CollisionEngine in Game.cpp will set it back to true if player lands on something)
+**What it gives Container and HiddenArea:**
+- `m_isLocked` — whether this object requires a puzzle before it can be opened
+- `m_puzzleType` — `"quiz"`, `"lock"`, or `"sequence"`
+- `m_puzzleData` — the list of strings that define the puzzle (question, choices, code, etc.)
+- `m_showHint` — set to true by Game.cpp when the player is close enough. Use this in `draw()` to decide whether to show the `[E]` prompt
+- `setLocked(puzzleType, puzzleData)` — called by Game.cpp during level load to configure the lock
+- `unlock()` — called by Game.cpp after the player solves the puzzle. Sets m_isLocked to false
+- `isInteractable()` returns `true` — CollisionEngine uses this to include this object in proximity checks
 
-**IMPORTANT:** Entity::update() DOES NOT handle collision. Game.cpp calls
-CollisionEngine after update() and then calls land()/stopVertical()/stopHorizontal()
-to fix the position. Entity just applies physics naively.
+### `InteractionResult.h` — COMPLETE, DO NOT MODIFY
 
-**`void draw(QPainter& painter, float camX, float camY) override`**
-Entity itself is abstract-ish — draw() can be pure virtual here,
-forcing each subclass to implement its own visuals. Add `= 0` if you like.
+This is a data struct, not a class. Container and HiddenArea fill one of these and return it from `interact()`. Game.cpp reads it and decides what to do. You don't implement this — you just create and return instances of it.
 
-**`void land()`**
-Called by Game.cpp when CollisionEngine reports fromTop collision.
-Sets: `m_velY = 0; m_onGround = true;`
-Player position correction (pushing out of floor) is done in Game.cpp before calling this.
-
-**`void stopVertical()`**
-Called by Game.cpp on ceiling collision. Sets: `m_velY = 0;`
-
-**`void stopHorizontal()`**
-Called by Game.cpp on wall collision. Sets: `m_velX = 0;`
-
-**`void setVelocityX(float vx)`** — sets m_velX
-**`void setVelocityY(float vy)`** — sets m_velY
-**`float velX() const`** — returns m_velX
-**`float velY() const`** — returns m_velY
-**`bool isOnGround() const`** — returns m_onGround
+**The five result types:**
+- `Type::None` — nothing happened (already open, or not enough triggers yet)
+- `Type::ShowPuzzle` — the object is locked. Game.cpp will show a puzzle dialog. Fill in `result.puzzle` with type, data, and objectId
+- `Type::RevealItems` — the object is now open. Fill `result.revealedItems` with the items inside. Game.cpp will spawn them as CollectibleItems in the world
+- `Type::RevealArea` — a HiddenArea triggered. Fill `result.revealedItems` with hidden items. Game.cpp spawns them
+- `Type::ShowMessage` — put a clue string in `result.message`. Game.cpp will show it as a text overlay
 
 ---
 
-## File 2: `entities/Player.h` and `Player.cpp`
-
-### What it IS
-The character the user controls. Reads from InputHandler, applies movement,
-draws the player sprite or a colored rectangle placeholder.
-
-### What to include
-```cpp
-#include "entities/Entity.h"
-#include "engine/InputHandler.h"
-#include <QPixmap>
-```
-
-### Constructor
-```cpp
-Player(float startX, float startY, InputHandler* input);
-```
-Store the InputHandler pointer as `m_input`. Never own it (no delete).
-
-### Member variables
-```cpp
-InputHandler* m_input;          // non-owning pointer, set in constructor
-QPixmap       m_spriteSheet;    // loaded from :/assets/images/player.png
-int           m_animFrame = 0;  // current sprite frame index
-int           m_frameTimer = 0; // counts frames to switch animation
-```
-
-### Methods to implement
-
-**`void update() override`**
-Player's update() DOES NOT read input. That's done in Game::processInput().
-Why? Because Game sets m_velX and calls jump() BEFORE calling update().
-So Player::update() just:
-1. Calls `Entity::update()` (applies physics — always call parent)
-2. Advances animation frame: increment m_frameTimer, every 8 frames increment m_animFrame
-
-**`void draw(QPainter& painter, float camX, float camY) override`**
-Screen position = world position minus camera offset:
-```cpp
-float sx = m_x - camX;
-float sy = m_y - camY;
-```
-Draw the player at (sx, sy). If you have a sprite sheet, draw the correct frame.
-If no sprite yet, draw a colored rectangle as placeholder:
-```cpp
-painter.fillRect(QRectF(sx, sy, m_w, m_h), QColor(60, 120, 200));
-```
-If m_facingRight is false, use painter.scale(-1, 1) to flip (remember to save/restore).
-
-**`void jump(float velocity)`**
-Sets `m_velY = velocity;` and `m_onGround = false;`
-Only call this if m_onGround is true — Game.cpp already checks that.
-
-**Animation frames (optional but recommended):**
-A simple 4-frame walk cycle. If player has a sprite sheet, extract frames using:
-```cpp
-QRect frameRect(m_animFrame * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT);
-painter.drawPixmap(sx, sy, m_spriteSheet, frameRect.x(), frameRect.y(),
-                   frameRect.width(), frameRect.height());
-```
-States: idle (frame 0), walking (frames 1-3), jump (frame 4)
+## Files You Must Implement
 
 ---
 
-## File 3: `entities/InteractiveObject.h` and `InteractiveObject.cpp`
+### `entities/Player.cpp` — NEEDS IMPLEMENTATION
 
-### What it IS
-Abstract base class for anything the player presses E near.
-Container and HiddenArea both inherit from it.
+**Current state:** exists as a stub. Draws a blue rectangle. Physics works because Entity::update() is called.
 
-### What to include
+**What you must add:**
+
+#### 1. Sprite loading in the constructor
+
 ```cpp
-#include "entities/GameObject.h"
-#include "entities/InteractionResult.h"
+Player::Player(float x, float y, InputHandler* input)
+    : Entity(x, y, 40, 60), m_input(input)
+{
+    m_sprite.load(":/assets/images/player.png");
+    // If the image has multiple frames side by side, that's the sprite sheet
+}
 ```
 
-### Member variables (protected)
+The `InputHandler* input` pointer is passed in by Game.cpp. Store it but never delete it — Game.cpp owns it.
+
+#### 2. `update()` — animation logic
+
 ```cpp
-bool        m_isLocked = false;
-QString     m_puzzleType;   // "quiz" | "lock" | "sequence" — set if locked
-QStringList m_puzzleData;   // the puzzle parameters
-bool        m_showHint = false; // Game sets this when player is nearby
+void Player::update() {
+    Entity::update(); // ALWAYS call this first — it does the physics
+
+    // Update facing direction based on velocity
+    if (m_velX > 0) m_facingRight = true;
+    if (m_velX < 0) m_facingRight = false;
+
+    // Advance animation frame every 8 game frames
+    if (++m_frameTimer >= 8) {
+        m_frameTimer = 0;
+        m_animFrame = (m_animFrame + 1) % 4;
+    }
+}
 ```
 
-### Methods to implement
+**Important:** Do NOT read input in `update()`. Game.cpp reads input before calling update and calls `setVelocityX()` and `jump()` directly. Your update() only does physics (via Entity::update()) and animation.
 
-**`virtual InteractionResult interact() = 0`**
-Pure virtual. Each subclass decides what happens when the player interacts.
-Return an InteractionResult struct (see entities/InteractionResult.h).
+#### 3. `draw()` — sprite rendering
 
-**`bool isInteractable() const override { return true; }`**
-Override from GameObject so CollisionEngine knows this is interactable.
+```cpp
+void Player::draw(QPainter& painter, float camX, float camY) {
+    float sx = m_x - camX;  // screen X = world X minus camera offset
+    float sy = m_y - camY;  // screen Y = world Y minus camera offset
 
-**`bool isSolid() const override { return false; }`**
-Players walk in front of containers, not into them.
+    if (!m_sprite.isNull()) {
+        painter.save();
+        if (!m_facingRight) {
+            // Flip horizontally: translate to centre, scale -1 on X, translate back
+            painter.translate(sx + m_w / 2, sy + m_h / 2);
+            painter.scale(-1, 1);
+            painter.translate(-m_w / 2, -m_h / 2);
+            painter.drawPixmap(QRectF(0, 0, m_w, m_h), m_sprite, m_sprite.rect());
+        } else {
+            painter.drawPixmap(QRectF(sx, sy, m_w, m_h), m_sprite, m_sprite.rect());
+        }
+        painter.restore();
+    } else {
+        // Fallback if image not loaded
+        painter.fillRect(QRectF(sx, sy, m_w, m_h), QColor(60, 120, 200));
+    }
+}
+```
 
-**`void setLocked(const QString& puzzleType, const QStringList& puzzleData)`**
-Sets m_isLocked = true, stores puzzle info.
-
-**`void unlock()`**
-Sets m_isLocked = false. Game.cpp calls this after puzzle is solved.
-
-**`bool isLocked() const`** — returns m_isLocked
-
-**`void setShowHint(bool show)`** — Game.cpp calls this each frame.
-Used in draw() to show/hide the interaction prompt icon above the object.
-
-**`void draw(QPainter& painter, float camX, float camY) override`**
-InteractiveObject's draw() is abstract — subclasses must implement their own visuals.
-But they should call a shared helper to draw the hint icon if m_showHint is true:
-Draw a small "!" or a key icon 30px above the object centre.
+**How this is called:** Game.cpp calls `obj->draw(painter, camX, camY)` every frame for every entity. `camX` and `camY` are the Camera's current scroll offsets. You always subtract them to go from world position to screen position.
 
 ---
 
-## File 4: `entities/Container.h` and `Container.cpp`
+### `entities/Container.cpp` — NEEDS IMPROVEMENT
 
-### What it IS
-A chest, drawer, cabinet, or box. Holds items that are revealed when opened.
-Can be locked (requires solving a puzzle first).
+**Current state:** The logic in `interact()` is correct. The `draw()` is minimal. `addItem()` works.
 
-### Inherits from: `InteractiveObject`
+**What to improve:**
 
-### What to include
+#### `draw()` — make it visually clear
+
 ```cpp
-#include "entities/InteractiveObject.h"
-#include "data/ItemData.h"
-#include <QVector>
-#include <QPixmap>
+void Container::draw(QPainter& painter, float camX, float camY) {
+    float sx = m_x - camX;
+    float sy = m_y - camY;
+
+    // Draw the correct sprite based on open/closed state
+    QPixmap& pix = m_opened ? m_openPix : m_closedPix;
+    if (!pix.isNull()) {
+        painter.drawPixmap(QRectF(sx, sy, m_w, m_h), pix, pix.rect());
+    } else {
+        // Fallback rectangles if sprites not loaded
+        painter.fillRect(QRectF(sx, sy, m_w, m_h),
+                         m_opened ? QColor(180, 120, 60) : QColor(120, 70, 30));
+    }
+
+    // If locked, draw a small padlock indicator
+    if (m_isLocked && !m_opened) {
+        painter.setPen(QColor(255, 60, 60));
+        painter.setFont(QFont("Arial", 9, QFont::Bold));
+        painter.drawText(QPointF(sx + m_w/2 - 4, sy - 2), "🔒");
+        // Or just draw a red square as a "locked" marker
+    }
+
+    // If the player is nearby and the container is not yet opened,
+    // show the [E] interaction hint above it
+    if (m_showHint && !m_opened) {
+        painter.setPen(Qt::yellow);
+        painter.setFont(QFont("Arial", 10, QFont::Bold));
+        painter.drawText(QPointF(sx + m_w/2 - 8, sy - 16), "[E]");
+    }
+}
 ```
 
-### Member variables
-```cpp
-QVector<Item> m_contents;   // items stored inside
-bool          m_opened = false;
-QPixmap       m_closedSprite; // :/assets/images/chest_closed.png
-QPixmap       m_openSprite;   // :/assets/images/chest_open.png
-```
+**How `interact()` is called:** When the player presses E near this container, Game.cpp calls `container->interact()`. Your function must return an `InteractionResult`. Game.cpp reads the result and acts on it — you never call Game directly.
 
-### Methods to implement
-
-**`InteractionResult interact() override`**
-Logic:
-```
-if (m_opened):
-    return InteractionResult{Type::None}
-if (m_isLocked):
-    PuzzleData p;
-    p.type     = m_puzzleType;
-    p.data     = m_puzzleData;
-    p.objectId = m_id;
-    return InteractionResult{Type::ShowPuzzle, puzzle=p}
-else:
-    m_opened = true;
-    return InteractionResult{Type::RevealItems, revealedItems=m_contents}
-```
-
-**`void addItem(const Item& item)`**
-Appends to m_contents. Called by Game.cpp during level loading.
-
-**`void draw(QPainter& painter, float camX, float camY) override`**
-Draw m_openSprite if m_opened, else m_closedSprite.
-If sprites are not loaded yet, draw a brown rectangle.
-Screen position: `float sx = m_x - camX; float sy = m_y - camY;`
-If m_showHint and !m_opened, call the hint icon helper from InteractiveObject.
+**What `interact()` returns and why:**
+- If already open → return `{InteractionResult::Type::None}` — Game.cpp does nothing
+- If locked → return `{Type::ShowPuzzle, puzzle}` where `puzzle.objectId = m_id` — Game.cpp emits a signal to show the puzzle dialog. After the player solves it, Game.cpp calls `unlock()` on this container and then calls `interact()` again, which will now return RevealItems
+- If unlocked → set `m_opened = true`, return `{Type::RevealItems, revealedItems = m_contents}` — Game.cpp spawns each item in `revealedItems` as a CollectibleItem in the world near this container's position
 
 ---
 
-## File 5: `entities/CollectibleItem.h` and `CollectibleItem.cpp`
+### `entities/CollectibleItem.cpp` — NEEDS IMPROVEMENT
 
-### What it IS
-An item lying in the world. When the player walks over it, it gets collected.
-This class is simpler than Container — no interaction needed, just overlap detection.
+**Current state:** Bob animation works. Icon loading works. Fallback gold rectangle works.
 
-### Inherits from: `GameObject` (NOT Entity — it doesn't move)
+**What to improve:**
 
-### What to include
+#### `draw()` — scale icon correctly
+
 ```cpp
-#include "entities/GameObject.h"
-#include "data/ItemData.h"
-#include <QPixmap>
+void CollectibleItem::draw(QPainter& painter, float camX, float camY) {
+    float sx = m_x - camX;
+    float sy = m_y - camY + m_bobOffset; // bobbing up and down
+
+    if (!m_icon.isNull()) {
+        painter.drawPixmap(QRectF(sx, sy, m_w, m_h), m_icon, m_icon.rect());
+    } else {
+        // Fallback: gold square with item name initial
+        painter.fillRect(QRectF(sx, sy, m_w, m_h), QColor(255, 220, 0));
+        painter.setPen(Qt::black);
+        painter.setFont(QFont("Arial", 10, QFont::Bold));
+        painter.drawText(QRectF(sx, sy, m_w, m_h), Qt::AlignCenter,
+                         m_item.name.isEmpty() ? "?" : m_item.name.left(1));
+    }
+}
 ```
 
-### Constructor
-```cpp
-CollectibleItem(float x, float y, const Item& item);
-```
-Store item data. Set m_w = 40, m_h = 40 (default item size).
-Load icon: `m_icon.load(item.iconPath);`
+**How `markCollected()` is called:** When the player walks over this item, Game.cpp detects the overlap and calls `item->markCollected()`. Your implementation sets `m_collected = true` and calls `setActive(false)`. Once active is false, Game.cpp deletes this object next frame. You never delete yourself.
 
-### Member variables
-```cpp
-Item    m_item;
-bool    m_collected = false;
-QPixmap m_icon;
-float   m_bobOffset = 0;    // for floating animation
-int     m_bobTimer  = 0;
-```
+**How `item()` is called:** Game.cpp reads `item->item()` to get the `Item` struct before calling `markCollected()`. It then passes that Item to `InventorySystem::addItem()`. Your `item()` just returns `m_item`.
 
-### Methods to implement
-
-**`void update() override`**
-Animate a gentle floating bob:
-```cpp
-m_bobTimer++;
-m_bobOffset = 5.0f * std::sin(m_bobTimer * 0.08f);
-```
-No physics here — item doesn't fall.
-
-**`void draw(QPainter& painter, float camX, float camY) override`**
-Draw icon at screen position with bobOffset applied to Y:
-```cpp
-float sx = m_x - camX;
-float sy = m_y - camY + m_bobOffset;
-if (!m_icon.isNull())
-    painter.drawPixmap(QPointF(sx, sy), m_icon.scaled(m_w, m_h));
-else
-    painter.fillRect(QRectF(sx, sy, m_w, m_h), QColor(255, 220, 0)); // gold
-```
-
-**`bool isCollectible() const override { return true; }`**
-Overrides from GameObject so Game.cpp routes it to the pickup logic.
-
-**`const Item& item() const`** — returns m_item
-
-**`bool isCollected() const`** — returns m_collected
-
-**`void markCollected()`**
-Sets m_collected = true AND calls setActive(false).
-Game.cpp then removes it from m_entities next frame.
+**How `isCollectible()` is used:** CollisionEngine calls `obj->isCollectible()` on every entity near the player. Only this class returns `true`. That's how Game.cpp knows to try to pick this object up.
 
 ---
 
-## File 6: `entities/HiddenArea.h` and `HiddenArea.cpp`
+### `entities/HiddenArea.cpp` — NEEDS IMPROVEMENT
 
-### What it IS
-An invisible trigger zone that the player "hits" (presses F near it) multiple
-times. After enough hits, it reveals hidden items.
-Example: hitting a cracked wall 3 times opens a secret passage.
+**Current state:** `interact()` logic is correct. `draw()` only draws when revealed.
 
-### Inherits from: `InteractiveObject`
+**What to improve:**
 
-### What to include
+#### Add a hit-flash visual effect
+
+Add a private member `int m_flashTimer = 0;` to the header.
+
 ```cpp
-#include "entities/InteractiveObject.h"
-#include "data/ItemData.h"
+// In interact(), after incrementing m_triggerCount:
+m_flashTimer = 8; // flash for 8 frames
+
+// In update() — currently empty, change it to:
+void HiddenArea::update() {
+    if (m_flashTimer > 0) m_flashTimer--;
+}
+
+// In draw():
+void HiddenArea::draw(QPainter& painter, float camX, float camY) {
+    float sx = m_x - camX;
+    float sy = m_y - camY;
+
+    if (m_revealed) {
+        // Show a glow or open area after revealing
+        painter.fillRect(QRectF(sx, sy, m_w, m_h), QColor(80, 200, 120, 80));
+    } else {
+        // Subtle visual hint — slightly different wall texture
+        // Only draw something very faint so sharp players can notice
+        painter.fillRect(QRectF(sx, sy, m_w, m_h), QColor(100, 90, 80, 30));
+    }
+
+    // Flash white when hit (player attacked this area)
+    if (m_flashTimer > 0) {
+        painter.fillRect(QRectF(sx, sy, m_w, m_h), QColor(255, 255, 255, 100));
+    }
+}
 ```
 
-### Constructor
-```cpp
-HiddenArea(float x, float y, float w, float h, int requiredTriggers);
-```
-
-### Member variables
-```cpp
-int           m_triggerCount    = 0;
-int           m_requiredTriggers;
-bool          m_revealed        = false;
-QVector<Item> m_hiddenItems;    // items that appear after reveal
-```
-
-### Methods to implement
-
-**`InteractionResult interact() override`**
-This is called when the player presses ATTACK (F key) near this area.
-Logic:
-```
-m_triggerCount++
-if (m_triggerCount >= m_requiredTriggers AND !m_revealed):
-    m_revealed = true
-    return InteractionResult{Type::RevealArea, revealedItems=m_hiddenItems}
-else:
-    return InteractionResult{Type::None}
-```
-After revealing, subsequent presses do nothing (m_revealed check).
-
-**`void addHiddenItem(const Item& item)`**
-Appends to m_hiddenItems. Called by Game.cpp during level loading.
-
-**`void draw(QPainter& painter, float camX, float camY) override`**
-If NOT revealed: draw nothing OR draw a very subtle cracked texture so player
-knows there might be something here (optional visual hint).
-If revealed: draw an open passage, a glow, or a distinct visual.
-Debug mode: draw a semi-transparent red rectangle to verify placement.
+**How `interact()` is called:** The player presses F (Attack key) near this area. Game.cpp calls `hiddenArea->interact()`. You increment `m_triggerCount`. When it reaches `m_requiredTriggers`, set `m_revealed = true` and return `{Type::RevealArea, revealedItems = m_hiddenItems}`. Game.cpp then spawns those items. Until the count is reached, return `{Type::None}`.
 
 ---
 
-## File 7: `entities/StaticPlatform.h` and `StaticPlatform.cpp`
+### `entities/StaticPlatform.cpp` — NEEDS IMPROVEMENT
 
-### What it IS
-Floors, walls, ceilings — solid tiles the player stands on and collides with.
-This is the simplest entity in the whole project.
+**Current state:** draws a brown rectangle.
 
-### Inherits from: `GameObject`
+**What to improve — add a tile texture look:**
 
-### Constructor
 ```cpp
-StaticPlatform(float x, float y, float w, float h,
-               const QColor& color = QColor(100, 80, 60));
+void StaticPlatform::draw(QPainter& painter, float camX, float camY) {
+    float sx = m_x - camX;
+    float sy = m_y - camY;
+
+    // Fill base color
+    painter.fillRect(QRectF(sx, sy, m_w, m_h), m_color);
+
+    // Draw tile grid lines — divides the platform into TILE_SIZE segments
+    painter.setPen(QPen(m_color.darker(140), 1));
+    for (float tx = sx; tx < sx + m_w; tx += 48) {
+        painter.drawLine(QPointF(tx, sy), QPointF(tx, sy + m_h));
+    }
+
+    // Highlight top edge (gives a "surface" feel)
+    painter.setPen(QPen(m_color.lighter(150), 2));
+    painter.drawLine(QPointF(sx, sy + 1), QPointF(sx + m_w, sy + 1));
+
+    // Dark border around the whole platform
+    painter.setPen(QPen(QColor(40, 25, 10), 1));
+    painter.drawRect(QRectF(sx, sy, m_w, m_h));
+}
 ```
 
-### Methods to implement
-
-**`bool isSolid() const override { return true; }`**
-This is the ONLY important override. CollisionEngine checks this flag.
-
-**`void update() override {}`**
-Empty — static objects don't do anything each frame.
-
-**`void draw(QPainter& painter, float camX, float camY) override`**
-Draw a filled rectangle at screen position:
-```cpp
-float sx = m_x - camX;
-float sy = m_y - camY;
-painter.fillRect(QRectF(sx, sy, m_w, m_h), m_color);
-// Optional: draw a 1px dark border for a tile look
-painter.setPen(QColor(60, 40, 20));
-painter.drawRect(QRectF(sx, sy, m_w, m_h));
-```
-Later replace with a tile sprite for the house/jungle theme.
+**How `isSolid()` is used:** CollisionEngine calls `obj->isSolid()` on every entity. Only StaticPlatform returns `true`. That's the only thing that tells the physics system "the player cannot pass through this". Platforms don't need any other special logic.
 
 ---
 
-## What Game.cpp Expects From You (Contract)
+## Summary — What Each Function Does and Who Calls It
 
-| Method | Called from | What must happen |
-|--------|-------------|-----------------|
-| `obj->update()` | Game::updateEntities() | Advances state, does NOT do collision |
-| `obj->draw(p, cx, cy)` | Game::draw() | Paints at (m_x-cx, m_y-cy) |
-| `obj->boundingBox()` | CollisionEngine | Returns correct QRectF |
-| `obj->isSolid()` | CollisionEngine::checkSolid() | true only for StaticPlatform |
-| `obj->isInteractable()` | CollisionEngine::checkProximity() | true for Container, HiddenArea |
-| `obj->isCollectible()` | Game::resolveProximity() | true only for CollectibleItem |
-| `item->markCollected()` | Game::resolveProximity() | sets active=false |
-| `container->interact()` | Game::triggerInteraction() | returns InteractionResult |
-| `container->unlock()` | Game::onPuzzleSolved() | sets m_isLocked=false |
-| `entity->land()` | Game::resolveSolidCollision() | zeroes velY, sets onGround |
-| `entity->stopVertical()` | Game::resolveSolidCollision() | zeroes velY |
-| `entity->stopHorizontal()` | Game::resolveSolidCollision() | zeroes velX |
-| `player->jump(v)` | Game::processInput() | sets velY = v |
-| `player->setVelocityX(v)` | Game::processInput() | sets velX |
-
----
-
-## Common Mistakes to Avoid
-
-1. **Don't call `m_inventory->addItem()` inside any entity** — Game.cpp does that.
-2. **Don't read input inside `update()`** — Game::processInput() calls setVelocityX/jump BEFORE update().
-3. **Don't store camera offset in entities** — receive camX/camY in draw() parameters.
-4. **Don't call `delete this`** — Game.cpp manages entity lifetimes.
-5. **Don't override isSolid() to return true unless you're StaticPlatform** — walls only.
+| Function | Who calls it | What you must do |
+|---|---|---|
+| `Player::update()` | Game.cpp every frame | Call `Entity::update()`, then update animation frame |
+| `Player::draw(painter, camX, camY)` | Game.cpp every frame | Draw sprite at `(m_x - camX, m_y - camY)` |
+| `Player::jump(velocity)` | Game.cpp when jump key held + on ground | Already in Entity — do not re-implement |
+| `Player::setVelocityX(vx)` | Game.cpp every frame | Already in Entity — do not re-implement |
+| `Container::interact()` | Game.cpp when player presses E nearby | Return InteractionResult describing what happened |
+| `Container::addItem(item)` | Game.cpp during level loading | Append item to m_contents |
+| `Container::unlock()` | Game.cpp after puzzle solved | Already in InteractiveObject — do not re-implement |
+| `Container::draw(painter, camX, camY)` | Game.cpp every frame | Draw chest sprite, lock indicator, [E] hint |
+| `CollectibleItem::item()` | Game.cpp on player overlap | Return m_item (the Item struct) |
+| `CollectibleItem::isCollected()` | Game.cpp on player overlap | Return m_collected |
+| `CollectibleItem::markCollected()` | Game.cpp after picking up | Set m_collected=true, setActive(false) |
+| `CollectibleItem::draw(painter, camX, camY)` | Game.cpp every frame | Draw icon at bobbing position |
+| `HiddenArea::interact()` | Game.cpp when player presses F nearby | Increment trigger count, return RevealArea when count reached |
+| `HiddenArea::addHiddenItem(item)` | Game.cpp during level loading | Append to m_hiddenItems |
+| `HiddenArea::update()` | Game.cpp every frame | Count down flash timer |
+| `HiddenArea::draw(painter, camX, camY)` | Game.cpp every frame | Draw revealed glow or subtle hint, flash on hit |
+| `StaticPlatform::isSolid()` | CollisionEngine every frame | Returns true — already done, do not change |
+| `StaticPlatform::draw(painter, camX, camY)` | Game.cpp every frame | Draw tiled platform rectangle |
