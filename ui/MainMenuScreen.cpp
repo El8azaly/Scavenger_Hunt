@@ -1,18 +1,55 @@
 #include "ui/MainMenuScreen.h"
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
-MainMenuScreen::MainMenuScreen(QWidget* p):QWidget(p){
-    auto* lay=new QVBoxLayout(this);
-    lay->setAlignment(Qt::AlignCenter);
-    auto* title=new QLabel("SCAVENGER HUNT",this);
-    title->setStyleSheet("color:white;font-size:36px;font-weight:bold;");
-    title->setAlignment(Qt::AlignCenter);
-    auto* btn=new QPushButton("START GAME",this);
-    btn->setFixedSize(200,50);
-    btn->setStyleSheet("QPushButton{background:#f0c040;color:#111;font-size:16px;font-weight:bold;border-radius:8px;}"
-                       "QPushButton:hover{background:#ffd060;}");
-    connect(btn,&QPushButton::clicked,this,&MainMenuScreen::startRequested);
-    lay->addWidget(title); lay->addSpacing(30); lay->addWidget(btn,0,Qt::AlignCenter);
-    setStyleSheet("background:#1a1a2e;");
+#include <QApplication>
+#include "ui/SpriteButton.h"
+#include "core/Constants.h"
+#include <QPainter>
+
+constexpr auto ui = Constants::UI_SCALE;
+MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p), m_background("window_bg") {
+    auto* titlePanel = SpriteButton::createPaper("paper_blank", "main menu", this);
+    titlePanel->setText("main menu", 1, PixelFont::Dark);
+    int titleW = 98 * ui;
+    int titleH = 64 * ui;
+    titlePanel->setFixedSize(titleW, titleH);
+    int centerX = (Constants::WINDOW_WIDTH - titleW) / 2;
+    titlePanel->move(centerX, 71* ui);
+
+    int btnWidth = 35 * ui;
+    int btnHeight = 35 * ui;
+    auto* playBtn = SpriteButton::createGreen("play", this);
+    playBtn->setText("play", 1, PixelFont::Dark);
+    playBtn->setTextOffset(1,0);
+    playBtn->setFixedSize(btnWidth, btnHeight);
+    int playX = (Constants::WINDOW_WIDTH - btnWidth) / 2;
+    playBtn->move(playX, 360);
+
+    int settingsBtnWidth = 16 * ui;
+    int settingsBtnHeight = 16 * ui;
+    auto* settingsButton = SpriteButton::createGreen("", this);
+    settingsButton->setIcon("circle_icon_1x1", 1);
+    settingsButton->setTextOffset(0,-1);
+    settingsButton->setFixedSize(settingsBtnWidth, settingsBtnHeight);
+    int settingsX = (Constants::WINDOW_WIDTH - btnWidth) / 2 - ui *16;
+    settingsButton->move(settingsX, 388);
+    connect(playBtn, &SpriteButton::clicked, this, &MainMenuScreen::startRequested);
+
+    auto* exitBtn = new SpriteButton("scroll_button", this);
+    exitBtn->setText("exit", 1, PixelFont::Dark);
+    exitBtn->setTextOffset(-4, -2);
+    int exitW = 41 * ui;
+    int exitH = 17 * ui;
+    exitBtn->setFixedSize(exitW, exitH);
+    int exitX = (Constants::WINDOW_WIDTH - exitW) / 2 + ui*40;
+    exitBtn->move(exitX, 410);
+    connect(exitBtn, &SpriteButton::clicked, this, []{ QApplication::quit(); });
+}
+
+void MainMenuScreen::paintEvent(QPaintEvent* event) {
+    QPainter painter(this);
+
+    int bgSize = 96 * ui;
+    int bgX = (width() - bgSize) / 2;
+    int bgY = (height() - bgSize) / 2;
+    m_background.draw(painter, bgX, bgY, bgSize, bgSize);
+    QWidget::paintEvent(event);
 }
