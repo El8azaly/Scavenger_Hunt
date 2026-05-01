@@ -1,0 +1,92 @@
+{ "frames": [
+   {
+    "filename": "Merchant Ship 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   },
+   {
+    "filename": "Merchant Ship 1.aseprite",
+    "frame": { "x": 8, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   },
+   {
+    "filename": "Merchant Ship 2.aseprite",
+    "frame": { "x": 16, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   },
+   {
+    "filename": "Merchant Ship 3.aseprite",
+    "frame": { "x": 24, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   },
+   {
+    "filename": "Merchant Ship 4.aseprite",
+    "frame": { "x": 32, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   },
+   {
+    "filename": "Merchant Ship 5.aseprite",
+    "frame": { "x": 40, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   },
+   {
+    "filename": "Merchant Ship 6.aseprite",
+    "frame": { "x": 48, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   },
+   {
+    "filename": "Merchant Ship 7.aseprite",
+    "frame": { "x": 56, "y": 0, "w": 8, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 15 },
+    "sourceSize": { "w": 8, "h": 15 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "item_pickup_animation.png",
+  "format": "RGBA8888",
+  "size": { "w": 64, "h": 15 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Key Idle", "from": 0, "to": 7, "direction": "forward", "color": "#fe5b59ff" },
+   { "name": "Chest", "from": 0, "to": 7, "direction": "forward", "color": "#000000ff" }
+  ],
+  "layers": [
+   { "name": "Objects", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
