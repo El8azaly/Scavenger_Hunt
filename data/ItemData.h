@@ -3,18 +3,20 @@
 
 // ─────────────────────────────────────────────────────────────
 //  Item  —  pure data struct representing any in-game item
-//
-//  Used by: InventorySystem, CollectibleItem, Container,
-//           CraftingSystem, QuestSystem, SaveManager.
-//
-//  This header has NO includes other than QString.
-//  Do not add Qt or game logic here.
 // ─────────────────────────────────────────────────────────────
 struct Item {
     QString id;           // unique key e.g. "brass_key", "map_piece_1"
     QString name;         // display name e.g. "Brass Key"
     QString description;  // shown in InventoryPanel tooltip
-    QString iconPath;     // Qt resource path e.g. ":/assets/images/brass_key.png"
+
+    // World & UI Representation (Animated Sprite)
+    QString spriteJsonPath;   // e.g. ":/assets/sprites/items/coin.json"
+    QString spriteImagePath;  // e.g. ":/assets/sprites/items/coin.png"
+
+    // NEW: Custom Sprite Sizes (Defaults to 36x36 if not overridden)
+    float   spriteWidth  = 36.0f;
+    float   spriteHeight = 36.0f;
+
     bool    isQuestTarget = false; // true = QuestSystem watches for this
 
     bool isNull() const { return id.isEmpty(); }
