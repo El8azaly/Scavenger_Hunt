@@ -11,6 +11,7 @@ namespace Constants
     // ── Window ───────────────────────────────────────────────
     constexpr int WINDOW_WIDTH  = 1280;
     constexpr int WINDOW_HEIGHT = 720;
+    constexpr int UI_SCALE = 3;
 
     // ── World / Tile grid ────────────────────────────────────
     constexpr int   TILE_SIZE      = 48;   // pixels per tile cell
