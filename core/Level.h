@@ -38,4 +38,5 @@ protected:
     QPixmap m_levelImage;
     QVector<QRectF> m_collisionRects;
     QColor m_backgroundColor = Qt::black; // Solid color for out-of-bounds
+    int m_animationAccumulator = 0; // Tracks time until 100ms is reached
 };

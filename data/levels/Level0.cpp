@@ -21,8 +21,12 @@ void Level0::init()
 
 void Level0::update(int deltaTimeMs)
 {
-    if (m_bottomSprite) m_bottomSprite->update(deltaTimeMs);
-    if (m_topSprite) m_topSprite->update(deltaTimeMs);
+    m_animationAccumulator += deltaTimeMs;
+    if (m_animationAccumulator >= 250) {
+        if (m_bottomSprite) m_bottomSprite->update(m_animationAccumulator);
+        if (m_topSprite) m_topSprite->update(m_animationAccumulator);
+        m_animationAccumulator = 0;
+    }
 }
 
 void Level0::drawBackLayer(QPainter& painter, const Camera& camera)
