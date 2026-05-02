@@ -57,6 +57,17 @@ static LevelData buildLevel0() {
     d.entities.append(itm);
 
     d.targetIds.append("brass_key");
+
+    EntitySpawnData enemy;
+    enemy.type = "enemy";
+    enemy.id = "fiercetooth_1";
+    enemy.x = 390;
+    enemy.y = 175;
+    enemy.w = 32;
+    enemy.h = 32;
+    enemy.properties["enemyType"] = "fiercetooth";
+    d.entities.append(enemy);
+
     return d;
 }
 

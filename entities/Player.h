@@ -13,14 +13,28 @@ public:
     void equipSword() { m_hasSword = true; }
     void attack();
 
+    int getHealth() const;
+
+    int getMaxHealth() const;
+
+    void takeDamage(int amount);
+    bool isAttacking() const { return m_attackTimer > 0; }
+    int  getAttackTimer() const { return m_attackTimer; }
+    bool isFacingRight() const { return m_facingRight; }
 private:
     InputHandler* m_input;
     AnimatedSprite* m_dustSprite;
-    bool m_wasOnGround; // Used to detect landing and jumping
+    bool m_wasOnGround;
 
-    // Dust dimensions from dust.json
+    bool m_hasSword = false;
+    bool m_isDead = false;
+    int m_attackTimer = 0;
+    int m_hitTimer = 0;
+    int m_deathTimer = 0;
+    int m_landTimer = 0; // For the "Ground" animation tag;
+
     const float DUST_W = 52.0f;
     const float DUST_H = 20.0f;
-    bool m_hasSword = false;
-    int m_attackTimer = 0; // Locks other animations while attacking
+    int m_health = 100;
+    int m_maxHealth = 100;
 };

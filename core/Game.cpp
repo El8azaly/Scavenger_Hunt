@@ -29,6 +29,7 @@
 #include <QMap>
 #include "ui/SkyBackground.h"
 #include "data/levels/Level0.h"
+#include "entities/FierceTooth.h"
 // ── Include specific levels ───────────────────────────────────
 
 class SkyBackground;
@@ -141,7 +142,7 @@ void Game::update() {
     runCollision();
 
     if (m_player) m_player->updateAnimation();
-    if (m_currentLevelObj) m_currentLevelObj->update(); // optional level animations
+    if (m_currentLevelObj) m_currentLevelObj->update();
 
     advanceCamera();
     removeInactiveEntities();
@@ -171,47 +172,68 @@ void Game::handleMousePress(int qtMouseButton) {
 
 void Game::updateEntities()
 {
+    // Change hit frame to 23 (2 frames after button press) so it feels instantaneous
+    bool playerJustHit = (m_player && m_player->getAttackTimer() == 23);
+
     for (GameObject* obj : m_entities) {
-        if (obj && obj->isActive()) obj->update();
+        if (!obj || !obj->isActive()) continue;
+
+        obj->update();
+
+        if (playerJustHit) {
+            // Replaced FierceTooth cast with AttackableEntity
+            if (AttackableEntity* attackable = dynamic_cast<AttackableEntity*>(obj)) {
+                float dist = std::abs(m_player->centreX() - attackable->centreX());
+                float verticalDist = std::abs(m_player->y() - attackable->y());
+
+                bool facingEnemy = (m_player->isFacingRight() && attackable->x() > m_player->x()) ||
+                                   (!m_player->isFacingRight() && attackable->x() < m_player->x());
+
+                if (dist < 105.0f && verticalDist < 60.0f && facingEnemy) {
+                    attackable->takeDamage(15);
+                }
+            }
+        }
     }
 }
-
 void Game::runCollision()
 {
+    for (GameObject* obj : m_entities) {
+        if (Entity* entity = dynamic_cast<Entity*>(obj)) {
+            auto solidHits = m_collision->checkSolid(entity->boundingBox(), m_entities);
+            for (const CollisionResult& cr : solidHits) {
+                resolveSolidCollision(entity, cr);
+            }
+        }
+    }
+
     if (!m_player) return;
-    QRectF playerRect = m_player->boundingBox();
-
-    auto solidHits = m_collision->checkSolid(playerRect, m_entities);
-    for (const CollisionResult& cr : solidHits)
-        resolveSolidCollision(cr);
-
-    auto nearby = m_collision->checkProximity(playerRect, m_entities, Constants::INTERACT_RANGE);
+    auto nearby = m_collision->checkProximity(m_player->boundingBox(), m_entities, Constants::INTERACT_RANGE);
     resolveProximity(nearby);
 }
 
-void Game::resolveSolidCollision(const CollisionResult& cr)
+void Game::resolveSolidCollision(Entity* subject, const CollisionResult& cr)
 {
-    if (!cr.object || !m_player) return;
+    if (!cr.object || !subject) return;
     QRectF solid = cr.object->boundingBox();
 
     if (cr.fromTop) {
-        m_player->setPosition(m_player->x(), solid.top() - m_player->height());
-        m_player->land();
+        subject->setPosition(subject->x(), solid.top() - subject->height());
+        subject->land();
     }
     else if (cr.fromBottom) {
-        m_player->setPosition(m_player->x(), solid.bottom());
-        m_player->stopVertical();
+        subject->setPosition(subject->x(), solid.bottom());
+        subject->stopVertical();
     }
     else if (cr.fromLeft) {
-        m_player->setPosition(solid.left() - m_player->width(), m_player->y());
-        m_player->stopHorizontal();
+        subject->setPosition(solid.left() - subject->width(), subject->y());
+        subject->stopHorizontal();
     }
     else if (cr.fromRight) {
-        m_player->setPosition(solid.right(), m_player->y());
-        m_player->stopHorizontal();
+        subject->setPosition(solid.right(), subject->y());
+        subject->stopHorizontal();
     }
 }
-
 void Game::resolveProximity(const QVector<GameObject*>& nearby)
 {
     m_nearestInteractable = nullptr;
@@ -315,29 +337,21 @@ void Game::draw(QPainter& painter)
 
 void Game::handleKeyPress(int qtKey) { m_input->keyPressEvent(qtKey); }
 void Game::handleKeyRelease(int qtKey) { m_input->keyReleaseEvent(qtKey); }
-
 void Game::spawnEntities(const LevelData& data)
 {
     float scale = 1.0f;
     float yOffset = 0.0f;
 
-    // ── 1. Initialize Polymorphic Level (Visuals & Collisions) ──
     if (m_currentLevel == 0) {
         m_currentLevelObj = std::make_unique<Level0>(this);
     }
 
     if (m_currentLevelObj) {
         m_currentLevelObj->init();
-
-        // Dynamically size camera based on scaled Level Image map size
         m_camera->setWorldBounds(m_currentLevelObj->worldWidth(), m_currentLevelObj->worldHeight());
-
-        // Grab the level's visual scaling and centering offset
         scale = Constants::UI_SCALE;
         yOffset = m_currentLevelObj->verticalOffset();
 
-        // Spawn the JSON collision rects as invisible static platforms
-        // NOTE: m_currentLevelObj->getCollisionRects() already applies scale and yOffset internally!
         int rectIndex = 0;
         for (const QRectF& rect : m_currentLevelObj->getCollisionRects()) {
             auto* p = new StaticPlatform(rect.x(), rect.y(), rect.width(), rect.height());
@@ -345,27 +359,52 @@ void Game::spawnEntities(const LevelData& data)
             m_entities.append(p);
         }
     } else {
-        // Fallback for older levels that don't have a visual LevelObj setup yet
         m_camera->setWorldBounds(data.worldWidth, data.worldHeight);
     }
 
-    // ── 2. Initialize Dynamic Entities (Items/Chests/NPCs) ──────
+    if (!m_player) {
+        float pStartX = data.playerStartX * scale;
+        float pStartY = data.playerStartY * scale + yOffset;
+
+        m_player = new Player(pStartX, pStartY, m_input.get());
+        m_entities.append(m_player);
+        m_camera->snapTo(m_player->centreX(), m_player->centreY());
+    }
+
     QMap<QString, Item> itemLib;
     for (const Item& item : data.itemLibrary)
         itemLib[item.id] = item;
 
+    QVector<QRectF> environmentRects;
+    if (m_currentLevelObj) {
+        environmentRects = m_currentLevelObj->getCollisionRects();
+    }
+
+    for (const EntitySpawnData& e : data.entities) {
+        if (e.type == "platform") {
+            environmentRects.append(QRectF(e.x * scale, e.y * scale + yOffset, e.w * scale, e.h * scale));
+        }
+    }
+
     for (const EntitySpawnData& e : data.entities) {
         GameObject* obj = nullptr;
-
-        // Apply scale and offset to dynamic entities so they align with the visual map
         float eX = e.x * scale;
         float eY = e.y * scale + yOffset;
         float eW = e.w * scale;
         float eH = e.h * scale;
 
         if (e.type == "platform") {
-            auto* p = new StaticPlatform(eX, eY, eW, eH);
-            obj = p;
+            obj = new StaticPlatform(eX, eY, eW, eH);
+        }
+        else if (e.type == "enemy") {
+            QString enemyType = e.properties.value("enemyType").toString();
+            if (enemyType == "fiercetooth") {
+                auto* enemy = new FierceTooth(eX, eY, m_player);
+
+                // --- STEP 2: PASS ENVIRONMENT TO ENEMY AI ---
+                enemy->setEnvironment(environmentRects);
+                obj = enemy;
+            }
         }
         else if (e.type == "collectible") {
             QString itemId = e.properties.value("itemId").toString();
@@ -400,28 +439,11 @@ void Game::spawnEntities(const LevelData& data)
 
         if (obj) {
             obj->setId(e.id);
-            if (e.type == "player_start") {
-                auto* player = new Player(eX, eY, m_input.get());
-                m_player = player;
-                m_entities.append(player);
-                continue;
-            }
+            if (e.type == "player_start") continue;
             m_entities.append(obj);
         }
     }
-
-    // ── 3. Spawn Player ─────────────────────────────────────────
-    // ── 3. Spawn Player ─────────────────────────────────────────
-    if (!m_player) {
-        float pStartX = data.playerStartX * scale;
-        float pStartY = data.playerStartY * scale + yOffset;
-
-        m_player = new Player(pStartX, pStartY, m_input.get());
-        m_entities.append(m_player);
-        m_camera->snapTo(m_player->centreX(), m_player->centreY());
-    }
 }
-
 void Game::clearLevel()
 {
     for (GameObject* obj : m_entities) delete obj;

@@ -10,6 +10,7 @@
 #include "entities/InteractionResult.h"
 #include "data/LevelLoader.h"
 #include "core/Level.h" // Added Level base class
+#include "entities/Entity.h"
 
 class SkyBackground;
 class GameObject;
@@ -69,7 +70,7 @@ private:
     void advanceCamera();
     void removeInactiveEntities();
 
-    void resolveSolidCollision(const CollisionResult& cr);
+    void resolveSolidCollision(Entity* subject, const CollisionResult& cr);
     void resolveProximity(const QVector<GameObject*>& nearbyObjects);
 
     void spawnEntities(const LevelData& data);
@@ -90,7 +91,6 @@ private:
     std::unique_ptr<QuestSystem>       m_quest;
     std::unique_ptr<ScoreManager>      m_score;
 
-    // ── The new visual/geometric Level ────────────────────────
     std::unique_ptr<Level> m_currentLevelObj;
 
     QVector<GameObject*> m_entities;

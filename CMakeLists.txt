@@ -22,6 +22,10 @@ list(APPEND PROJECT_SOURCES
 )
 
 add_executable(ScavengerHunt ${PROJECT_SOURCES}
+        entities/AttackableEntity.cpp
+        entities/AttackableEntity.h
+        entities/Enemy.cpp
+        entities/Enemy.h
 )
 target_include_directories(ScavengerHunt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ScavengerHunt PRIVATE

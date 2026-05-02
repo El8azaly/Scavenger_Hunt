@@ -5,8 +5,6 @@
     <file>assets/sprites/player/captain.json</file>
     <file>assets/sprites/player/dust.png</file>
     <file>assets/sprites/player/dust.json</file>
-    <file>assets/sprites/items/key.json</file>
-    <file>assets/sprites/items/key.png</file>
     <file>assets/sprites/ui/font.png</file>
     <file>assets/sprites/ui/ui_theme.json</file>
     <file>assets/sprites/ui/ui_theme.png</file>
@@ -14,7 +12,33 @@
     <file>assets/sprites/sky/water.png</file>
     <file>assets/sprites/levels/level0_collision_data.json</file>
     <file>assets/sprites/levels/level0.png</file>
+    <file>assets/sprites/enemy/fierce_tooth.png</file>
+    <file>assets/sprites/enemy/fierce_tooth.json</file>
+    <file>assets/sprites/items/blue_potion.json</file>
+    <file>assets/sprites/items/diamond.json</file>
+    <file>assets/sprites/items/gold_coin.json</file>
+    <file>assets/sprites/items/key.json</file>
+    <file>assets/sprites/items/red_potion.json</file>
+    <file>assets/sprites/items/silver_coin.json</file>
     <file>assets/sprites/items/sword.json</file>
+    <file>assets/sprites/items/blue_potion.png</file>
+    <file>assets/sprites/items/diamond.png</file>
+    <file>assets/sprites/items/gold_coin.png</file>
+    <file>assets/sprites/items/key.png</file>
+    <file>assets/sprites/items/red_potion.png</file>
+    <file>assets/sprites/items/silver_coin.png</file>
     <file>assets/sprites/items/sword.png</file>
+    <file>assets/sprites/items/chest.json</file>
+    <file>assets/sprites/items/emerald.json</file>
+    <file>assets/sprites/items/green_potion.json</file>
+    <file>assets/sprites/items/map.json</file>
+    <file>assets/sprites/items/ruby.json</file>
+    <file>assets/sprites/items/skull.json</file>
+    <file>assets/sprites/items/chest.png</file>
+    <file>assets/sprites/items/emerald.png</file>
+    <file>assets/sprites/items/green_potion.png</file>
+    <file>assets/sprites/items/map.png</file>
+    <file>assets/sprites/items/ruby.png</file>
+    <file>assets/sprites/items/skull.png</file>
   </qresource>
 </RCC>

@@ -126,7 +126,12 @@ void SpriteButton::drawContent(QPainter& p) {
     int scaledOffsetX = m_textOffsetX * Constants::UI_SCALE;
     int scaledOffsetY = m_textOffsetY * Constants::UI_SCALE;
 
-    // Split text into wrapped lines
+    // --- ADDED: Push text down 1 UI pixel when button is pressed ---
+    if (m_isDown) {
+        scaledOffsetY += Constants::UI_SCALE;
+    }
+
+    // Split text into wrapped lines[cite: 1]
     QStringList words = m_text.split(" ");
     QStringList lines;
     QString currentLine = "";
@@ -144,7 +149,7 @@ void SpriteButton::drawContent(QPainter& p) {
     }
     if (!currentLine.isEmpty()) lines.append(currentLine);
 
-    // Calculate total block height
+    // Calculate total block height[cite: 1]
     int lineHeight = 6 * effectiveTextScale;
     int lineSpacing = 2 * effectiveTextScale;
     int textHeight = lines.size() * lineHeight + qMax(0, (int)lines.size() - 1) * lineSpacing;
@@ -154,17 +159,17 @@ void SpriteButton::drawContent(QPainter& p) {
 
     int totalHeight = iconSize + iconMargin + textHeight;
 
-    // Factor in our dynamic scaled offsetY to the vertical center calculation
+    // Factor in our dynamic scaled offsetY (now including press-down offset)[cite: 1]
     int currentY = contentBox.y() + (contentBox.height() - totalHeight) / 2 + scaledOffsetY;
 
-    // Draw Icon Centered
+    // Draw Icon Centered[cite: 1]
     if (iconSize > 0) {
         int iconX = contentBox.x() + (contentBox.width() - iconSize) / 2 + scaledOffsetX;
         SlicedSprite(m_iconName).draw(p, iconX, currentY, iconSize, iconSize);
         currentY += iconSize + iconMargin;
     }
 
-    // Draw Text Centered
+    // Draw Text Centered[cite: 1]
     for (const QString& line : lines) {
         int lineWidth = line.length() * 6 * effectiveTextScale;
         int lineX = contentBox.x() + (contentBox.width() - lineWidth) / 2 + scaledOffsetX;
