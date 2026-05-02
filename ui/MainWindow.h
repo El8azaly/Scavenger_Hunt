@@ -16,7 +16,7 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
 private slots:
     void onStateChanged(GameState oldState, GameState newState);
-    void onGameTick();
+    void onGameTick(int deltaTimeMs);
 private:
     Game*            m_game;
     GameLoop*        m_gameLoop;

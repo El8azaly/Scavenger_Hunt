@@ -1,0 +1,54 @@
+{ "frames": [
+   {
+    "filename": "level0 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 944, "h": 384 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 944, "h": 384 },
+    "sourceSize": { "w": 944, "h": 384 },
+    "duration": 100
+   },
+   {
+    "filename": "level0 1.aseprite",
+    "frame": { "x": 944, "y": 0, "w": 944, "h": 384 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 944, "h": 384 },
+    "sourceSize": { "w": 944, "h": 384 },
+    "duration": 100
+   },
+   {
+    "filename": "level0 2.aseprite",
+    "frame": { "x": 0, "y": 384, "w": 944, "h": 384 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 944, "h": 384 },
+    "sourceSize": { "w": 944, "h": 384 },
+    "duration": 100
+   },
+   {
+    "filename": "level0 3.aseprite",
+    "frame": { "x": 944, "y": 384, "w": 944, "h": 384 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 944, "h": 384 },
+    "sourceSize": { "w": 944, "h": 384 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "level0_top.png",
+  "format": "RGBA8888",
+  "size": { "w": 1888, "h": 768 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 4", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

@@ -18,7 +18,7 @@ public:
     virtual ~Level() = default;
 
     virtual void init() = 0;
-    virtual void update() {}
+    virtual void update(int deltaTimeMs) {}
 
     virtual void drawBackLayer(QPainter& painter, const Camera& camera) {}
     virtual void drawLevelLayer(QPainter& painter, const Camera& camera);

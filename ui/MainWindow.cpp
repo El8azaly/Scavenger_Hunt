@@ -64,9 +64,9 @@ void MainWindow::connectSignals() {
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
 }
 
-void MainWindow::onGameTick() {
-    m_game->update();
-    m_gameWidget->update(); // triggers paintEvent
+void MainWindow::onGameTick(int deltaTimeMs) {
+    m_game->update(deltaTimeMs);
+    m_gameWidget->update();
 }
 
 void MainWindow::onStateChanged(GameState /*old*/, GameState newState) {

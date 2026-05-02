@@ -134,7 +134,7 @@ CraftingSystem* Game::crafting()     const { return m_crafting.get(); }
 QuestSystem* Game::quest()        const { return m_quest.get(); }
 ScoreManager* Game::score()        const { return m_score.get(); }
 
-void Game::update() {
+void Game::update(int deltaTimeMs) {
     if (!m_stateManager->isPlaying()) return;
 
     processInput();
@@ -142,7 +142,7 @@ void Game::update() {
     runCollision();
 
     if (m_player) m_player->updateAnimation();
-    if (m_currentLevelObj) m_currentLevelObj->update();
+    if (m_currentLevelObj) m_currentLevelObj->update(deltaTimeMs);
 
     advanceCamera();
     removeInactiveEntities();

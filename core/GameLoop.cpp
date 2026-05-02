@@ -4,7 +4,9 @@ GameLoop::GameLoop(QObject* parent)
     : QObject(parent)
 {
     m_timer.setTimerType(Qt::PreciseTimer);
-    connect(&m_timer, &QTimer::timeout, this, &GameLoop::tick);
+    connect(&m_timer, &QTimer::timeout, this, [this]() {
+        emit tick(16); // 16ms is roughly 60 frames per second
+    });
 }
 
 void GameLoop::start()

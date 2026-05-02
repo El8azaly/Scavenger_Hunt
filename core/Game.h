@@ -31,7 +31,7 @@ public:
     explicit Game(QObject* parent = nullptr);
     ~Game();
 
-    void update();
+    void update(int deltaTimeMs);
     void draw(QPainter& painter);
 
     void handleKeyPress(int qtKey);

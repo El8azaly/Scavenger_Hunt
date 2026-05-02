@@ -20,7 +20,7 @@ public:
     bool isRunning() const;
 
 signals:
-    void tick(); // emitted every frame; GameWidget connects this to update()
+    void tick(int deltaTimeMs); // emitted every frame; GameWidget connects this to update()
 
 private:
     QTimer m_timer;
