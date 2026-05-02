@@ -1,4 +1,4 @@
-#include "ui/PixelFont.h"
+#include "PixelFont.h"
 #include <QRect>
 #include <QImage>
 #include <QDebug>
@@ -6,6 +6,7 @@
 // Define the static default colors
 const QColor PixelFont::Dark("#33323d");
 const QColor PixelFont::Light("#edc59b");
+const QColor PixelFont::Bright("#f6f5fa");
 
 PixelFont::PixelFont() {
     QString fontPath = ":/assets/sprites/ui/font.png";

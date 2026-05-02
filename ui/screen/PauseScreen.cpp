@@ -1,4 +1,4 @@
-#include "ui/PauseScreen.h"
+#include "PauseScreen.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>

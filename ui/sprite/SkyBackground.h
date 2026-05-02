@@ -2,7 +2,7 @@
 #include <QPainter>
 #include <QVector>
 #include <QPoint>
-#include "engine/AnimatedSprite.h"
+#include "AnimatedSprite.h"
 
 class SkyBackground {
 public:

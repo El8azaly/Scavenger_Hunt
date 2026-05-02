@@ -2,8 +2,8 @@
 #include <QWidget>
 #include <QRect>
 
-#include "SkyBackground.h"
-#include "SlicedSprite.h"
+#include "../sprite/SkyBackground.h"
+#include "ui/sprite/SlicedSprite.h"
 
 class MainMenuScreen : public QWidget {
     Q_OBJECT

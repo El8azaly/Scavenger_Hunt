@@ -10,6 +10,7 @@ public:
     // Default color options
     static const QColor Dark;
     static const QColor Light;
+    static const QColor Bright;
 
     // Hardcoded to load from your resources automatically
     PixelFont();

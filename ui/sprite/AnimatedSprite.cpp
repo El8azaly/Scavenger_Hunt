@@ -1,4 +1,4 @@
-#include "engine/AnimatedSprite.h"
+#include "AnimatedSprite.h"
 
 AnimatedSprite::AnimatedSprite(const QString& jsonPath, const QString& imagePath) {
     m_spriteSheet.load(imagePath);
@@ -20,7 +20,6 @@ void AnimatedSprite::loadData(const QString& jsonPath) {
     QJsonObject root = doc.object();
 
     QJsonArray framesArr = root["frames"].toArray();
-    qDebug() << "Loaded" << framesArr.size() << "frames from" << jsonPath;
 
     for (const QJsonValue& v : framesArr) {
         QJsonObject fObj = v.toObject();
@@ -44,16 +43,17 @@ void AnimatedSprite::loadData(const QString& jsonPath) {
 }
 void AnimatedSprite::setState(const QString& stateName) {
     if (m_currentState == stateName) return;
-
     if (!m_tags.contains(stateName)) return;
 
     m_currentState = stateName;
     m_currentFrameIndex = m_tags[m_currentState].from;
     m_elapsedTime = 0;
+    m_finished = false;
 }
 
 void AnimatedSprite::update(int deltaTimeMs) {
     if (m_frames.isEmpty() || !m_tags.contains(m_currentState)) return;
+    if (m_finished) return;
 
     m_elapsedTime += deltaTimeMs;
     int duration = m_frames[m_currentFrameIndex].duration;
@@ -62,8 +62,15 @@ void AnimatedSprite::update(int deltaTimeMs) {
     while (m_elapsedTime >= duration) {
         m_elapsedTime -= duration;
         m_currentFrameIndex++;
+
         if (m_currentFrameIndex > m_tags[m_currentState].to) {
-            m_currentFrameIndex = m_tags[m_currentState].from;
+            if (!m_loop) {
+                m_currentFrameIndex = m_tags[m_currentState].to;
+                m_finished = true;
+                break;
+            } else {
+                m_currentFrameIndex = m_tags[m_currentState].from;
+            }
         }
 
         duration = m_frames[m_currentFrameIndex].duration;

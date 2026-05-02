@@ -11,6 +11,7 @@
 #include "data/LevelLoader.h"
 #include "core/Level.h" // Added Level base class
 #include "entities/Entity.h"
+#include "../ui/sprite/SlicedSprite.h"
 
 class SkyBackground;
 class GameObject;
@@ -18,7 +19,6 @@ class Player;
 class InteractiveObject;
 class CollectibleItem;
 class InventorySystem;
-class CraftingSystem;
 class QuestSystem;
 class ScoreManager;
 #include <QTimer>
@@ -51,7 +51,6 @@ public:
 
     GameState        currentState()  const;
     InventorySystem* inventory()     const;
-    CraftingSystem* crafting()      const;
     QuestSystem* quest()         const;
     ScoreManager* score()         const;
     const Camera&    camera()        const { return *m_camera; }
@@ -87,10 +86,13 @@ private:
     std::unique_ptr<Camera>            m_camera;
     std::unique_ptr<CollisionEngine>   m_collision;
     std::unique_ptr<InventorySystem>   m_inventory;
-    std::unique_ptr<CraftingSystem>    m_crafting;
     std::unique_ptr<QuestSystem>       m_quest;
     std::unique_ptr<ScoreManager>      m_score;
-
+    std::unique_ptr<SlicedSprite> m_interactPopup;
+    float m_popupOpacity = 0.0f;
+    float m_popupYOffset = -40.0f; // Control the Y position independently here
+    float m_lastPopupX = 0.0f;
+    float m_lastPopupY = 0.0f;
     std::unique_ptr<Level> m_currentLevelObj;
 
     QVector<GameObject*> m_entities;

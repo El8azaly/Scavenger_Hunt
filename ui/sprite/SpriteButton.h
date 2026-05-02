@@ -1,7 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <QString>
-#include "ui/PixelFont.h"
+#include "PixelFont.h"
 
 class SpriteButton : public QWidget {
     Q_OBJECT

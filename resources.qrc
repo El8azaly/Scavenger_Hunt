@@ -44,5 +44,9 @@
     <file>assets/sprites/levels/level0_bottom.png</file>
     <file>assets/sprites/levels/level0_top.json</file>
     <file>assets/sprites/levels/level0_top.png</file>
+    <file>assets/sprites/enemy/dialogue.json</file>
+    <file>assets/sprites/enemy/dialogue.png</file>
+    <file>assets/sprites/objects/interactables.json</file>
+    <file>assets/sprites/objects/interactables.png</file>
   </qresource>
 </RCC>

@@ -77,5 +77,11 @@
   "clouds_1x1": { "x": 0, "y": 512, "w": 448, "h": 192, "sliceW": 448, "sliceH": 192 },
   "sky_1x1": { "x": 0, "y": 704, "w": 384, "h": 128, "sliceW": 384, "sliceH": 128 },
   "sky_top_block_1x1": { "x": 384, "y": 704, "w": 16, "h": 16, "sliceW": 16, "sliceH": 16 },
-  "sky_bottom_block_1x1": { "x": 384, "y": 720, "w": 16, "h": 16, "sliceW": 16, "sliceH": 16 }
+  "sky_bottom_block_1x1": { "x": 384, "y": 720, "w": 16, "h": 16, "sliceW": 16, "sliceH": 16 },
+
+  "health_hud_1x1": { "x": 128, "y": 432, "w": 80, "h": 48, "sliceW": 80, "sliceH": 48 },
+  "heart_1x1": { "x": 128, "y": 480, "w": 8, "h": 7, "sliceW": 8, "sliceH": 7 },
+  "time_hud_1x1": { "x": 145, "y": 478, "w": 15, "h": 8, "sliceW": 15, "sliceH": 8 },
+  "items_required_hud_1x1": { "x": 150, "y": 406, "w": 50, "h": 20, "sliceW": 50, "sliceH": 20 },
+  "interact_popup_1x1": { "x": 145, "y": 193, "w": 70, "h": 13, "sliceW": 70, "sliceH": 13 }
 }

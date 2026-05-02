@@ -1,10 +1,10 @@
 #include "ui/MainWindow.h"
 #include "ui/GameWidget.h"
-#include "UISpriteSheet.h"
-#include "ui/MainMenuScreen.h"
-#include "ui/PauseScreen.h"
-#include "ui/GameOverScreen.h"
-#include "ui/WinScreen.h"
+#include "sprite/UISpriteSheet.h"
+#include "screen/MainMenuScreen.h"
+#include "screen/PauseScreen.h"
+#include "screen/GameOverScreen.h"
+#include "screen/WinScreen.h"
 #include "core/Constants.h"
 #include <QVBoxLayout>
 

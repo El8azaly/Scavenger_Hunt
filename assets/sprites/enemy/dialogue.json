@@ -1,0 +1,213 @@
+{ "frames": [
+   {
+    "filename": "Dialogue 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 1.aseprite",
+    "frame": { "x": 13, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 2.aseprite",
+    "frame": { "x": 26, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 3.aseprite",
+    "frame": { "x": 39, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 5000
+   },
+   {
+    "filename": "Dialogue 4.aseprite",
+    "frame": { "x": 52, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 5.aseprite",
+    "frame": { "x": 65, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 6.aseprite",
+    "frame": { "x": 78, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 5000
+   },
+   {
+    "filename": "Dialogue 7.aseprite",
+    "frame": { "x": 91, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 8.aseprite",
+    "frame": { "x": 104, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 9.aseprite",
+    "frame": { "x": 117, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 10.aseprite",
+    "frame": { "x": 130, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 5000
+   },
+   {
+    "filename": "Dialogue 11.aseprite",
+    "frame": { "x": 143, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 12.aseprite",
+    "frame": { "x": 156, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 13.aseprite",
+    "frame": { "x": 169, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 5000
+   },
+   {
+    "filename": "Dialogue 14.aseprite",
+    "frame": { "x": 182, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 15.aseprite",
+    "frame": { "x": 195, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 16.aseprite",
+    "frame": { "x": 208, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 17.aseprite",
+    "frame": { "x": 221, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 5000
+   },
+   {
+    "filename": "Dialogue 18.aseprite",
+    "frame": { "x": 234, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 19.aseprite",
+    "frame": { "x": 247, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 100
+   },
+   {
+    "filename": "Dialogue 20.aseprite",
+    "frame": { "x": 260, "y": 0, "w": 13, "h": 13 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 13 },
+    "sourceSize": { "w": 13, "h": 13 },
+    "duration": 5000
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "dialogue.png",
+  "format": "RGBA8888",
+  "size": { "w": 273, "h": 13 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Exclamation In", "from": 0, "to": 2, "direction": "forward", "color": "#000000ff" },
+   { "name": "Exclamation Out", "from": 4, "to": 6, "direction": "forward", "color": "#000000ff" },
+   { "name": "Interrogation In", "from": 7, "to": 10, "direction": "forward", "color": "#000000ff" },
+   { "name": "Interrogation Out", "from": 11, "to": 13, "direction": "forward", "color": "#000000ff" },
+   { "name": "Dead In", "from": 14, "to": 17, "direction": "forward", "color": "#000000ff" },
+   { "name": "Dead Out", "from": 18, "to": 20, "direction": "forward", "color": "#000000ff" }
+  ],
+  "layers": [
+   { "name": "Dialogue", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

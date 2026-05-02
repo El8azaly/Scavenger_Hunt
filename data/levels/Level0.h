@@ -1,6 +1,6 @@
 #pragma once
 #include "core/Level.h"
-#include "engine/AnimatedSprite.h"
+#include "../../ui/sprite/AnimatedSprite.h"
 #include <memory>
 
 class Level0 : public Level

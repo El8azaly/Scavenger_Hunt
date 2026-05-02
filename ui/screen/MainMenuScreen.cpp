@@ -1,6 +1,6 @@
-#include "ui/MainMenuScreen.h"
+#include "MainMenuScreen.h"
 #include <QApplication>
-#include "ui/SpriteButton.h"
+#include "../sprite/SpriteButton.h"
 #include "core/Constants.h"
 #include <QPainter>
 #include <QTimer>

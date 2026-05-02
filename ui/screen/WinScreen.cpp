@@ -1,4 +1,4 @@
-#include "ui/WinScreen.h"
+#include "WinScreen.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>

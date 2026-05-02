@@ -1,7 +1,7 @@
 #pragma once
 #include "entities/Entity.h" 
 #include "engine/InputHandler.h" 
-#include "engine/AnimatedSprite.h"
+#include "../ui/sprite/AnimatedSprite.h"
 
 class Player : public Entity {
 public:

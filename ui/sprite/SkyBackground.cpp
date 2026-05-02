@@ -1,5 +1,5 @@
-#include "ui/SkyBackground.h"
-#include "ui/SlicedSprite.h"
+#include "SkyBackground.h"
+#include "SlicedSprite.h"
 #include "core/Constants.h"
 #include <tuple>
 

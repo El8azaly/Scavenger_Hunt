@@ -1,4 +1,4 @@
-#include "ui/UISpriteSheet.h"
+#include "UISpriteSheet.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>

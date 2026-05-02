@@ -9,16 +9,24 @@ public:
     void update() override;
     void draw(QPainter& painter, float camX, float camY) override;
 
-    bool isCollectible() const override { return true; }
+    bool isCollectible() const override { return m_pickupDelay <= 0; }
     const Item& item() const { return m_item; }
     bool isCollected() const { return m_collected; }
     void markCollected();
+
+    void popOut(float startX, float startY);
 
 private:
     Item    m_item;
     bool    m_collected = false;
 
-    // We keep the bobbing effect as it looks great on animated items too!
     float   m_bobOffset = 0;
     int     m_bobTimer  = 0;
+
+    // Pop animation variables
+    bool    m_popping   = false;
+    float   m_velX      = 0.0f;
+    float   m_velY      = 0.0f;
+    float   m_popStartY = 0.0f;
+    int     m_pickupDelay = 0;
 };

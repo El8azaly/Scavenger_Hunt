@@ -3,7 +3,7 @@
 #include <QRectF>
 #include <QString>
 
-#include "engine/AnimatedSprite.h" 
+#include "../ui/sprite/AnimatedSprite.h"
 
 // ─────────────────────────────────────────────────────────────
 //  GameObject  —  abstract base class for EVERYTHING in the world

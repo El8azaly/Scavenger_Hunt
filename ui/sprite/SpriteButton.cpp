@@ -1,5 +1,5 @@
-#include "ui/SpriteButton.h"
-#include "ui/SlicedSprite.h"
+#include "SpriteButton.h"
+#include "SlicedSprite.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include "core/Constants.h"

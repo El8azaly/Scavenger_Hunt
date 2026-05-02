@@ -1,5 +1,5 @@
 #pragma once
-#include "ui/UISpriteSheet.h"
+#include "UISpriteSheet.h"
 #include <QPainter>
 
 class SlicedSprite {

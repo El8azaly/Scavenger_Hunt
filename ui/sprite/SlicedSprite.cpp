@@ -1,4 +1,4 @@
-#include "ui/SlicedSprite.h"
+#include "SlicedSprite.h"
 #include "core/Constants.h"
 #include <algorithm> // Required for std::min / std::max
 

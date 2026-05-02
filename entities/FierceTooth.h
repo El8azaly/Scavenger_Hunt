@@ -1,7 +1,7 @@
 // entities/FierceTooth.h
 #pragma once
 #include "entities/Enemy.h"
-#include "engine/AnimatedSprite.h"
+#include "../ui/sprite/AnimatedSprite.h"
 
 class FierceTooth : public Enemy {
 public:

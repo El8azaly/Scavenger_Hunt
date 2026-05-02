@@ -1,4 +1,4 @@
-#include "ui/GameOverScreen.h"
+#include "GameOverScreen.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>
