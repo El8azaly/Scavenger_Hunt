@@ -18,7 +18,7 @@ public:
     static SpriteSegment getSegment(const QString& id);
 
 private:
-    // FIX: Change to a pointer so it doesn't initialize before main()
+
     static QPixmap* s_texture;
     static QHash<QString, SpriteSegment> s_segments;
 };

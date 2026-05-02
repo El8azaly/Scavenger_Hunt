@@ -35,9 +35,6 @@ void HUD::draw(QPainter& p, ScoreManager* score, InventorySystem* inv, QuestSyst
     }
     p.drawPixmap(0, 0, vignetteCache);
 
-    // ==========================================
-    // 2. HUD RENDERING
-    // ==========================================
     static PixelFont pixelFont;
 
     if(quest) {

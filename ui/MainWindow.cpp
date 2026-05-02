@@ -8,7 +8,6 @@
 #include "core/Constants.h"
 #include <QVBoxLayout>
 
-
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setFixedSize(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
     m_game     = new Game(this);
@@ -26,26 +25,24 @@ void MainWindow::buildUI() {
     m_gameOverScreen= new GameOverScreen(this);
     m_winScreen     = new WinScreen(this);
 
-    m_stack->addWidget(m_menuScreen);      // index 0
-    m_stack->addWidget(m_gameWidget);      // index 1
-    m_stack->addWidget(m_pauseScreen);     // index 2
-    m_stack->addWidget(m_gameOverScreen);  // index 3
-    m_stack->addWidget(m_winScreen);       // index 4
+    m_stack->addWidget(m_menuScreen);
+    m_stack->addWidget(m_gameWidget);
+    m_stack->addWidget(m_pauseScreen);
+    m_stack->addWidget(m_gameOverScreen);
+    m_stack->addWidget(m_winScreen);
     m_stack->setCurrentIndex(0);
     setCentralWidget(m_stack);
 }
 
 void MainWindow::connectSignals() {
-    // Game state → switch screen
+
     connect(m_game, &Game::stateChanged, this, &MainWindow::onStateChanged);
-    // GameLoop tick → advance one frame
+
     connect(m_gameLoop, &GameLoop::tick, this, &MainWindow::onGameTick);
 
-    // Menu buttons
     connect(m_menuScreen, &MainMenuScreen::startRequested,
             this, [this](){ m_game->startNewGame(0); m_gameLoop->start(); });
 
-    // Pause buttons
     connect(m_pauseScreen, &PauseScreen::resumeRequested,
             this, [this](){ m_game->resumeGame(); m_gameLoop->start(); });
     connect(m_pauseScreen, &PauseScreen::restartRequested,
@@ -53,13 +50,12 @@ void MainWindow::connectSignals() {
     connect(m_pauseScreen, &PauseScreen::exitRequested,
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
 
-    // Game-over / win buttons
     connect(m_gameOverScreen, &GameOverScreen::restartRequested,
             this, [this](){ m_game->restartLevel(); m_gameLoop->start(); });
     connect(m_gameOverScreen, &GameOverScreen::exitRequested,
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
     connect(m_winScreen, &WinScreen::nextLevelRequested,
-            this, [this](){ m_game->startNewGame(1); m_gameLoop->start(); }); // TODO next level
+            this, [this](){ m_game->startNewGame(1); m_gameLoop->start(); });
     connect(m_winScreen, &WinScreen::exitRequested,
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
 }
@@ -69,7 +65,7 @@ void MainWindow::onGameTick(int deltaTimeMs) {
     m_gameWidget->update();
 }
 
-void MainWindow::onStateChanged(GameState /*old*/, GameState newState) {
+void MainWindow::onStateChanged(GameState , GameState newState) {
     m_gameLoop->stop();
     switch(newState) {
         case GameState::MAIN_MENU: m_stack->setCurrentIndex(0); break;

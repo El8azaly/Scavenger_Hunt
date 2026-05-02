@@ -6,7 +6,6 @@ InputHandler::InputHandler(QObject* parent)
     : QObject(parent)
 {}
 
-// ── Key mappings ──────────────────────────────────────────────
 std::optional<GameAction> InputHandler::keyToAction(int k) const
 {
     switch (k) {
@@ -23,9 +22,8 @@ std::optional<GameAction> InputHandler::keyToAction(int k) const
     }
 }
 
-bool InputHandler::isOneShot(GameAction action)
-{
-    // These actions should fire exactly once per press, not repeat while held
+bool InputHandler::isOneShot(GameAction action) {
+
     switch (action) {
     case GameAction::INTERACT:
     case GameAction::OPEN_INVENTORY:
@@ -38,33 +36,29 @@ bool InputHandler::isOneShot(GameAction action)
     }
 }
 
-// ── Event handlers (called by GameWidget) ─────────────────────
-void InputHandler::keyPressEvent(int qtKey)
-{
+void InputHandler::keyPressEvent(int qtKey) {
     auto action = keyToAction(qtKey);
     if (!action) return;
 
     if (isOneShot(*action)) {
-        // Fire signal immediately; don't store as held
+
         emit oneShotAction(*action);
-        m_justPressedKeys.insert(qtKey); // still record so wasJustPressed works
+        m_justPressedKeys.insert(qtKey);
     } else {
         if (!m_heldKeys.contains(qtKey))
-            m_justPressedKeys.insert(qtKey); // first frame only
+            m_justPressedKeys.insert(qtKey);
         m_heldKeys.insert(qtKey);
     }
 }
 
-void InputHandler::keyReleaseEvent(int qtKey)
-{
+void InputHandler::keyReleaseEvent(int qtKey) {
     m_heldKeys.remove(qtKey);
     m_justPressedKeys.remove(qtKey);
 }
 
-// ── Queries ───────────────────────────────────────────────────
 bool InputHandler::isHeld(GameAction action) const
 {
-    // Reverse-map action to its primary key and check heldKeys
+
     switch (action) {
     case GameAction::MOVE_LEFT:   return m_heldKeys.contains(Qt::Key_A)
                                       || m_heldKeys.contains(Qt::Key_Left);
@@ -96,8 +90,7 @@ bool InputHandler::wasJustPressed(GameAction action) const
     }
 }
 
-void InputHandler::endFrame()
-{
-    // Clear "just pressed" so wasJustPressed() returns false next frame
+void InputHandler::endFrame() {
+
     m_justPressedKeys.clear();
 }

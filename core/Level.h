@@ -25,10 +25,9 @@ public:
     virtual void drawMiddleLayer(QPainter& painter, const Camera& camera) {}
     virtual void drawFrontLayer(QPainter& painter, const Camera& camera) {}
 
-    // Accessors
     float worldWidth() const;
     float worldHeight() const;
-    float verticalOffset() const; // Used to center the level image vertically
+    float verticalOffset() const;
 
     QVector<QRectF> getCollisionRects() const { return m_collisionRects; }
 
@@ -37,6 +36,6 @@ protected:
 
     QPixmap m_levelImage;
     QVector<QRectF> m_collisionRects;
-    QColor m_backgroundColor = Qt::black; // Solid color for out-of-bounds
-    int m_animationAccumulator = 0; // Tracks time until 100ms is reached
+    QColor m_backgroundColor = Qt::black;
+    int m_animationAccumulator = 0;
 };

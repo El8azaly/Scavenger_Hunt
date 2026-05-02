@@ -1,4 +1,3 @@
-// entities/AttackableEntity.h
 #pragma once
 #include "entities/Entity.h"
 

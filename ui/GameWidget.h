@@ -14,5 +14,5 @@ protected:
 
     void keyReleaseEvent(QKeyEvent* event) override;
 private:
-    Game* m_game;  // non-owning
+    Game* m_game;
 };

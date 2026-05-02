@@ -5,9 +5,8 @@ GameStateManager::GameStateManager(QObject* parent)
     : QObject(parent)
 {}
 
-void GameStateManager::setState(GameState newState)
-{
-    if (newState == m_state) return; // no redundant transitions
+void GameStateManager::setState(GameState newState) {
+    if (newState == m_state) return;
 
     GameState old = m_state;
     m_state = newState;

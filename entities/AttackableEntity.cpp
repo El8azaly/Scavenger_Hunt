@@ -1,4 +1,3 @@
-// entities/AttackableEntity.cpp
 #include "entities/AttackableEntity.h"
 
 AttackableEntity::AttackableEntity(float x, float y, float w, float h, int maxHealth)

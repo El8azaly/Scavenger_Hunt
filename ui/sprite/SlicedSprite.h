@@ -4,11 +4,9 @@
 
 class SlicedSprite {
 public:
-    // elementBaseName should be e.g. "window_bg"
-    // The class will automatically look for "_9slice", "_3slice_h", etc.
+
     explicit SlicedSprite(const QString& elementBaseName);
 
-    // Draws the element perfectly at any target dimension.
     void draw(QPainter& painter, int x, int y, int targetW, int targetH);
 
 private:

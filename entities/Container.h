@@ -14,12 +14,11 @@ public:
 
     void update() override;
     void draw(QPainter& painter, float camX, float camY) override;
-    void updateAnimation(); // Proper state priority handling
+    void updateAnimation();
 
     InteractionResult interact() override;
     void addItem(const Item& item);
 
-    // Only interactable if not opened and not currently playing opening animation
     bool isInteractable() const override { return !m_opened && !m_opening; }
 
 private:
@@ -30,7 +29,6 @@ private:
     bool m_opened = false;
     bool m_opening = false;
 
-    // Sprite Dimension and Offsets (Prevents stretching)
     float m_spriteWidth;
     float m_spriteHeight;
     float m_spriteOffsetX;

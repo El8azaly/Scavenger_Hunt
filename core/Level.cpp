@@ -10,14 +10,13 @@
 Level::Level(QObject* parent) : QObject(parent) {}
 
 float Level::verticalOffset() const {
-    // Calculates how much to shift the level down to center it on the screen
+
     float scaledH = m_levelImage.height() * Constants::GAME_SCALE;
     float offset = (Constants::WINDOW_HEIGHT - scaledH) / 2.0f;
     return (offset > 0) ? offset : 0.0f;
 }
 
-void Level::drawLevelLayer(QPainter& painter, const Camera& camera)
-{
+void Level::drawLevelLayer(QPainter& painter, const Camera& camera) {
 
     if (m_levelImage.isNull()) return;
 
@@ -26,23 +25,19 @@ void Level::drawLevelLayer(QPainter& painter, const Camera& camera)
     float scaledH = m_levelImage.height() * scale;
     float yOffset = verticalOffset();
 
-    // The rect where the entire level image sits in the game world
     QRectF worldRect(0, yOffset, scaledW, scaledH);
 
-    // Only draw the portion of the world that intersects the camera viewport
     QRectF view = camera.viewport();
     QRectF visibleWorldRect = view.intersected(worldRect);
 
     if (visibleWorldRect.isEmpty()) return;
 
-    // Convert world rect back to the original pixel coordinates of the unscaled image
     float srcX = (visibleWorldRect.x() - worldRect.x()) / scale;
     float srcY = (visibleWorldRect.y() - worldRect.y()) / scale;
     float srcW = visibleWorldRect.width() / scale;
     float srcH = visibleWorldRect.height() / scale;
     QRectF sourceRect(srcX, srcY, srcW, srcH);
 
-    // Destination rect on the screen space
     QRectF destRect(
         camera.toScreenX(visibleWorldRect.x()),
         camera.toScreenY(visibleWorldRect.y()),
@@ -62,8 +57,7 @@ float Level::worldHeight() const {
     return std::max(scaledH + verticalOffset(), static_cast<float>(Constants::WINDOW_HEIGHT));
 }
 
-void Level::loadCollisionData(const QString& filepath, const QString& jsonKey)
-{
+void Level::loadCollisionData(const QString& filepath, const QString& jsonKey) {
     m_collisionRects.clear();
 
     QFile file(filepath);
@@ -87,7 +81,7 @@ void Level::loadCollisionData(const QString& filepath, const QString& jsonKey)
     QJsonArray rectArray = root[jsonKey].toArray();
     for (const QJsonValue& val : rectArray) {
         QJsonObject obj = val.toObject();
-        // Scale and shift coordinates to match the visually drawn image
+
         float x = obj["x"].toDouble() * scale;
         float y = obj["y"].toDouble() * scale + yOffset;
         float w = obj["w"].toDouble() * scale;

@@ -3,7 +3,6 @@
 #include <QImage>
 #include <QDebug>
 
-// Define the static default colors
 const QColor PixelFont::Dark("#33323d");
 const QColor PixelFont::Light("#edc59b");
 const QColor PixelFont::Bright("#f6f5fa");
@@ -48,17 +47,14 @@ void PixelFont::drawText(QPainter& painter, const QString& text, int x, int y, i
             QRect sourceRect(col * CHAR_WIDTH, row * CHAR_HEIGHT, CHAR_WIDTH, CHAR_HEIGHT);
             QRect destRect(currentX, y, CHAR_WIDTH * scale, CHAR_HEIGHT * scale);
 
-            // 1. Convert to QImage for perfectly safe pixel-level color masking
             QImage glyph = m_spriteSheet.toImage().copy(sourceRect);
             glyph = glyph.convertToFormat(QImage::Format_ARGB32_Premultiplied);
 
-            // 2. Tint the image
             QPainter tintPainter(&glyph);
             tintPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
             tintPainter.fillRect(glyph.rect(), color);
             tintPainter.end();
 
-            // 3. Convert back to Pixmap and draw
             painter.drawPixmap(destRect, QPixmap::fromImage(glyph));
         }
 

@@ -23,7 +23,6 @@ private:
     float   m_bobOffset = 0;
     int     m_bobTimer  = 0;
 
-    // Pop animation variables
     bool    m_popping   = false;
     float   m_velX      = 0.0f;
     float   m_velY      = 0.0f;

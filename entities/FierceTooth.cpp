@@ -4,8 +4,7 @@
 #include "Player.h"
 
 FierceTooth::FierceTooth(float x, float y, Player* player)
-    : Enemy(x, y, 64, 64, 60, player), m_wasOnGround(true)
-{
+    : Enemy(x, y, 64, 64, 60, player), m_wasOnGround(true) {
     m_sprite = new AnimatedSprite(":/assets/sprites/enemy/fierce_tooth.json",
                                   ":/assets/sprites/enemy/fierce_tooth.png");
     m_spriteWidth = 64;
@@ -64,7 +63,6 @@ void FierceTooth::updateAnimation() {
 
     m_sprite->update(16);
 
-    // Landing Tracker Logic
     bool landed = !m_wasOnGround && m_onGround;
     if (landed) m_landTimer = 12;
 

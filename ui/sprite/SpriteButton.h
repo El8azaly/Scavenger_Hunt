@@ -6,21 +6,18 @@
 class SpriteButton : public QWidget {
     Q_OBJECT
 public:
-    // baseStyle should match your JSON prefixes, e.g., "green_button" or "paper_blank"
+
     SpriteButton(const QString& baseStyle, QWidget* parent = nullptr);
 
-    // Customization
     void setText(const QString& text, int scale = 2, QColor color = PixelFont::Dark);
-    void setIcon(const QString& iconName, int scale = 2); // e.g., "play_icon"
-    void setInteractable(bool interactable); // set false for static paper panels
+    void setIcon(const QString& iconName, int scale = 2);
+    void setInteractable(bool interactable);
 
-    // Allows fine-tuning of text/icon position (values are automatically scaled by UI_SCALE)
     void setTextOffset(int offsetX, int offsetY);
     void setButtonNudge(int offsetX, int offsetY);
 
     QRect getHitRect() const;
 
-    // Easy Presets
     static SpriteButton* createGreen(const QString& text, QWidget* parent = nullptr);
     static SpriteButton* createYellow(const QString& text, QWidget* parent = nullptr);
     static SpriteButton* createPaper(const QString& paperType, const QString& text = "", QWidget* parent = nullptr);

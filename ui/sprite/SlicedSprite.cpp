@@ -1,6 +1,6 @@
 #include "SlicedSprite.h"
 #include "core/Constants.h"
-#include <algorithm> // Required for std::min / std::max
+#include <algorithm>
 
 SlicedSprite::SlicedSprite(const QString& elementBaseName)
     : m_baseName(elementBaseName) {}
@@ -11,26 +11,22 @@ void SlicedSprite::draw(QPainter& painter, int x, int y, int targetW, int target
     SpriteSegment seg3v = UISpriteSheet::getSegment(m_baseName + "_3slice_v");
     SpriteSegment seg1x1 = UISpriteSheet::getSegment(m_baseName + "_1x1");
 
-    // If they passed an exact explicit name (e.g., "play_icon_1x1"), just draw it.
     SpriteSegment exact = UISpriteSheet::getSegment(m_baseName);
     if (!exact.isNull()) {
         draw1x1(painter, x, y, targetW, targetH, exact);
         return;
     }
 
-    // Determine base slice size from whatever variant is available
     SpriteSegment baseSeg = !seg1x1.isNull() ? seg1x1 : (!seg9.isNull() ? seg9 : (!seg3h.isNull() ? seg3h : seg3v));
-    if (baseSeg.isNull()) return; // Missing from JSON
+    if (baseSeg.isNull()) return;
 
     int scale = Constants::UI_SCALE;
     int scaledSliceW = baseSeg.sliceW * scale;
     int scaledSliceH = baseSeg.sliceH * scale;
 
-    // Determine if we are stretching wider/taller than a single slice
     bool stretchW = targetW > scaledSliceW;
     bool stretchH = targetH > scaledSliceH;
 
-    // Pick the most appropriate variant for the requested dimensions
     if (stretchW && stretchH && !seg9.isNull()) {
         draw9Slice(painter, x, y, targetW, targetH, seg9);
     }
@@ -44,7 +40,7 @@ void SlicedSprite::draw(QPainter& painter, int x, int y, int targetW, int target
         draw1x1(painter, x, y, targetW, targetH, seg1x1);
     }
     else if (!seg9.isNull()) {
-        // Fallback to 9slice if the ideal variant is missing
+
         draw9Slice(painter, x, y, targetW, targetH, seg9);
     }
 }
@@ -56,31 +52,27 @@ void SlicedSprite::draw9Slice(QPainter& p, int destX, int destY, int targetW, in
     int sy = seg.rect.y();
     int scale = Constants::UI_SCALE;
 
-    int cw = sw * scale; // Scaled corner width
-    int ch = sh * scale; // Scaled corner height
+    int cw = sw * scale;
+    int ch = sh * scale;
 
-    // Safe bounds in case target is squeezed smaller than two corners combined
     int leftW = std::min(cw, targetW / 2);
     int rightW = std::min(cw, targetW - leftW);
     int topH = std::min(ch, targetH / 2);
     int bottomH = std::min(ch, targetH - topH);
 
-    // Calculate exact middle space available
     int midW = std::max(0, targetW - leftW - rightW);
     int midH = std::max(0, targetH - topH - bottomH);
 
     const QPixmap& tex = UISpriteSheet::texture();
 
-    // Helper lambda to tile and crop a specific zone
     auto drawZone = [&](int srcCol, int srcRow, int dx, int dy, int dw, int dh) {
         if (dw <= 0 || dh <= 0) return;
         QRect srcRect(sx + srcCol * sw, sy + srcRow * sh, sw, sh);
         QRect destRect(dx, dy, dw, dh);
 
         p.save();
-        p.setClipRect(destRect); // This crops the excess pixels seamlessly!
+        p.setClipRect(destRect);
 
-        // Tile across the allotted space
         for (int ty = dy; ty < dy + dh; ty += ch) {
             for (int tx = dx; tx < dx + dw; tx += cw) {
                 p.drawPixmap(tx, ty, cw, ch, tex, srcRect.x(), srcRect.y(), sw, sh);
@@ -89,17 +81,14 @@ void SlicedSprite::draw9Slice(QPainter& p, int destX, int destY, int targetW, in
         p.restore();
     };
 
-    // Top Row (Left, Middle, Right)
     drawZone(0, 0, destX, destY, leftW, topH);
     drawZone(1, 0, destX + leftW, destY, midW, topH);
     drawZone(2, 0, destX + leftW + midW, destY, rightW, topH);
 
-    // Middle Row
     drawZone(0, 1, destX, destY + topH, leftW, midH);
     drawZone(1, 1, destX + leftW, destY + topH, midW, midH);
     drawZone(2, 1, destX + leftW + midW, destY + topH, rightW, midH);
 
-    // Bottom Row
     drawZone(0, 2, destX, destY + topH + midH, leftW, bottomH);
     drawZone(1, 2, destX + leftW, destY + topH + midH, midW, bottomH);
     drawZone(2, 2, destX + leftW + midW, destY + topH + midH, rightW, bottomH);
@@ -179,6 +168,6 @@ void SlicedSprite::draw3SliceV(QPainter& p, int destX, int destY, int targetW, i
 
 void SlicedSprite::draw1x1(QPainter &p, int destX, int destY, int targetW, int targetH, const SpriteSegment &seg) {
     if (seg.isNull()) return;
-    // Just stretch 1x1 elements to fit exact bounds
+
     p.drawPixmap(QRect(destX, destY, targetW, targetH), UISpriteSheet::texture(), seg.rect);
 }

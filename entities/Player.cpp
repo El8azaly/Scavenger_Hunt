@@ -2,9 +2,8 @@
 #include <QPainter>
 
 Player::Player(float x, float y, InputHandler* input)
-    : Entity(x, y, 40, 60), m_input(input), m_wasOnGround(true)
-{
-    // Player Setup
+    : Entity(x, y, 40, 60), m_input(input), m_wasOnGround(true) {
+
     m_sprite = new AnimatedSprite(":/assets/sprites/player/captain.json",
                                   ":/assets/sprites/player/captain.png");
     m_spriteWidth = 96;
@@ -12,7 +11,6 @@ Player::Player(float x, float y, InputHandler* input)
     m_spriteOffsetX = (m_w - m_spriteWidth) / 2.0f;
     m_spriteOffsetY = (m_h - m_spriteHeight);
 
-    // Dust Setup
     m_dustSprite = new AnimatedSprite(":/assets/sprites/player/dust.json",
                                       ":/assets/sprites/player/dust.png");
 }
@@ -24,9 +22,9 @@ Player::~Player() {
 void Player::update() {
     if (m_isDead) {
         m_deathTimer++;
-        m_velX = 0; // Prevent sliding while dead
+        m_velX = 0;
     } else {
-        Entity::update(); // Handle physics
+        Entity::update();
         if (m_hitTimer > 0) m_hitTimer--;
         if (m_landTimer > 0) m_landTimer--;
     }
@@ -49,7 +47,7 @@ bool Player::attack() {
         else m_sprite->setState("Attack 3");
     }
 
-    return true; // Attack successfully initiated
+    return true;
 }
 
 int Player::getHealth() const { return m_health; }
@@ -59,7 +57,7 @@ void Player::takeDamage(int amount) {
     if (m_isDead) return;
 
     m_health -= amount;
-    m_hitTimer = 20; // Trigger Hit animation
+    m_hitTimer = 20;
 
     if (m_health <= 0) {
         m_health = 0;
@@ -73,24 +71,23 @@ void Player::updateAnimation() {
 
     QString suffix = m_hasSword ? " S" : "";
 
-    // --- Animation Priority Tree ---
     if (m_isDead) {
-        // Frames 21-24 or 46-49 (Dead Hit), then Dead Ground[cite: 18]
+
         if (m_deathTimer < 30) m_sprite->setState("Dead Hit" + suffix);
         else m_sprite->setState("Dead Ground");
     }
     else if (m_hitTimer > 0) {
-        m_sprite->setState("Hit"); // Generic hit tag[cite: 18]
+        m_sprite->setState("Hit");
     }
     else if (m_attackTimer > 0) {
-        m_attackTimer--; // Tick down the attack timer[cite: 23]
-        // Note: attack() already set the specific Attack state
+        m_attackTimer--;
+
     }
     else if (m_landTimer > 0) {
-        m_sprite->setState("Ground" + suffix); // Landing frames 15-16 or 44-45[cite: 18]
+        m_sprite->setState("Ground" + suffix);
     }
     else {
-        // Normal movement animations[cite: 23]
+
         if (!m_onGround) {
             m_sprite->setState((m_velY < 0 ? "Jump" : "Fall") + suffix);
         } else if (std::abs(m_velX) > 0.1f) {
@@ -102,13 +99,12 @@ void Player::updateAnimation() {
 
     m_sprite->update(16);
 
-    // --- Dust Animation Logic (Preserved) ---
     bool landed = !m_wasOnGround && m_onGround;
     bool jumping = m_wasOnGround && !m_onGround && m_velY < 0;
     bool running = m_onGround && std::abs(m_velX) > 0.1f;
 
     if (landed) {
-        m_landTimer = 12; // Start the "Ground" player animation[cite: 18]
+        m_landTimer = 12;
         m_dustSprite->setState("Fall");
     } else if (jumping) {
         m_dustSprite->setState("Jump");
@@ -125,7 +121,7 @@ void Player::updateAnimation() {
 }
 
 void Player::draw(QPainter& painter, float camX, float camY) {
-    // 1. Draw Dust (Behind player)[cite: 23]
+
     if (m_dustSprite && !m_dustSprite->currentState().isEmpty()) {
         float centerX = m_x + (m_w / 2.0f);
         float centerY = m_y + (m_h / 2.0f);
@@ -137,7 +133,5 @@ void Player::draw(QPainter& painter, float camX, float camY) {
         m_dustSprite->draw(painter, destRect, !m_facingRight);
     }
 
-    // 2. Draw Player[cite: 23]
     drawSprite(painter, camX, camY, !m_facingRight);
 }
-

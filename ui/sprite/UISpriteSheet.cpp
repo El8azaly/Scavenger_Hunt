@@ -4,12 +4,11 @@
 #include <QJsonObject>
 #include <QDebug>
 
-// Initialize the pointer to null (this is safe before main)
 QPixmap* UISpriteSheet::s_texture = nullptr;
 QHash<QString, SpriteSegment> UISpriteSheet::s_segments;
 
 void UISpriteSheet::init(const QString& imagePath, const QString& jsonPath) {
-    // FIX: Create the QPixmap safely AFTER the game has started
+
     if (!s_texture) {
         s_texture = new QPixmap();
     }
@@ -32,7 +31,6 @@ void UISpriteSheet::init(const QString& imagePath, const QString& jsonPath) {
     }
 }
 
-// Dereference the pointer when returning
 const QPixmap& UISpriteSheet::texture() {
     return *s_texture;
 }

@@ -4,8 +4,7 @@ class ScoreManager;
 class InventorySystem;
 class QuestSystem;
 
-// In HUD.h
-class Player; // Forward declaration
+class Player;
 
 class HUD {
 public:

@@ -2,8 +2,7 @@
 
 Level0::Level0(QObject* parent) : Level(parent) {}
 
-void Level0::init()
-{
+void Level0::init() {
     m_backgroundColor = QColor(30, 30, 45);
     m_levelImage.load(":/assets/sprites/levels/level0.png");
     loadCollisionData(":/assets/sprites/levels/level0_collision_data.json", "level0");
@@ -19,8 +18,7 @@ void Level0::init()
     );
 }
 
-void Level0::update(int deltaTimeMs)
-{
+void Level0::update(int deltaTimeMs) {
     m_animationAccumulator += deltaTimeMs;
     if (m_animationAccumulator >= 250) {
         if (m_bottomSprite) m_bottomSprite->update(m_animationAccumulator);
@@ -29,8 +27,7 @@ void Level0::update(int deltaTimeMs)
     }
 }
 
-void Level0::drawBackLayer(QPainter& painter, const Camera& camera)
-{
+void Level0::drawBackLayer(QPainter& painter, const Camera& camera) {
     if (!m_bottomSprite) return;
 
     float scale = Constants::GAME_SCALE;
@@ -46,8 +43,7 @@ void Level0::drawBackLayer(QPainter& painter, const Camera& camera)
     m_bottomSprite->draw(painter, destRect, false);
 }
 
-void Level0::drawFrontLayer(QPainter& painter, const Camera& camera)
-{
+void Level0::drawFrontLayer(QPainter& painter, const Camera& camera) {
     if (!m_topSprite) return;
 
     float scale = Constants::GAME_SCALE;

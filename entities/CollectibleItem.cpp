@@ -1,11 +1,10 @@
 #include "entities/CollectibleItem.h"
 #include <QPainter>
 #include <cmath>
-#include <cstdlib> // For std::rand()
+#include <cstdlib>
 
 CollectibleItem::CollectibleItem(float x, float y, const Item& item)
-    : GameObject(x, y, item.spriteWidth, item.spriteHeight), m_item(item)
-{
+    : GameObject(x, y, item.spriteWidth, item.spriteHeight), m_item(item) {
     if (!m_item.spriteJsonPath.isEmpty()) {
         m_sprite = new AnimatedSprite(m_item.spriteJsonPath, m_item.spriteImagePath);
         m_sprite->setState("Idle");
@@ -23,12 +22,11 @@ void CollectibleItem::popOut(float startX, float startY) {
     m_popping = true;
     m_popStartY = startY;
 
-    // NEW: Set the pickup delay to 180 frames (3 seconds at 60 FPS)
     m_pickupDelay = 180;
 }
 
 void CollectibleItem::update() {
-    // NEW: Countdown the pickup delay timer
+
     if (m_pickupDelay > 0) {
         m_pickupDelay--;
     }

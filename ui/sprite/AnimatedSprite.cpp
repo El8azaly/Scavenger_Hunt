@@ -11,7 +11,7 @@ AnimatedSprite::AnimatedSprite(const QString& jsonPath, const QString& imagePath
 void AnimatedSprite::loadData(const QString& jsonPath) {
     QFile file(jsonPath);
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "FAILED TO OPEN JSON:" << jsonPath; // Check Application Output
+        qDebug() << "FAILED TO OPEN JSON:" << jsonPath;
         return;
     }
 

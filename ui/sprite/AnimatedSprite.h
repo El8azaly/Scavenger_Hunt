@@ -28,7 +28,6 @@ public:
     void setState(const QString& stateName);
     QString currentState() const { return m_currentState; }
 
-    // NEW: Control looping behaviour
     void setLoop(bool loop) { m_loop = loop; }
     bool isFinished() const { return m_finished; }
 
@@ -43,7 +42,6 @@ private:
     int m_currentFrameIndex = 0;
     int m_elapsedTime = 0;
 
-    // NEW: Variables to track loop state
     bool m_loop = true;
     bool m_finished = false;
 };

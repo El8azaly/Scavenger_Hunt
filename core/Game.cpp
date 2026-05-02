@@ -1,6 +1,5 @@
 #include "core/Game.h"
 
-// ── Entity headers ────────────────────────────────────────────
 #include "entities/GameObject.h"
 #include "entities/Entity.h"
 #include "entities/Player.h"
@@ -10,16 +9,13 @@
 #include "entities/HiddenArea.h"
 #include "entities/StaticPlatform.h"
 
-// ── System headers ────────────────────────────────────────────
 #include "systems/InventorySystem.h"
 #include "systems/QuestSystem.h"
 #include "systems/ScoreManager.h"
 
-// ── Data headers ──────────────────────────────────────────────
 #include "data/LevelLoader.h"
 #include "data/SaveManager.h"
 
-// ── UI / Visual headers ────────────────────────────────────────
 #include "ui/HUD.h"
 #include "core/Constants.h"
 #include <QPainter>
@@ -29,13 +25,11 @@
 #include "../ui/sprite/SkyBackground.h"
 #include "data/levels/Level0.h"
 #include "entities/FierceTooth.h"
-// ── Include specific levels ───────────────────────────────────
 
 class SkyBackground;
 
 Game::Game(QObject* parent)
-    : QObject(parent)
-{
+    : QObject(parent) {
     m_stateManager  = std::make_unique<GameStateManager>(this);
     m_input         = std::make_unique<InputHandler>(this);
     m_camera        = std::make_unique<Camera>();
@@ -62,13 +56,11 @@ Game::Game(QObject* parent)
     m_animationTimer->start(16);
 }
 
-Game::~Game()
-{
+Game::~Game() {
     clearLevel();
 }
 
-void Game::startNewGame(int levelNumber)
-{
+void Game::startNewGame(int levelNumber) {
     m_currentLevel = levelNumber;
     clearLevel();
     loadGame();
@@ -80,7 +72,6 @@ void Game::startNewGame(int levelNumber)
     m_inventory->clear();
     m_quest->setTargets(data.targetIds);
 
-    // Bounding occurs inside spawnEntities depending on LevelObj
     spawnEntities(data);
 
     m_stateManager->setState(GameState::PLAYING);
@@ -88,24 +79,21 @@ void Game::startNewGame(int levelNumber)
 
 void Game::restartLevel() { startNewGame(m_currentLevel); }
 
-void Game::pauseGame()
-{
+void Game::pauseGame() {
     if (m_stateManager->isPlaying()) {
         m_score->stopTimer();
         m_stateManager->setState(GameState::PAUSED);
     }
 }
 
-void Game::resumeGame()
-{
+void Game::resumeGame() {
     if (m_stateManager->isPaused()) {
         m_score->startTimer(m_score->timeLeft());
         m_stateManager->setState(GameState::PLAYING);
     }
 }
 
-void Game::exitToMenu()
-{
+void Game::exitToMenu() {
     m_score->stopTimer();
     clearLevel();
     m_stateManager->setState(GameState::MAIN_MENU);
@@ -114,8 +102,7 @@ void Game::exitToMenu()
 void Game::saveGame() { SaveManager::save(this, Constants::SAVES_DIR + "slot1.json"); }
 void Game::loadGame() { SaveManager::load(this, Constants::SAVES_DIR + "slot1.json"); }
 
-void Game::onPuzzleSolved(const QString& objectId)
-{
+void Game::onPuzzleSolved(const QString& objectId) {
     InteractiveObject* obj = findInteractableById(objectId);
     if (!obj) return;
     obj->unlock();
@@ -145,19 +132,18 @@ void Game::update(int deltaTimeMs) {
     removeInactiveEntities();
     bool showPopup = (m_nearestInteractable != nullptr && m_nearestInteractable->isInteractable());
     if (showPopup) {
-        m_popupOpacity += 0.25f; // Fast fade in (~60ms)
+        m_popupOpacity += 0.25f;
         if (m_popupOpacity > 1.0f) m_popupOpacity = 1.0f;
         m_lastPopupX = m_nearestInteractable->centreX();
         m_lastPopupY = m_nearestInteractable->y();
     } else {
-        m_popupOpacity -= 0.25f; // Fast fade out
+        m_popupOpacity -= 0.25f;
         if (m_popupOpacity < 0.0f) m_popupOpacity = 0.0f;
     }
     m_input->endFrame();
 }
 
-void Game::processInput()
-{
+void Game::processInput() {
     if (!m_player) return;
     float velX = 0;
     if (m_input->isHeld(GameAction::MOVE_LEFT))  velX = -Constants::PLAYER_SPEED;
@@ -168,7 +154,6 @@ void Game::processInput()
         m_player->jump(Constants::JUMP_VELOCITY);
 }
 
-// Add the new mouse handling method
 void Game::handleMousePress(int qtMouseButton) {
     if (m_stateManager->isPlaying() && m_player && qtMouseButton == Qt::LeftButton) {
         if (m_player->attack()) {
@@ -177,10 +162,7 @@ void Game::handleMousePress(int qtMouseButton) {
     }
 }
 
-
-
-void Game::updateEntities()
-{
+void Game::updateEntities() {
     bool playerJustHit = (m_player && m_player->getAttackTimer() == 23);
     QVector<GameObject*> newEntities;
 
@@ -214,8 +196,7 @@ void Game::updateEntities()
         m_entities.append(newObj);
     }
 }
-void Game::runCollision()
-{
+void Game::runCollision() {
     for (GameObject* obj : m_entities) {
         if (Entity* entity = dynamic_cast<Entity*>(obj)) {
             auto solidHits = m_collision->checkSolid(entity->boundingBox(), m_entities);
@@ -230,8 +211,7 @@ void Game::runCollision()
     resolveProximity(nearby);
 }
 
-void Game::resolveSolidCollision(Entity* subject, const CollisionResult& cr)
-{
+void Game::resolveSolidCollision(Entity* subject, const CollisionResult& cr) {
     if (!cr.object || !subject) return;
     QRectF solid = cr.object->boundingBox();
 
@@ -252,8 +232,7 @@ void Game::resolveSolidCollision(Entity* subject, const CollisionResult& cr)
         subject->stopHorizontal();
     }
 }
-void Game::resolveProximity(const QVector<GameObject*>& nearby)
-{
+void Game::resolveProximity(const QVector<GameObject*>& nearby) {
     m_nearestInteractable = nullptr;
     for (GameObject* obj : nearby) {
         if (!obj) continue;
@@ -280,14 +259,12 @@ void Game::resolveProximity(const QVector<GameObject*>& nearby)
         triggerInteraction(m_nearestInteractable);
 }
 
-void Game::advanceCamera()
-{
+void Game::advanceCamera() {
     if (m_player) m_camera->follow(m_player->centreX(), m_player->centreY());
     m_camera->updateShake();
 }
 
-void Game::removeInactiveEntities()
-{
+void Game::removeInactiveEntities() {
     auto it = std::remove_if(m_entities.begin(), m_entities.end(), [](GameObject* obj) {
         if (obj && !obj->isActive()) { delete obj; return true; }
         return false;
@@ -295,29 +272,24 @@ void Game::removeInactiveEntities()
     m_entities.erase(it, m_entities.end());
 }
 
-void Game::draw(QPainter& painter)
-{
+void Game::draw(QPainter& painter) {
     if (m_stateManager->isInMenu()) return;
     m_skyBg->draw(painter, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 
-    // ── 1. Draw Background Level Layers ───────────────────────
     if (m_currentLevelObj) {
         m_currentLevelObj->drawBackLayer(painter, *m_camera);
         m_currentLevelObj->drawLevelLayer(painter, *m_camera);
         m_currentLevelObj->drawMiddleLayer(painter, *m_camera);
     }
 
-    // ── 2. Draw Entities ───────────────────────────────────────
     QRectF view = m_camera->viewport();
     float  camX = m_camera->offsetX();
     float  camY = m_camera->offsetY();
 
-    // Pass 1: Draw all world entities EXCEPT the player
     for (GameObject* obj : m_entities) {
         if (!obj || !obj->isActive()) continue;
         if (!view.intersects(obj->boundingBox())) continue;
 
-        // Skip the player so we can draw them on top later
         if (obj == m_player) continue;
 
         bool isCollisionBox = obj->id().startsWith("level_collision_") ||
@@ -345,23 +317,18 @@ void Game::draw(QPainter& painter)
         }
     }
 
-    // Pass 2: Draw the Player strictly on top of all world objects
     if (m_player && m_player->isActive() && view.intersects(m_player->boundingBox())) {
         m_player->draw(painter, camX, camY);
     }
-
-    // ── 3. Draw UI and Foregrounds ─────────────────────────────
-    // Draw the new Interact Popup Widget
 
     if (m_currentLevelObj) {
         m_currentLevelObj->drawFrontLayer(painter, *m_camera);
     }
     if (m_popupOpacity > 0.0f) {
-        // Base dimensions from your JSON, scaled automatically by UI_SCALE
+
         int targetW = 70 * Constants::UI_SCALE;
         int targetH = 13 * Constants::UI_SCALE;
 
-        // Center it horizontally on the object, and apply your independent Y offset
         float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 70;
         float sy = m_camera->toScreenY(m_lastPopupY) + m_popupYOffset + 110;
 
@@ -375,8 +342,7 @@ void Game::draw(QPainter& painter)
 }
 void Game::handleKeyPress(int qtKey) { m_input->keyPressEvent(qtKey); }
 void Game::handleKeyRelease(int qtKey) { m_input->keyReleaseEvent(qtKey); }
-void Game::spawnEntities(const LevelData& data)
-{
+void Game::spawnEntities(const LevelData& data) {
     float scale = 1.0f;
     float yOffset = 0.0f;
 
@@ -467,7 +433,6 @@ void Game::spawnEntities(const LevelData& data)
                 c->setLocked(pType, pData);
             }
 
-            // Read items dynamically defined in LevelLoader
             QStringList contentIds = e.properties.value("contents").toStringList();
             for (const QString& id : contentIds) {
                 Item item = itemLib.value(id, Item::null());
@@ -493,30 +458,26 @@ void Game::spawnEntities(const LevelData& data)
         }
     }
 }
-void Game::clearLevel()
-{
+void Game::clearLevel() {
     for (GameObject* obj : m_entities) delete obj;
     m_entities.clear();
     m_player = nullptr;
     m_nearestInteractable = nullptr;
-    m_currentLevelObj.reset(); // Destroy the level instance
+    m_currentLevelObj.reset();
 }
 
-void Game::spawnItemInWorld(const Item& item, float x, float y)
-{
+void Game::spawnItemInWorld(const Item& item, float x, float y) {
     auto* collectible = new CollectibleItem(x, y, item);
     m_entities.append(collectible);
 }
 
-void Game::triggerInteraction(InteractiveObject* obj)
-{
+void Game::triggerInteraction(InteractiveObject* obj) {
     if (!obj) return;
     InteractionResult result = obj->interact();
     processInteractionResult(result, obj);
 }
 
-void Game::processInteractionResult(const InteractionResult& result, InteractiveObject* obj)
-{
+void Game::processInteractionResult(const InteractionResult& result, InteractiveObject* obj) {
     switch (result.type) {
     case InteractionResult::Type::ShowPuzzle:
         emit puzzleRequired(result.puzzle);
@@ -526,10 +487,8 @@ void Game::processInteractionResult(const InteractionResult& result, Interactive
         float spawnX = obj->x() + (obj->width() / 2.0f) - 18.0f;
         float spawnY = obj->y() + (obj->height() / 2.0f);
 
-        // 2. Copy the items list so it's safe to use inside the timer
         QVector<Item> itemsToSpawn = result.revealedItems;
 
-        // 3. Add a 500 millisecond delay using a lambda function
         QTimer::singleShot(100, this, [this, itemsToSpawn, spawnX, spawnY, obj, result]() {
             float currentX = spawnX;
 
@@ -558,15 +517,13 @@ void Game::processInteractionResult(const InteractionResult& result, Interactive
     }
 }
 
-GameObject* Game::findById(const QString& id)
-{
+GameObject* Game::findById(const QString& id) {
     for (GameObject* obj : m_entities)
         if (obj && obj->id() == id) return obj;
     return nullptr;
 }
 
-InteractiveObject* Game::findInteractableById(const QString& id)
-{
+InteractiveObject* Game::findInteractableById(const QString& id) {
     GameObject* obj = findById(id);
     if (obj && obj->isInteractable())
         return static_cast<InteractiveObject*>(obj);

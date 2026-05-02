@@ -1,4 +1,3 @@
-// entities/Enemy.cpp
 #include "entities/Enemy.h"
 #include "entities/Player.h"
 #include "entities/CollectibleItem.h"
@@ -22,18 +21,17 @@ Enemy::Enemy(float x, float y, float w, float h, int maxHealth, Player* player)
       m_attackDuration(60),
       m_alpha(1.0f),
       m_deathFadeDelay(80),
-      m_fadeSpeed(0.02f)
-{
-    // Load the dialogue box sprite
+      m_fadeSpeed(0.02f) {
+
     m_dialogSprite = new AnimatedSprite(":/assets/sprites/enemy/dialogue.json", ":/assets/sprites/enemy/dialogue.png");
     m_dialogSprite->setLoop(false);
 }
 
 Enemy::~Enemy() {
     if (m_beltItem && !m_itemDropped) {
-        delete m_beltItem; // Prevent memory leak if enemy is deleted before dying
+        delete m_beltItem;
     }
-    // Clean up dialog sprite
+
     delete m_dialogSprite;
 }
 
@@ -53,13 +51,12 @@ CollectibleItem* Enemy::takeDroppedItem() {
     return item;
 }
 
-// Helper to trigger dialogue
 void Enemy::showDialog(const QString& type) {
     m_dialogState = type;
-    m_dialogTimer = 120; // 2 Seconds at 60fps
+    m_dialogTimer = 120;
     if (m_dialogSprite) {
         m_dialogSprite->setState(type + " In");
-        m_dialogSprite->setLoop(false); // Play "In" and stop on last frame
+        m_dialogSprite->setLoop(false);
     }
 }
 
@@ -75,7 +72,6 @@ void Enemy::updateBehavior() {
             m_isAggroed = true;
             m_reactionTimer = 25;
 
-            // First time seeing player!
             if (!m_hasSeenPlayer) {
                 m_hasSeenPlayer = true;
                 showDialog("Exclamation");
@@ -141,33 +137,31 @@ void Enemy::update() {
     updateBehavior();
     updateAnimation();
 
-    // Handle Dialog Animation Sequence
     if (m_dialogSprite && m_dialogState != "None" && m_dialogState != "") {
         m_dialogSprite->update(16);
 
         if (m_dialogSprite->isFinished()) {
             if (m_dialogSprite->currentState().endsWith("In")) {
-                if (m_dialogState != "Dead") { // Dead never leaves
+                if (m_dialogState != "Dead") {
                     if (m_dialogTimer > 0) {
-                        m_dialogTimer--; // Wait 2 seconds on last frame
+                        m_dialogTimer--;
                     } else {
                         m_dialogSprite->setState(m_dialogState + " Out");
                         m_dialogSprite->setLoop(false);
                     }
                 }
             } else if (m_dialogSprite->currentState().endsWith("Out")) {
-                m_dialogState = "None"; // Clear dialog when completely out
+                m_dialogState = "None";
             }
         }
     }
 
     if (m_isDead) {
-        // Play Dead dialog at the exact moment of death
+
         if (m_deathTimer == 0) {
             showDialog("Dead");
         }
 
-        // On death, pop the item and stage it to be grabbed by the global game loop
         if (m_beltItem && !m_itemDropped) {
             m_itemDropped = true;
             m_beltItem->popOut(m_x + m_w/2 - m_beltItem->width()/2, m_y + m_h - 10 - m_beltItem->height());
@@ -195,7 +189,6 @@ void Enemy::update() {
     if (m_velX > 0) m_facingRight = true;
     else if (m_velX < 0) m_facingRight = false;
 
-    // Attach belt item 1 frame delayed, looking like it belongs on a belt
     if (m_beltItem && !m_itemDropped) {
         float beltX = m_prevX + (m_facingRight ? m_w/2 - 15 : m_w/2 + 5) - m_beltItem->width()/2;
         float beltY = m_prevY + m_h/2;
@@ -208,28 +201,26 @@ void Enemy::onHit() {
     m_reactionTimer = 0;
     m_isAggroed = true;
 
-    // First time attacked!
     if (!m_hasBeenAttacked) {
         m_hasBeenAttacked = true;
-        m_hasSeenPlayer = true; // Pre-empt Exclamation if hit from behind
+        m_hasSeenPlayer = true;
         showDialog("Interrogation");
     }
 }
 
-// Draw logic for the dialogue
 void Enemy::drawDialog(QPainter& painter, float camX, float camY) {
-    // 2. Draw dialog box overlapping the enemy (and match opacity fade)
+
     if (m_dialogSprite && m_dialogState != "None" && m_dialogState != "") {
-        float dx = m_x + (m_w / 2.0f) - 16.0f - camX; // Centered (assuming 32x32 dialog)
-        float dy = m_y - 24.0f - camY; // Placed above head
+        float dx = m_x + (m_w / 2.0f) - 16.0f - camX;
+        float dy = m_y - 24.0f - camY;
 
         if (m_isDead) {
-            // Drop down smoothly when dead to sit near their body
+
             dy += std::min(m_deathTimer * 0.8f, m_h - 5.0f);
         }
 
         painter.save();
-        painter.setOpacity(m_alpha); // Applies the death fade effect
+        painter.setOpacity(m_alpha);
         m_dialogSprite->draw(painter, QRectF(dx, dy, 32.0f, 32.0f), false);
         painter.restore();
     }

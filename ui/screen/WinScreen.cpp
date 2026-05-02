@@ -29,6 +29,6 @@ WinScreen::WinScreen(QWidget* p) : QWidget(p) {
     setStyleSheet("background:#1a1a2e;");
 }
 
-void WinScreen::setFinalScore(int /*score*/) {
-    // TODO M2: display score on this screen
+void WinScreen::setFinalScore(int ) {
+
 }

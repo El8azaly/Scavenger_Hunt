@@ -1,4 +1,3 @@
-// entities/Enemy.h
 #pragma once
 #include "entities/AttackableEntity.h"
 #include <QVector>
@@ -7,7 +6,7 @@
 class Player;
 class CollectibleItem;
 struct Item;
-class AnimatedSprite; // Forward declaration
+class AnimatedSprite;
 
 class Enemy : public AttackableEntity {
 public:
@@ -22,10 +21,8 @@ public:
 
     void update() override;
 
-    // Custom draw function to render the UI Box (avoids linker errors)
     void drawDialog(QPainter& painter, float camX, float camY);
 
-    // Helper function to trigger dialogue
     void showDialog(const QString& type);
 
 protected:
@@ -43,7 +40,6 @@ protected:
     float m_prevX = 0.0f;
     float m_prevY = 0.0f;
 
-    // Dialogue properties
     AnimatedSprite* m_dialogSprite = nullptr;
     QString m_dialogState = "None";
     int m_dialogTimer = 0;

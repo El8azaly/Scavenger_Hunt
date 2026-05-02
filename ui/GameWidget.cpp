@@ -10,7 +10,7 @@ GameWidget::GameWidget(Game* game, QWidget* parent)
 
 void GameWidget::paintEvent(QPaintEvent*) {
     QPainter painter(this);
-    painter.fillRect(rect(), QColor(30, 30, 40)); // sky background
+    painter.fillRect(rect(), QColor(30, 30, 40));
     m_game->draw(painter);
 }
 

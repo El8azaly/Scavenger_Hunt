@@ -1,6 +1,6 @@
 #pragma once
-#include "entities/Entity.h" 
-#include "engine/InputHandler.h" 
+#include "entities/Entity.h"
+#include "engine/InputHandler.h"
 #include "../ui/sprite/AnimatedSprite.h"
 
 class Player : public Entity {
@@ -31,7 +31,7 @@ private:
     int m_attackTimer = 0;
     int m_hitTimer = 0;
     int m_deathTimer = 0;
-    int m_landTimer = 0; // For the "Ground" animation tag;
+    int m_landTimer = 0;
 
     const float DUST_W = 52.0f;
     const float DUST_H = 20.0f;

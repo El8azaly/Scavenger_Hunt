@@ -9,7 +9,7 @@
 #include "engine/CollisionEngine.h"
 #include "entities/InteractionResult.h"
 #include "data/LevelLoader.h"
-#include "core/Level.h" // Added Level base class
+#include "core/Level.h"
 #include "entities/Entity.h"
 #include "../ui/sprite/SlicedSprite.h"
 
@@ -90,7 +90,7 @@ private:
     std::unique_ptr<ScoreManager>      m_score;
     std::unique_ptr<SlicedSprite> m_interactPopup;
     float m_popupOpacity = 0.0f;
-    float m_popupYOffset = -40.0f; // Control the Y position independently here
+    float m_popupYOffset = -40.0f;
     float m_lastPopupX = 0.0f;
     float m_lastPopupY = 0.0f;
     std::unique_ptr<Level> m_currentLevelObj;

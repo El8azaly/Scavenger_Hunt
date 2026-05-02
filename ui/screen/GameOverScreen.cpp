@@ -29,6 +29,6 @@ GameOverScreen::GameOverScreen(QWidget* p) : QWidget(p) {
     setStyleSheet("background:#1a1a2e;");
 }
 
-void GameOverScreen::setFinalScore(int /*score*/) {
-    // TODO M2: display score on this screen
+void GameOverScreen::setFinalScore(int ) {
+
 }

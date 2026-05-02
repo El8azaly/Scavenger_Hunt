@@ -1,4 +1,3 @@
-// entities/FierceTooth.h
 #pragma once
 #include "entities/Enemy.h"
 #include "../ui/sprite/AnimatedSprite.h"

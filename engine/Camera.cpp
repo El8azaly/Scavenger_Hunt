@@ -29,7 +29,6 @@ void Camera::follow(float targetCentreX, float targetCentreY) {
     float desiredX = (targetCentreX + m_currentLookAhead) - m_viewW / 2.0f;
     float desiredY = targetCentreY - m_viewH / 2.0f;
 
-
     if (m_worldW > 0)
         desiredX = std::clamp(desiredX, 0.0f, m_worldW - m_viewW);
     if (m_worldH > 0)
@@ -62,9 +61,9 @@ void Camera::addShake(int durationFrames, float intensity) {
 void Camera::updateShake() {
     if (m_shakeTimer > 0) {
         m_shakeTimer--;
-        // Generate a random float between -1.0 and +1.0, multiplied by the intensity
+
         m_shakeOffsetX = ((std::rand() % 100) / 50.0f - 1.0f) * m_shakeIntensity;
-        // m_shakeOffsetY = ((std::rand() % 100) / 50.0f - 1.0f) * m_shakeIntensity;
+
     } else {
         m_shakeOffsetX = 0.0f;
         m_shakeOffsetY = 0.0f;

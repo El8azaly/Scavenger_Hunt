@@ -14,11 +14,9 @@ public:
 
     void setWorldBounds(float worldWidth, float worldHeight);
 
-    // --- New Shake Methods ---
     void addShake(int durationFrames, float intensity);
     void updateShake();
 
-    // --- Updated Getters (incorporating shake offset) ---
     float offsetX() const { return m_x + m_shakeOffsetX; }
     float offsetY() const { return m_y + m_shakeOffsetY; }
 
@@ -37,7 +35,6 @@ private:
     float m_targetLookAhead = 0;
     float m_currentLookAhead = 0;
 
-    // --- New Shake Variables ---
     int m_shakeTimer = 0;
     float m_shakeIntensity = 0.0f;
     float m_shakeOffsetX = 0.0f;
