@@ -35,9 +35,8 @@ void Player::update() {
     else if (m_velX < 0) m_facingRight = false;
 }
 
-void Player::attack() {
-    // Prevent attacking if no sword, if dead, or if an attack is already playing[cite: 23]
-    if (!m_hasSword || m_isDead || m_attackTimer > 0) return;
+bool Player::attack() {
+    if (!m_hasSword || m_isDead || m_attackTimer > 0) return false;
 
     m_attackTimer = 25;
 
@@ -49,6 +48,8 @@ void Player::attack() {
         else if (r != 1) m_sprite->setState("Attack 2");
         else m_sprite->setState("Attack 3");
     }
+
+    return true; // Attack successfully initiated
 }
 
 int Player::getHealth() const { return m_health; }
@@ -139,3 +140,4 @@ void Player::draw(QPainter& painter, float camX, float camY) {
     // 2. Draw Player[cite: 23]
     drawSprite(painter, camX, camY, !m_facingRight);
 }
+

@@ -1,5 +1,6 @@
 #include "engine/Camera.h"
 #include <algorithm>
+#include <cstdlib>
 
 Camera::Camera(int viewWidth, int viewHeight) : m_viewW(viewWidth), m_viewH(viewHeight) {}
 
@@ -53,6 +54,24 @@ void Camera::snapTo(float targetCentreX, float targetCentreY) {
     m_y = desiredY;
 }
 
+void Camera::addShake(int durationFrames, float intensity) {
+    m_shakeTimer = durationFrames;
+    m_shakeIntensity = intensity;
+}
+
+void Camera::updateShake() {
+    if (m_shakeTimer > 0) {
+        m_shakeTimer--;
+        // Generate a random float between -1.0 and +1.0, multiplied by the intensity
+        m_shakeOffsetX = ((std::rand() % 100) / 50.0f - 1.0f) * m_shakeIntensity;
+        // m_shakeOffsetY = ((std::rand() % 100) / 50.0f - 1.0f) * m_shakeIntensity;
+    } else {
+        m_shakeOffsetX = 0.0f;
+        m_shakeOffsetY = 0.0f;
+    }
+}
+
 QRectF Camera::viewport() const {
-    return { m_x, m_y, static_cast<float>(m_viewW), static_cast<float>(m_viewH) };
+    return { m_x + m_shakeOffsetX, m_y + m_shakeOffsetY,
+             static_cast<float>(m_viewW), static_cast<float>(m_viewH) };
 }

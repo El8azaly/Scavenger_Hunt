@@ -164,7 +164,9 @@ void Game::processInput()
 // Add the new mouse handling method
 void Game::handleMousePress(int qtMouseButton) {
     if (m_stateManager->isPlaying() && m_player && qtMouseButton == Qt::LeftButton) {
-        m_player->attack();
+        if (m_player->attack()) {
+            m_camera->addShake(2, 8.0f);
+        }
     }
 }
 
@@ -265,6 +267,7 @@ void Game::resolveProximity(const QVector<GameObject*>& nearby)
 void Game::advanceCamera()
 {
     if (m_player) m_camera->follow(m_player->centreX(), m_player->centreY());
+    m_camera->updateShake();
 }
 
 void Game::removeInactiveEntities()

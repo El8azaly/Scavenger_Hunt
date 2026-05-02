@@ -11,7 +11,7 @@ public:
     void draw(QPainter& painter, float camX, float camY) override;
     void updateAnimation();
     void equipSword() { m_hasSword = true; }
-    void attack();
+    bool attack();
 
     int getHealth() const;
 
