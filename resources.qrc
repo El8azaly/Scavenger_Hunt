@@ -50,5 +50,10 @@
     <file>assets/sprites/objects/interactables.png</file>
     <file>assets/sprites/npc/captain_star.json</file>
     <file>assets/sprites/npc/captain_star.png</file>
+    <file>assets/sprites/ui/big_font.png</file>
+    <file>assets/sprites/sky/ship.json</file>
+    <file>assets/sprites/sky/ship.png</file>
+    <file>assets/sprites/sky/water_waves.json</file>
+    <file>assets/sprites/sky/water_waves.png</file>
   </qresource>
 </RCC>

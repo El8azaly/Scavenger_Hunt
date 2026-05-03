@@ -12,7 +12,7 @@ public:
     ~SkyBackground();
 
     void update(int deltaTimeMs);
-    void draw(QPainter& painter, int screenW, int screenH);
+    void draw(QPainter& painter, int screenW, int screenH, float cameraX = 0.0f);
 
     void setCloudSpeed(float pixelsPerSecond);
     void setCloudOffsetY(int offsetY);
@@ -23,9 +23,16 @@ private:
         AnimatedSprite* sprite = nullptr;
         QPoint pos;
     };
-    float m_cloudOffsetX = 0.0f;
+
+    static float s_cloudOffsetX;
+    static float s_shipX;
+    static bool s_shipInitialized;
+
     float m_cloudSpeed = 7.0f;
     int m_cloudOffsetY = -74;
 
     QVector<WaterInstance> m_waters;
+
+    AnimatedSprite* m_shipSprite = nullptr;
+    AnimatedSprite* m_waterWavesSprite = nullptr;
 };

@@ -13,6 +13,7 @@
 #include <QVector>
 #include <QDateTime>
 
+#include "core/Game.h"
 #include "systems/QuestSystem.h"
 
 void HUD::makeVignette(QPixmap &vignetteCache, bool &isVignetteCached) {
@@ -176,14 +177,29 @@ void HUD::drawHotbar(QPainter &p, InventorySystem *inv, QuestSystem* quest) {
         }
     }
 }
+void HUD::drawLevelHud(QPainter &p, ScoreManager *score, PixelFont &pixelFont, Game* game) {
+    int scale = Constants::UI_SCALE;
+    int hudX = 12;
+    int hudY = 12;
+    int hudW = 67 * scale;
+    int hudH = 25 * scale;
+    SlicedSprite levelHud("current_level_hud_1x1");
+    levelHud.draw(p, hudX, hudY, hudW, hudH);
+    int currentLevel =  game->getCurrentLevel();
+    int textX = hudX + (7 * scale);
+    int textY = hudY + (5 * scale);
 
-void HUD::draw(QPainter& p, ScoreManager* score, InventorySystem* inv, QuestSystem* quest, Player* player) {
+    QString levelText = QString("Level:%1").arg(currentLevel);
+    pixelFont.drawText(p, levelText, textX, textY, scale, PixelFont::Dark);
+}
+
+void HUD::draw(QPainter& p, ScoreManager* score, InventorySystem* inv, QuestSystem* quest, Player* player, Game* game) {
     static QPixmap vignetteCache;
+    static PixelFont pixelFont;
     static bool isVignetteCached = false;
     if (!isVignetteCached) makeVignette(vignetteCache, isVignetteCached);
     p.drawPixmap(0, 0, vignetteCache);
-    static PixelFont pixelFont;
-
+    drawLevelHud(p, score, pixelFont, game);
     if (player) drawPlayerHud(p, score, player, pixelFont);
     if (inv) drawHotbar(p, inv, quest);
 }

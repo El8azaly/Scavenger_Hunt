@@ -307,7 +307,7 @@ void Game::removeInactiveEntities() {
 
 void Game::draw(QPainter& painter) {
     if (m_stateManager->isInMenu()) return;
-    m_skyBg->draw(painter, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
+    m_skyBg->draw(painter, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, m_camera->offsetX());
 
     if (m_currentLevelObj) {
         m_currentLevelObj->drawBackLayer(painter, *m_camera);
@@ -389,7 +389,7 @@ void Game::draw(QPainter& painter) {
         painter.restore();
     }
 
-    HUD::draw(painter, m_score.get(), m_inventory.get(), m_quest.get(), m_player);
+    HUD::draw(painter, m_score.get(), m_inventory.get(), m_quest.get(), m_player, this);
 }
 void Game::handleKeyPress(int qtKey) { m_input->keyPressEvent(qtKey); }
 void Game::handleKeyRelease(int qtKey) { m_input->keyReleaseEvent(qtKey); }

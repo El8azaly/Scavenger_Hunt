@@ -2,8 +2,8 @@
 #include <QWidget>
 #include <QRect>
 #include <QVector>
-
-#include "../sprite/SkyBackground.h"
+#include "ui/sprite/PixelFont.h"
+#include "ui/sprite/SkyBackground.h"
 #include "ui/sprite/SlicedSprite.h"
 
 class SpriteButton;
@@ -35,7 +35,7 @@ private:
     SpriteButton* m_playBtn;
     SpriteButton* m_gridBtn;
     SpriteButton* m_exitBtn;
-
+    PixelFont m_font;
     SpriteButton* m_backBtn;
     QVector<SpriteButton*> m_levelBtns;
 };
