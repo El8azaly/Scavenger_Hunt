@@ -32,7 +32,6 @@ struct LevelData {
     QStringList              targetIds;
     QVector<CraftingRecipe>  recipes;
     QVector<Item>            itemLibrary;
-
 };
 
 class LevelLoader
@@ -40,6 +39,6 @@ class LevelLoader
 public:
 
     static LevelData load(int levelNumber);
-
+    static QVector<int> getRegisteredLevels();
     static LevelData loadFromFile(const QString& filePath);
 };

@@ -55,6 +55,7 @@ public:
     ScoreManager* score()         const;
     const Camera&    camera()        const { return *m_camera; }
     QString getWorldPosString(const QPoint& screenPos) const;
+    int getCurrentLevel() const { return m_currentLevel; }
 signals:
     void stateChanged(GameState oldState, GameState newState);
     void puzzleRequired(const PuzzleData& puzzle);
@@ -103,6 +104,7 @@ private:
 
     Player* m_player = nullptr;
     int m_currentLevel = 0;
+private:
     InteractiveObject* m_nearestInteractable = nullptr;
 
     SkyBackground* m_skyBg;

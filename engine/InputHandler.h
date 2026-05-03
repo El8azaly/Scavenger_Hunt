@@ -26,7 +26,7 @@ public:
     bool isHeld(GameAction action) const;
 
     bool wasJustPressed(GameAction action) const;
-
+    void reset();
     void endFrame();
 
 signals:

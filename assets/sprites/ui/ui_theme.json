@@ -69,6 +69,7 @@
   "search_icon_1x1": { "x": 192, "y": 504, "w": 8, "h": 8, "sliceW": 8, "sliceH": 8 },
   "enemy_icon_1x1": { "x": 200, "y": 504, "w": 8, "h": 8, "sliceW": 8, "sliceH": 8 },
   "time_icon_1x1": { "x": 216, "y": 504, "w": 8, "h": 8, "sliceW": 8, "sliceH": 8 },
+  "restart_icon_1x1": { "x": 224, "y": 504, "w": 8, "h": 8, "sliceW": 8, "sliceH": 8 },
 
   "scroll_button_1x1": { "x": 0, "y": 303, "w": 41, "h": 17, "sliceW": 41, "sliceH": 17 },
   "scroll_button_hovered_1x1": { "x": 42, "y": 303, "w": 41, "h": 17, "sliceW": 41, "sliceH": 17 },
@@ -90,5 +91,10 @@
   "interact_popup_1x1": { "x": 145, "y": 193, "w": 70, "h": 13, "sliceW": 70, "sliceH": 13 },
   "captain_star_dialog_1x1": { "x": 240, "y": 144, "w": 160, "h": 64, "sliceW": 160, "sliceH": 64 },
   "captain_star_error_dialog_1x1": { "x": 416, "y": 144, "w": 160, "h": 64, "sliceW": 160, "sliceH": 64 },
-  "captain_star_sucess_dialog_1x1": { "x": 576, "y": 144, "w": 160, "h": 64, "sliceW": 160, "sliceH": 64 }
+  "captain_star_sucess_dialog_1x1": { "x": 576, "y": 144, "w": 160, "h": 64, "sliceW": 160, "sliceH": 64 },
+  "game_over_screen_1x1": { "x": 528, "y": 16, "w": 102, "h": 91, "sliceW": 102, "sliceH": 91 },
+  "paused_label_1x1": { "x": 145, "y": 254, "w": 78, "h": 17, "sliceW": 78, "sliceH": 17 },
+  "victory_label_1x1": { "x": 145, "y": 236, "w": 78, "h": 17, "sliceW": 78, "sliceH": 17 },
+  "game_over_label_1x1": { "x": 145, "y": 211, "w": 78, "h": 22, "sliceW": 78, "sliceH": 22 },
+  "level_screen_1x1": { "x": 656, "y": 16, "w": 128, "h": 86, "sliceW": 128, "sliceH": 86 }
 }

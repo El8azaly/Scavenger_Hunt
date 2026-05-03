@@ -6,9 +6,7 @@
 
 class GameWidget;
 class MainMenuScreen;
-class PauseScreen;
-class GameOverScreen;
-class WinScreen;
+class GameOverlayScreen;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -18,14 +16,16 @@ private slots:
     void onStateChanged(GameState oldState, GameState newState);
     void onGameTick(int deltaTimeMs);
 private:
-    Game*            m_game;
-    GameLoop*        m_gameLoop;
-    QStackedWidget*  m_stack;
-    GameWidget*      m_gameWidget;
-    MainMenuScreen*  m_menuScreen;
-    PauseScreen*     m_pauseScreen;
-    GameOverScreen*  m_gameOverScreen;
-    WinScreen*       m_winScreen;
+    Game* m_game;
+    GameLoop* m_gameLoop;
+    QStackedWidget* m_stack;
+    GameWidget* m_gameWidget;
+    MainMenuScreen* m_menuScreen;
+
+    GameOverlayScreen* m_pauseScreen;
+    GameOverlayScreen* m_gameOverScreen;
+    GameOverlayScreen* m_winScreen;
+
     void buildUI();
     void connectSignals();
 };

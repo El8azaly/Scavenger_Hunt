@@ -89,7 +89,10 @@ bool InputHandler::wasJustPressed(GameAction action) const
     default: return false;
     }
 }
-
+void InputHandler::reset() {
+    m_heldKeys.clear();
+    m_justPressedKeys.clear();
+}
 void InputHandler::endFrame() {
 
     m_justPressedKeys.clear();

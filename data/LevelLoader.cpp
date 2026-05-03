@@ -29,6 +29,10 @@ static LevelData buildLevel0() {
     return d;
 }
 
+QVector<int> LevelLoader::getRegisteredLevels() {
+    return {0};
+}
+
 LevelData LevelLoader::load(int levelNumber) {
     if (levelNumber == 0) return buildLevel0();
     return {};

@@ -68,7 +68,7 @@ void Game::startNewGame(int levelNumber) {
     clearLevel();
     m_allTargetsFound = false;
     m_showStarError = false;
-
+    m_input->reset();
     m_score->reset();
     m_inventory->clear();
 
@@ -181,6 +181,9 @@ void Game::processInput() {
 
     if (m_input->isHeld(GameAction::JUMP) && m_player->isOnGround())
         m_player->jump(Constants::JUMP_VELOCITY);
+    if (m_input->wasJustPressed(GameAction::PAUSE)) {
+        pauseGame();
+    }
 }
 
 void Game::handleMousePress(int qtMouseButton) {
