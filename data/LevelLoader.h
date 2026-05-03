@@ -3,7 +3,8 @@
 #include <QVector>
 #include <QVariantMap>
 #include "data/ItemData.h"
-
+class Level;
+class Game;
 struct EntitySpawnData {
     QString     type;
 
@@ -33,12 +34,17 @@ struct LevelData {
     QVector<CraftingRecipe>  recipes;
     QVector<Item>            itemLibrary;
 };
-
+struct LevelRegistryEntry {
+    std::function<LevelData()> dataBuilder;
+    std::function<std::unique_ptr<Level>(Game*)> instanceCreator;
+};
 class LevelLoader
 {
 public:
 
     static LevelData load(int levelNumber);
     static QVector<int> getRegisteredLevels();
-    static LevelData loadFromFile(const QString& filePath);
+    static std::unique_ptr<Level> createLevelInstance(int levelNumber, Game* game);
+private:
+    static const std::map<int, LevelRegistryEntry>& getRegistry();
 };

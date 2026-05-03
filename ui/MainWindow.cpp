@@ -53,7 +53,11 @@ void MainWindow::connectSignals() {
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
 
     connect(m_gameOverScreen, &GameOverlayScreen::restartRequested,
-            this, [this](){ m_game->restartLevel(); m_gameLoop->start(); });
+            this, [this](){
+                m_game->restartLevel();
+                m_game->resumeGame();
+                m_gameLoop->start();
+            });
     connect(m_gameOverScreen, &GameOverlayScreen::exitRequested,
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
 
@@ -61,6 +65,13 @@ void MainWindow::connectSignals() {
             this, [this](){ m_game->startNewGame(1); m_gameLoop->start(); });
     connect(m_winScreen, &GameOverlayScreen::exitRequested,
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
+
+    connect(m_winScreen, &GameOverlayScreen::restartRequested,
+            this, [this](){
+                m_game->restartLevel();
+                m_game->resumeGame();
+                m_gameLoop->start();
+            });
 
 }
 

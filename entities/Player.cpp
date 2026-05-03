@@ -19,20 +19,6 @@ Player::~Player() {
     delete m_dustSprite;
 }
 
-void Player::update() {
-    if (m_isDead) {
-        m_deathTimer++;
-        m_velX = 0;
-    } else {
-        Entity::update();
-        if (m_hitTimer > 0) m_hitTimer--;
-        if (m_landTimer > 0) m_landTimer--;
-    }
-
-    if (m_velX > 0) m_facingRight = true;
-    else if (m_velX < 0) m_facingRight = false;
-}
-
 bool Player::attack() {
     if (!m_hasSword || m_isDead || m_attackTimer > 0) return false;
 
@@ -118,6 +104,37 @@ void Player::updateAnimation() {
 
     m_dustSprite->update(16);
     m_wasOnGround = m_onGround;
+}
+void Player::setInTrap(bool inTrap) {
+    if (inTrap && !m_inTrap) {
+        takeDamage(10);
+        m_trapDamageTimer = 0;
+    }
+
+    m_inTrap = inTrap;
+}
+
+void Player::update() {
+    if (m_isDead) {
+        m_deathTimer++;
+        m_velX = 0;
+    } else {
+        Entity::update();
+        if (m_hitTimer > 0) m_hitTimer--;
+        if (m_landTimer > 0) m_landTimer--;
+        if (m_inTrap) {
+            m_trapDamageTimer++;
+            if (m_trapDamageTimer >= 60) {
+                takeDamage(10);
+                m_trapDamageTimer = 0;
+            }
+        } else {
+            m_trapDamageTimer = 0;
+        }
+    }
+
+    if (m_velX > 0) m_facingRight = true;
+    else if (m_velX < 0) m_facingRight = false;
 }
 
 void Player::draw(QPainter& painter, float camX, float camY) {

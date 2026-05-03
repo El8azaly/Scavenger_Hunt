@@ -22,6 +22,7 @@ protected:
 private:
     void showLevelScreen();
     void showMainMenu();
+    void onPlayButtonClicked();
 
     SlicedSprite m_background;
     SlicedSprite m_levelScreenBg;
@@ -38,4 +39,9 @@ private:
     PixelFont m_font;
     SpriteButton* m_backBtn;
     QVector<SpriteButton*> m_levelBtns;
+    SlicedSprite m_lockedWarning;
+    bool m_showLockedWarning = false;
+    int m_warningTimerMs = 0;
+    int m_warningTargetX = 0;
+    int m_warningTargetY = 0;
 };

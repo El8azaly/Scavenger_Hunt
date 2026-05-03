@@ -28,13 +28,16 @@ public:
     float worldWidth() const;
     float worldHeight() const;
     float verticalOffset() const;
-
+    QVector<QRectF> getTrapRects() const { return m_trapRects; }
     QVector<QRectF> getCollisionRects() const { return m_collisionRects; }
 
 protected:
+
+    void loadTrapData(const QString& filepath, const QString& jsonKey);
     void loadCollisionData(const QString& filepath, const QString& jsonKey);
 
     QPixmap m_levelImage;
+    QVector<QRectF> m_trapRects;
     QVector<QRectF> m_collisionRects;
     QColor m_backgroundColor = Qt::black;
     int m_animationAccumulator = 0;

@@ -3,8 +3,8 @@
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    app.setApplicationName("Scavenger Hunt");
-    app.setOrganizationName("AUC-CSCE1102");
+    QCoreApplication::setOrganizationName("scavengerhunt");
+    QCoreApplication::setApplicationName("data");
 
     MainWindow window;
     window.setWindowTitle("Scavenger Hunt");

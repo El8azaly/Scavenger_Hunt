@@ -21,6 +21,9 @@ public:
     bool isAttacking() const { return m_attackTimer > 0; }
     int  getAttackTimer() const { return m_attackTimer; }
     bool isFacingRight() const { return m_facingRight; }
+    void setInTrap(bool inTrap);
+    bool isInTrap() const { return m_inTrap; }
+
 private:
     InputHandler* m_input;
     AnimatedSprite* m_dustSprite;
@@ -37,4 +40,6 @@ private:
     const float DUST_H = 20.0f;
     int m_health = 100;
     int m_maxHealth = 100;
+    bool m_inTrap = false;
+    int m_trapDamageTimer = 0;
 };

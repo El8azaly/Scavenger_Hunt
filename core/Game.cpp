@@ -24,6 +24,8 @@
 #include <QMap>
 #include "../ui/sprite/SkyBackground.h"
 #include "data/levels/Level0.h"
+#include "data/levels/Level1.h"
+#include <QSettings>
 #include "entities/CaptainStar.h"
 #include "entities/FierceTooth.h"
 
@@ -71,7 +73,7 @@ void Game::startNewGame(int levelNumber) {
     m_input->reset();
     m_score->reset();
     m_inventory->clear();
-
+    m_isDying = false;
     loadGame();
 
     LevelData data = LevelLoader::load(m_currentLevel);
@@ -164,7 +166,8 @@ void Game::update(int deltaTimeMs) {
     }
     m_input->endFrame();
     if (m_player && m_player->getHealth() <= 0) {
-        if (m_stateManager->current() != GameState::GAME_OVER) {
+        if (m_stateManager->current() != GameState::GAME_OVER && !m_isDying) {
+            m_isDying = true;
             QTimer::singleShot(1500, this, [this]() {
                 m_stateManager->setState(GameState::GAME_OVER);
             });
@@ -174,9 +177,10 @@ void Game::update(int deltaTimeMs) {
 
 void Game::processInput() {
     if (!m_player) return;
+    float currentSpeed = m_player->isInTrap() ? (Constants::PLAYER_SPEED * 0.5f) : Constants::PLAYER_SPEED;
     float velX = 0;
-    if (m_input->isHeld(GameAction::MOVE_LEFT))  velX = -Constants::PLAYER_SPEED;
-    if (m_input->isHeld(GameAction::MOVE_RIGHT)) velX =  Constants::PLAYER_SPEED;
+    if (m_input->isHeld(GameAction::MOVE_LEFT))  velX = -currentSpeed;
+    if (m_input->isHeld(GameAction::MOVE_RIGHT)) velX =  currentSpeed;
     m_player->setVelocityX(velX);
 
     if (m_input->isHeld(GameAction::JUMP) && m_player->isOnGround())
@@ -240,6 +244,21 @@ void Game::runCollision() {
     }
 
     if (!m_player) return;
+
+    bool currentlyInTrap = false;
+    if (m_currentLevelObj) {
+        QRectF pBox = m_player->boundingBox();
+        for (const QRectF& trapRect : m_currentLevelObj->getTrapRects()) {
+            if (pBox.intersects(trapRect)) {
+                currentlyInTrap = true;
+                break;
+            }
+        }
+    }
+    m_player->setInTrap(currentlyInTrap);
+    if (m_currentLevelObj && m_player->y() > m_currentLevelObj->worldHeight()) {
+        m_player->takeDamage(999);
+    }
     auto nearby = m_collision->checkProximity(m_player->boundingBox(), m_entities, Constants::INTERACT_RANGE);
     resolveProximity(nearby);
 }
@@ -397,9 +416,7 @@ void Game::spawnEntities(const LevelData& data) {
     float scale = 1.0f;
     float yOffset = 0.0f;
 
-    if (m_currentLevel == 0) {
-        m_currentLevelObj = std::make_unique<Level0>(this);
-    }
+    m_currentLevelObj = LevelLoader::createLevelInstance(m_currentLevel, this);
 
     if (m_currentLevelObj) {
         m_currentLevelObj->init();
@@ -535,6 +552,12 @@ void Game::triggerInteraction(InteractiveObject* obj) {
             m_showStarError = false;
 
             QTimer::singleShot(1000, this, [this]() {
+                QSettings settings;
+                int maxUnlocked = settings.value("max_unlocked_level", 0).toInt();
+                int nextLevel = m_currentLevel + 1;
+                if (nextLevel > maxUnlocked) {
+                    settings.setValue("max_unlocked_level", nextLevel);
+                }
                 m_score->stopTimer();
                 m_score->addScore(m_score->timeLeft() * Constants::SCORE_TIME_BONUS);
                 m_stateManager->setState(GameState::WIN);

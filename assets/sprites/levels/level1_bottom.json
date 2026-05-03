@@ -1,0 +1,102 @@
+{ "frames": [
+   {
+    "filename": "level1 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 1.aseprite",
+    "frame": { "x": 1184, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 2.aseprite",
+    "frame": { "x": 2368, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 3.aseprite",
+    "frame": { "x": 3552, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 4.aseprite",
+    "frame": { "x": 4736, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 5.aseprite",
+    "frame": { "x": 5920, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 6.aseprite",
+    "frame": { "x": 7104, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 7.aseprite",
+    "frame": { "x": 8288, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level1 8.aseprite",
+    "frame": { "x": 9472, "y": 0, "w": 1184, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1184, "h": 416 },
+    "sourceSize": { "w": 1184, "h": 416 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "level1_bottom.png",
+  "format": "RGBA8888",
+  "size": { "w": 10656, "h": 416 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Background" },
+   { "name": "Palm Trees Back", "group": "Background", "opacity": 255, "blendMode": "normal" },
+   { "name": "Middleground" },
+   { "name": "Foreground" }
+  ],
+  "slices": [
+  ]
+ }
+}

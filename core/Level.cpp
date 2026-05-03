@@ -89,3 +89,36 @@ void Level::loadCollisionData(const QString& filepath, const QString& jsonKey) {
         m_collisionRects.append(QRectF(x, y, w, h));
     }
 }
+
+void Level::loadTrapData(const QString& filepath, const QString& jsonKey) {
+    m_trapRects.clear();
+
+    QFile file(filepath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "[Level] Failed to open trap JSON:" << filepath;
+        return;
+    }
+
+    QByteArray data = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (!doc.isObject()) return;
+
+    QJsonObject root = doc.object();
+    if (!root.contains(jsonKey)) return;
+
+    float scale = Constants::GAME_SCALE;
+    float yOffset = verticalOffset();
+
+    QJsonArray rectArray = root[jsonKey].toArray();
+    for (const QJsonValue& val : rectArray) {
+        QJsonObject obj = val.toObject();
+
+        float x = obj["x"].toDouble() * scale;
+        float y = obj["y"].toDouble() * scale + yOffset;
+        float w = obj["w"].toDouble() * scale;
+        float h = obj["h"].toDouble() * scale;
+        m_trapRects.append(QRectF(x, y, w, h));
+    }
+}

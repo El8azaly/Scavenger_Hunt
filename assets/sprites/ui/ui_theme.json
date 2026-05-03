@@ -98,5 +98,6 @@
   "game_over_label_1x1": { "x": 145, "y": 211, "w": 78, "h": 22, "sliceW": 78, "sliceH": 22 },
   "level_screen_1x1": { "x": 656, "y": 16, "w": 128, "h": 86, "sliceW": 128, "sliceH": 86 },
 
-  "current_level_hud_1x1": { "x": 0, "y": 278, "w": 67, "h": 25, "sliceW": 67, "sliceH": 25 }
+  "current_level_hud_1x1": { "x": 0, "y": 278, "w": 67, "h": 25, "sliceW": 67, "sliceH": 25 },
+  "unlock_level_warning_1x1": { "x": 240, "y": 223, "w": 160, "h": 33, "sliceW": 160, "sliceH": 33 }
 }

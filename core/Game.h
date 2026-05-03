@@ -97,6 +97,7 @@ private:
     bool m_lastPopupWasCaptainStar = false;
     bool m_allTargetsFound = false;
     bool m_showStarError = false;
+    bool m_isDying = false;
     std::unique_ptr<SlicedSprite> m_captainStarErrorPopup;
     std::unique_ptr<Level> m_currentLevelObj;
 

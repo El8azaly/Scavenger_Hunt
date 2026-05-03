@@ -5,18 +5,50 @@
 #include <QPainter>
 #include <QTimer>
 #include <algorithm>
+#include <QSettings>
+#include <functional>
 
 #include "data/LevelLoader.h"
 #include "ui/HUD.h"
 
 constexpr auto ui = Constants::UI_SCALE;
 
+class TooltipOverlay : public QWidget {
+public:
+    std::function<void(QPainter&)> paintCallback;
+
+    TooltipOverlay(QWidget* parent) : QWidget(parent) {
+        setAttribute(Qt::WA_TransparentForMouseEvents);
+        setAttribute(Qt::WA_TranslucentBackground);
+    }
+
+protected:
+    void paintEvent(QPaintEvent* event) override {
+        if (paintCallback) {
+            QPainter painter(this);
+            paintCallback(painter);
+        }
+    }
+};
+
 MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
-    m_background("window_bg"), m_levelScreenBg("level_screen_1x1") {
+    m_background("window_bg"),
+    m_levelScreenBg("level_screen_1x1"),
+    m_lockedWarning("unlock_level_warning_1x1") {
 
     m_skyBg = new SkyBackground();
     m_animationTimer = new QTimer(this);
-    connect(m_animationTimer, &QTimer::timeout, this, [this]{ m_skyBg->update(16); this->update(); });
+
+    connect(m_animationTimer, &QTimer::timeout, this, [this]{
+        m_skyBg->update(16);
+        if (m_showLockedWarning) {
+            m_warningTimerMs += 16;
+            if (m_warningTimerMs > 1200) {
+                m_showLockedWarning = false;
+            }
+        }
+        this->update();
+    });
     m_animationTimer->start(16);
 
     m_titlePanel = SpriteButton::createPaper("paper_blank", "main menu", this);
@@ -72,11 +104,20 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
     int startX = bgStartX + 12 * ui;
     int startY = bgStartY + 16 * ui;
 
+    QSettings settings;
+    int maxUnlocked = settings.value("max_unlocked_level", 0).toInt();
+
     int numButtons = std::min(6, static_cast<int>(registeredLevels.size()));
     for (int i = 0; i < numButtons; ++i) {
         int lvlNumber = registeredLevels[i];
         auto* btn = SpriteButton::createYellow("", this);
-        btn->setText(QString::number(lvlNumber), 1, PixelFont::Dark);
+
+        if (lvlNumber <= maxUnlocked || lvlNumber == 0) {
+            btn->setText(QString::number(lvlNumber), 1, PixelFont::Dark);
+        } else {
+            btn->setText("!", 1, PixelFont::Dark);
+        }
+
         btn->setFixedSize(16 * ui, 16 * ui);
         btn->setTextOffset(0, -1);
         int col = i % 2;
@@ -84,15 +125,60 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
         btn->move(startX + (col * gridOffsetX), startY + (row * gridOffsetY));
         btn->hide();
         m_levelBtns.append(btn);
-        connect(btn, &SpriteButton::clicked, this, [this, lvlNumber]() {
-            emit levelSelected(lvlNumber);
+
+        connect(btn, &SpriteButton::clicked, this, [this, btn, lvlNumber]() {
+            QSettings settings;
+            int currentMaxUnlocked = settings.value("max_unlocked_level", 0).toInt();
+
+            if (lvlNumber <= currentMaxUnlocked || lvlNumber == 0) {
+                emit levelSelected(lvlNumber);
+            } else {
+
+                m_showLockedWarning = true;
+                m_warningTimerMs = 0;
+
+                int warnW = 76 * Constants::UI_SCALE;
+                int warnH = 22 * Constants::UI_SCALE;
+
+                m_warningTargetX = btn->x() + (btn->width() - warnW) / 2;
+                m_warningTargetY = btn->y() - warnH - (4 * Constants::UI_SCALE);
+            }
         });
     }
 
-    connect(m_playBtn, &SpriteButton::clicked, this, &MainMenuScreen::startRequested);
+    connect(m_playBtn, &SpriteButton::clicked, this, &MainMenuScreen::onPlayButtonClicked);
     connect(m_gridBtn, &SpriteButton::clicked, this, &MainMenuScreen::showLevelScreen);
     connect(m_exitBtn, &SpriteButton::clicked, this, []{ QApplication::quit(); });
     connect(m_backBtn, &SpriteButton::clicked, this, &MainMenuScreen::showMainMenu);
+
+    auto tooltipOverlay = new TooltipOverlay(this);
+    tooltipOverlay->resize(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
+    tooltipOverlay->paintCallback = [this](QPainter& painter) {
+        if (!m_showingLevels || !m_showLockedWarning) return;
+
+        const float FADE_IN = 150.0f;
+        const float HOLD = 800.0f;
+        const float FADE_OUT = 250.0f;
+
+        float opacity = 0.0f;
+
+        if (m_warningTimerMs < FADE_IN) {
+            opacity = m_warningTimerMs / FADE_IN;
+        } else if (m_warningTimerMs < FADE_IN + HOLD) {
+            opacity = 1.0f;
+        } else if (m_warningTimerMs < FADE_IN + HOLD + FADE_OUT) {
+            opacity = 1.0f - ((m_warningTimerMs - FADE_IN - HOLD) / FADE_OUT);
+        }
+
+        painter.save();
+        painter.setOpacity(opacity);
+        m_lockedWarning.draw(painter, m_warningTargetX + 30*ui, m_warningTargetY-8*ui, 160 * ui, 33*ui);
+        painter.restore();
+    };
+
+    connect(m_animationTimer, &QTimer::timeout, tooltipOverlay, [tooltipOverlay] {
+        tooltipOverlay->update();
+    });
 }
 
 void MainMenuScreen::paintEvent(QPaintEvent* event) {
@@ -109,6 +195,7 @@ void MainMenuScreen::paintEvent(QPaintEvent* event) {
         int bgX = (width() - bgWidth) / 2;
         int bgY = (height() - bgHeight) / 2;
         m_levelScreenBg.draw(painter, bgX, bgY, bgWidth, bgHeight);
+
     } else {
         int bgSize = 96 * ui;
         int bgX = (width() - bgSize) / 2;
@@ -130,6 +217,18 @@ void MainMenuScreen::paintEvent(QPaintEvent* event) {
     QWidget::paintEvent(event);
 }
 
+void MainMenuScreen::onPlayButtonClicked() {
+    QSettings settings;
+    int targetLevel = settings.value("max_unlocked_level", 0).toInt();
+
+    QVector<int> registeredLevels = LevelLoader::getRegisteredLevels();
+    if (registeredLevels.contains(targetLevel)) {
+        emit levelSelected(targetLevel);
+    } else {
+        showLevelScreen();
+    }
+}
+
 void MainMenuScreen::showLevelScreen() {
     m_showingLevels = true;
 
@@ -139,7 +238,19 @@ void MainMenuScreen::showLevelScreen() {
     m_exitBtn->hide();
 
     m_backBtn->show();
-    for(auto* btn : m_levelBtns) {
+
+    QSettings settings;
+    int maxUnlocked = settings.value("max_unlocked_level", 0).toInt();
+    QVector<int> registeredLevels = LevelLoader::getRegisteredLevels();
+
+    for(int i = 0; i < m_levelBtns.size(); ++i) {
+        SpriteButton* btn = m_levelBtns[i];
+        int lvlNumber = registeredLevels[i];
+        if (lvlNumber <= maxUnlocked || lvlNumber == 0) {
+            btn->setText(QString::number(lvlNumber), 1, PixelFont::Dark);
+        } else {
+            btn->setText("!", 1, PixelFont::Dark);
+        }
         btn->show();
     }
 
