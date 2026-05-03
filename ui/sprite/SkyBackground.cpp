@@ -46,7 +46,6 @@ void SkyBackground::update(int deltaTimeMs) {
     }
     if (m_waterWavesSprite) m_waterWavesSprite->update(deltaTimeMs);
 }
-
 void SkyBackground::draw(QPainter& p, int screenW, int screenH, float cameraX) {
     int scale = Constants::UI_SCALE;
     int skyH = 128 * scale;
@@ -69,9 +68,14 @@ void SkyBackground::draw(QPainter& p, int screenW, int screenH, float cameraX) {
 
     int wWidth = 170 * scale;
     int wHeight = 16 * scale;
+    float spacing = 250 * scale;
+    float tileStep = wWidth + spacing;
     for (const auto& water : m_waters) {
-
-        water.sprite->draw(p, QRectF(water.pos.x() - cameraX, water.pos.y(), wWidth, wHeight), false);
+        float baseX = water.pos.x();
+        float offsetX = std::fmod(cameraX * 1.0f, tileStep);
+        for (float wx = baseX - offsetX - tileStep; wx < screenW; wx += tileStep) {
+            water.sprite->draw(p, QRectF(wx, water.pos.y(), wWidth, wHeight), false);
+        }
     }
 
     int shipW = 78 * scale;
@@ -81,23 +85,25 @@ void SkyBackground::draw(QPainter& p, int screenW, int screenH, float cameraX) {
     int waveY = screenH - waveH + 15 * scale;
 
     if (!s_shipInitialized) {
-
-        s_shipX = 40 * scale;
+        s_shipX = cameraX + (40 * scale);
         s_shipInitialized = true;
     }
+    float shipScreenX = s_shipX - cameraX;
 
-    float shipLoopWidth = screenW + shipW;
-    float shipDrawX = std::fmod(s_shipX - cameraX, shipLoopWidth);
-    if (shipDrawX < -shipW) shipDrawX += shipLoopWidth;
-
+    if (shipScreenX > screenW) {
+        s_shipX = cameraX - shipW;
+    } else if (shipScreenX < -shipW) {
+        s_shipX = cameraX + screenW;
+    }
+    float finalDrawX = s_shipX - cameraX;
     int shipY = waveY - shipH + (40 * scale);
     if (m_shipSprite) {
-        m_shipSprite->draw(p, QRectF(shipDrawX, shipY, shipW, shipH), false);
+        m_shipSprite->draw(p, QRectF(finalDrawX, shipY, shipW, shipH), false);
     }
 
     if (m_waterWavesSprite) {
-        float waveParallaxX = std::fmod(cameraX * 1.05f, (float)waveW);
-        for (float wx = -waveParallaxX; wx < screenW; wx += waveW) {
+        float waveOffset = std::fmod(cameraX * 1.07f, (float)waveW);
+        for (float wx = -waveOffset; wx < screenW; wx += waveW) {
             m_waterWavesSprite->draw(p, QRectF(wx, waveY, waveW, waveH), false);
         }
     }
