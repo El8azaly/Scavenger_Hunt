@@ -22,7 +22,7 @@ void CollectibleItem::popOut(float startX, float startY) {
     m_popping = true;
     m_popStartY = startY;
 
-    m_pickupDelay = 180;
+    m_pickupDelay = 40;
 }
 
 void CollectibleItem::update() {

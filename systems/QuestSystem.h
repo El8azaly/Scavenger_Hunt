@@ -22,6 +22,8 @@ signals:
     void allTargetsFound();
 private slots:
     void onItemAdded(const Item& item);
+
 private:
     QSet<QString> m_targetIds, m_foundIds;
+    InventorySystem* m_inventory;
 };

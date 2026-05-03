@@ -1,109 +1,34 @@
 #include "data/LevelLoader.h"
 #include "core/Constants.h"
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
+#include "data/ItemRegistry.h"
+#include "data/EntityRegistry.h"
 
 static LevelData buildLevel0() {
     LevelData d;
     d.levelNumber  = 0;
     d.timeLimitSec = Constants::LEVEL1_TIME_SEC;
-    d.playerStartX = 50;
-    d.playerStartY = 50;
+    d.playerStartX = 71;
+    d.playerStartY = 193;
 
-    Item sword;
-    sword.id = "sword";
-    sword.name = "Captain's Sword";
-    sword.description = "A trusty blade for slaying enemies.";
-    sword.spriteJsonPath = ":/assets/sprites/items/sword.json";
-    sword.spriteImagePath = ":/assets/sprites/items/sword.png";
-    sword.spriteWidth = 14.0f;
-    sword.spriteHeight = 19*2;
-    d.itemLibrary.append(sword);
+    d.itemLibrary = ItemRegistry::allItems().values().toVector();
+    d.entities.append(EntityRegistry::spawnCaptainStar("capnstar",38, 193));
+    d.entities.append(EntityRegistry::spawnCollectible("sword_1", "sword", 200, 175));
+    d.entities.append(EntityRegistry::spawnEnemy("fiercetooth_1", "fiercetooth", 588, 150, "brass_key"));
+    d.entities.append(EntityRegistry::spawnContainer(
+        "chest_1", "chest", 280, 150,
+        {"map"}
+    ));
 
-    EntitySpawnData swd;
-    swd.type = "collectible";
-    swd.id = "sword_1";
-    swd.x = 200;
-    swd.y = 175;
-    swd.w = 36;
-    swd.h = 36;
-    swd.properties["itemId"] = "sword";
-    d.entities.append(swd);
+    d.entities.append(EntityRegistry::spawnContainer(
+        "box_1", "box", 210, 150,
+        {"diamond"}
+    ));
 
-    Item key;
-    key.id="brass_key";
-    key.name="Brass Key";
-    key.description="A shiny brass key. Wonder what it opens?";
-    key.spriteJsonPath=":/assets/sprites/items/key.json";
-    key.spriteImagePath=":/assets/sprites/items/key.png";
-    key.isQuestTarget=true;
-    key.spriteWidth = 16.0f;
-    key.spriteHeight = 30.0f;
-    d.itemLibrary.append(key);
-
-    d.targetIds.append("brass_key");
-
-    EntitySpawnData enemy;
-    enemy.type = "enemy";
-    enemy.id = "fiercetooth_1";
-    enemy.x = 390;
-    enemy.y = 175;
-    enemy.w = 32;
-    enemy.h = 32;
-    enemy.properties["enemyType"] = "fiercetooth";
-    enemy.properties["heldItemId"] = "brass_key";
-    d.entities.append(enemy);
-
-    Item coin;
-    coin.id = "gold_coin";
-    coin.name = "Gold Coin";
-    coin.description = "A shiny gold coin.";
-    coin.spriteJsonPath = ":/assets/sprites/items/gold_coin.json";
-    coin.spriteImagePath = ":/assets/sprites/items/gold_coin.png";
-    coin.spriteWidth = 16.0f*2;
-    coin.spriteHeight = 16.0f*2;
-    d.itemLibrary.append(coin);
-
-    EntitySpawnData chest;
-    chest.type = "container";
-    chest.id = "chest_1";
-    chest.x = 460;
-    chest.y = 150;
-    chest.w = 39;
-    chest.h =  64;
-    chest.properties["containerType"] = "chest";
-
-    chest.properties["contents"] = QStringList() << "sword" << "gold_coin" << "gold_coin";
-    d.entities.append(chest);
-
-    EntitySpawnData barrel;
-    barrel.type = "container";
-    barrel.id = "barrel_1";
-    barrel.x = 280;
-    barrel.y = 150;
-    barrel.w = 39;
-    barrel.h =  64;
-    barrel.properties["containerType"] = "barrel";
-
-    barrel.properties["contents"] = QStringList() << "brass_key" << "gold_coin";
-    d.entities.append(barrel);
-
-    EntitySpawnData box;
-    box.type = "container";
-    box.id = "box_1";
-    box.x = 210;
-    box.y = 150;
-    box.w = 39;
-    box.h =  64;
-    box.properties["containerType"] = "box";
-
-    box.properties["contents"] = QStringList() << "gold_coin" << "gold_coin" << "gold_coin";
-    d.entities.append(box);
+    d.targetIds.append({"diamond", "map", "brass_key"});
 
     return d;
 }
+
 LevelData LevelLoader::load(int levelNumber) {
     if (levelNumber == 0) return buildLevel0();
     return {};

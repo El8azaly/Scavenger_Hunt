@@ -48,5 +48,7 @@
     <file>assets/sprites/enemy/dialogue.png</file>
     <file>assets/sprites/objects/interactables.json</file>
     <file>assets/sprites/objects/interactables.png</file>
+    <file>assets/sprites/npc/captain_star.json</file>
+    <file>assets/sprites/npc/captain_star.png</file>
   </qresource>
 </RCC>

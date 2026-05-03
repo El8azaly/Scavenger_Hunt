@@ -82,6 +82,13 @@
   "health_hud_1x1": { "x": 128, "y": 432, "w": 80, "h": 48, "sliceW": 80, "sliceH": 48 },
   "heart_1x1": { "x": 128, "y": 480, "w": 8, "h": 7, "sliceW": 8, "sliceH": 7 },
   "time_hud_1x1": { "x": 145, "y": 478, "w": 15, "h": 8, "sliceW": 15, "sliceH": 8 },
-  "items_required_hud_1x1": { "x": 150, "y": 406, "w": 50, "h": 20, "sliceW": 50, "sliceH": 20 },
-  "interact_popup_1x1": { "x": 145, "y": 193, "w": 70, "h": 13, "sliceW": 70, "sliceH": 13 }
+  "item_hotbar_5_1x1": { "x": 141, "y": 406, "w": 76, "h": 20, "sliceW": 76, "sliceH": 20 },
+  "item_hotbar_4_1x1": { "x": 141, "y": 374, "w": 76, "h": 20, "sliceW": 76, "sliceH": 20 },
+  "item_hotbar_3_1x1": { "x": 141, "y": 342, "w": 76, "h": 20, "sliceW": 76, "sliceH": 20 },
+  "item_hotbar_2_1x1": { "x": 141, "y": 310, "w": 76, "h": 20, "sliceW": 76, "sliceH": 20 },
+  "item_hotbar_1_1x1": { "x": 141, "y": 278, "w": 76, "h": 20, "sliceW": 76, "sliceH": 20 },
+  "interact_popup_1x1": { "x": 145, "y": 193, "w": 70, "h": 13, "sliceW": 70, "sliceH": 13 },
+  "captain_star_dialog_1x1": { "x": 240, "y": 144, "w": 160, "h": 64, "sliceW": 160, "sliceH": 64 },
+  "captain_star_error_dialog_1x1": { "x": 416, "y": 144, "w": 160, "h": 64, "sliceW": 160, "sliceH": 64 },
+  "captain_star_sucess_dialog_1x1": { "x": 576, "y": 144, "w": 160, "h": 64, "sliceW": 160, "sliceH": 64 }
 }

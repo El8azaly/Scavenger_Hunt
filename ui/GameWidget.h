@@ -11,8 +11,9 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
     void mousePressEvent(QMouseEvent *event) override;
-
+    void mouseMoveEvent(QMouseEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
 private:
     Game* m_game;
+    QPoint m_mousePos;
 };

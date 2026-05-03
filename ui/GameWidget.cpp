@@ -1,11 +1,18 @@
 #include "ui/GameWidget.h"
 #include <QPainter>
 #include <QKeyEvent>
+#include <QGuiApplication>
+#include <QClipboard>
 
 GameWidget::GameWidget(Game* game, QWidget* parent)
     : QWidget(parent), m_game(game) {
     setFocusPolicy(Qt::StrongFocus);
     setFocus();
+    setMouseTracking(true);
+}
+
+void GameWidget::mouseMoveEvent(QMouseEvent* event) {
+    m_mousePos = event->pos();
 }
 
 void GameWidget::paintEvent(QPaintEvent*) {
@@ -15,6 +22,10 @@ void GameWidget::paintEvent(QPaintEvent*) {
 }
 
 void GameWidget::keyPressEvent(QKeyEvent* e) {
+    if (e->key() == Qt::Key_Delete) {
+        QString worldPosText = m_game->getWorldPosString(m_mousePos);
+        QGuiApplication::clipboard()->setText(worldPosText);
+    }
     m_game->handleKeyPress(e->key());
 }
 void GameWidget::mousePressEvent(QMouseEvent *event) {

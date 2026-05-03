@@ -24,6 +24,7 @@
 #include <QMap>
 #include "../ui/sprite/SkyBackground.h"
 #include "data/levels/Level0.h"
+#include "entities/CaptainStar.h"
 #include "entities/FierceTooth.h"
 
 class SkyBackground;
@@ -38,12 +39,14 @@ Game::Game(QObject* parent)
     m_quest         = std::make_unique<QuestSystem>(m_inventory.get(), this);
     m_score         = std::make_unique<ScoreManager>(this);
     m_interactPopup = std::make_unique<SlicedSprite>("interact_popup");
+    m_captainStarPopup = std::make_unique<SlicedSprite>("captain_star_dialog_1x1");
+    m_captainStarErrorPopup = std::make_unique<SlicedSprite>("captain_star_error_dialog_1x1");
 
     connect(m_stateManager.get(), &GameStateManager::stateChanged, this, &Game::stateChanged);
+    connect(m_stateManager.get(), &GameStateManager::stateChanged, this, &Game::stateChanged);
     connect(m_quest.get(), &QuestSystem::allTargetsFound, this, [this]() {
-        m_score->stopTimer();
-        m_score->addScore(m_score->timeLeft() * Constants::SCORE_TIME_BONUS);
-        m_stateManager->setState(GameState::WIN);
+        m_allTargetsFound = true;
+        m_showStarError = false;
     });
     connect(m_score.get(), &ScoreManager::timeUp, this, [this]() {
         m_stateManager->setState(GameState::GAME_OVER);
@@ -63,17 +66,20 @@ Game::~Game() {
 void Game::startNewGame(int levelNumber) {
     m_currentLevel = levelNumber;
     clearLevel();
+    m_allTargetsFound = false;
+    m_showStarError = false;
+
+    m_score->reset();
+    m_inventory->clear();
+
     loadGame();
 
     LevelData data = LevelLoader::load(m_currentLevel);
-
-    m_score->reset();
     m_score->startTimer(data.timeLimitSec);
-    m_inventory->clear();
+
     m_quest->setTargets(data.targetIds);
 
     spawnEntities(data);
-
     m_stateManager->setState(GameState::PLAYING);
 }
 
@@ -118,6 +124,20 @@ InventorySystem* Game::inventory()    const { return m_inventory.get(); }
 QuestSystem* Game::quest()        const { return m_quest.get(); }
 ScoreManager* Game::score()        const { return m_score.get(); }
 
+QString Game::getWorldPosString(const QPoint& screenPos) const {
+    if (!m_camera) return "0, 0";
+    float worldX = screenPos.x() + m_camera->offsetX();
+    float worldY = screenPos.y() + m_camera->offsetY();
+    float scale = Constants::UI_SCALE;
+    float yOffset = 0.0f;
+    if (m_currentLevelObj) {
+        yOffset = m_currentLevelObj->verticalOffset();
+    }
+    int levelX = static_cast<int>(worldX / scale);
+    int levelY = static_cast<int>((worldY - yOffset) / scale);
+    return QString("%1, %2").arg(levelX).arg(levelY);
+}
+
 void Game::update(int deltaTimeMs) {
     if (!m_stateManager->isPlaying()) return;
 
@@ -136,11 +156,20 @@ void Game::update(int deltaTimeMs) {
         if (m_popupOpacity > 1.0f) m_popupOpacity = 1.0f;
         m_lastPopupX = m_nearestInteractable->centreX();
         m_lastPopupY = m_nearestInteractable->y();
+
+        m_lastPopupWasCaptainStar = (dynamic_cast<CaptainStar*>(m_nearestInteractable) != nullptr);
     } else {
         m_popupOpacity -= 0.25f;
         if (m_popupOpacity < 0.0f) m_popupOpacity = 0.0f;
     }
     m_input->endFrame();
+    if (m_player && m_player->getHealth() <= 0) {
+        if (m_stateManager->current() != GameState::GAME_OVER) {
+            QTimer::singleShot(1500, this, [this]() {
+                m_stateManager->setState(GameState::GAME_OVER);
+            });
+        }
+    }
 }
 
 void Game::processInput() {
@@ -185,7 +214,8 @@ void Game::updateEntities() {
                 bool facingEnemy = (m_player->isFacingRight() && attackable->x() > m_player->x()) ||
                                    (!m_player->isFacingRight() && attackable->x() < m_player->x());
 
-                if (dist < 105.0f && verticalDist < 60.0f && facingEnemy) {
+                bool isVeryClose = dist < 40.0f;
+                if ((dist < 105.0f && facingEnemy || isVeryClose) && verticalDist < 60.0f) {
                     attackable->takeDamage(15);
                 }
             }
@@ -324,17 +354,35 @@ void Game::draw(QPainter& painter) {
     if (m_currentLevelObj) {
         m_currentLevelObj->drawFrontLayer(painter, *m_camera);
     }
+
     if (m_popupOpacity > 0.0f) {
-
-        int targetW = 70 * Constants::UI_SCALE;
-        int targetH = 13 * Constants::UI_SCALE;
-
-        float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 70;
-        float sy = m_camera->toScreenY(m_lastPopupY) + m_popupYOffset + 110;
-
         painter.save();
         painter.setOpacity(m_popupOpacity);
-        m_interactPopup->draw(painter, sx, sy, targetW, targetH);
+
+        if (m_lastPopupWasCaptainStar) {
+
+            int targetW = 160*Constants::UI_SCALE;
+            int targetH = 64*Constants::UI_SCALE;
+
+            float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f)  + 210;
+            float sy = m_camera->toScreenY(m_lastPopupY) - targetH - 5;
+
+            if (m_showStarError) {
+                m_captainStarErrorPopup->draw(painter, sx, sy, targetW, targetH);
+            } else {
+                m_captainStarPopup->draw(painter, sx, sy, targetW, targetH);
+            }
+        } else {
+
+            int targetW = 70 * Constants::UI_SCALE;
+            int targetH = 13 * Constants::UI_SCALE;
+
+            float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 70;
+            float sy = m_camera->toScreenY(m_lastPopupY) + m_popupYOffset + 110;
+
+            m_interactPopup->draw(painter, sx, sy, targetW, targetH);
+        }
+
         painter.restore();
     }
 
@@ -440,6 +488,9 @@ void Game::spawnEntities(const LevelData& data) {
             }
             obj = c;
         }
+        else if (e.type == "npc_star") {
+            obj = new CaptainStar(eX, eY);
+        }
         else if (e.type == "hidden_area") {
             int triggers = e.properties.value("requiredTriggers", Constants::DEFAULT_TRIGGER_COUNT).toInt();
             auto* ha = new HiddenArea(eX, eY, eW, eH, triggers);
@@ -473,6 +524,29 @@ void Game::spawnItemInWorld(const Item& item, float x, float y) {
 
 void Game::triggerInteraction(InteractiveObject* obj) {
     if (!obj) return;
+
+    if (auto* captain = dynamic_cast<CaptainStar*>(obj)) {
+        captain->interact();
+
+        if (m_allTargetsFound) {
+            m_showStarError = false;
+
+            QTimer::singleShot(1000, this, [this]() {
+                m_score->stopTimer();
+                m_score->addScore(m_score->timeLeft() * Constants::SCORE_TIME_BONUS);
+                m_stateManager->setState(GameState::WIN);
+            });
+        } else {
+
+            m_showStarError = true;
+
+            QTimer::singleShot(4000, this, [this]() {
+                m_showStarError = false;
+            });
+        }
+        return;
+    }
+
     InteractionResult result = obj->interact();
     processInteractionResult(result, obj);
 }

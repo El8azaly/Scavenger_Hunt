@@ -54,7 +54,7 @@ public:
     QuestSystem* quest()         const;
     ScoreManager* score()         const;
     const Camera&    camera()        const { return *m_camera; }
-
+    QString getWorldPosString(const QPoint& screenPos) const;
 signals:
     void stateChanged(GameState oldState, GameState newState);
     void puzzleRequired(const PuzzleData& puzzle);
@@ -80,7 +80,7 @@ private:
     InteractiveObject* findInteractableById(const QString& id);
     void triggerInteraction(InteractiveObject* obj);
     void processInteractionResult(const InteractionResult& result, InteractiveObject* obj);
-
+    std::unique_ptr<SlicedSprite> m_captainStarPopup;
     std::unique_ptr<GameStateManager>  m_stateManager;
     std::unique_ptr<InputHandler>      m_input;
     std::unique_ptr<Camera>            m_camera;
@@ -93,6 +93,10 @@ private:
     float m_popupYOffset = -40.0f;
     float m_lastPopupX = 0.0f;
     float m_lastPopupY = 0.0f;
+    bool m_lastPopupWasCaptainStar = false;
+    bool m_allTargetsFound = false;
+    bool m_showStarError = false;
+    std::unique_ptr<SlicedSprite> m_captainStarErrorPopup;
     std::unique_ptr<Level> m_currentLevelObj;
 
     QVector<GameObject*> m_entities;
