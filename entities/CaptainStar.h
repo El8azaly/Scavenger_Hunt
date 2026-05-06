@@ -1,7 +1,7 @@
 #pragma once
 #include "entities/InteractiveObject.h"
-#include "../ui/sprite/AnimatedSprite.h"
-#include "../ui/sprite/SlicedSprite.h"
+#include "ui/sprite/AnimatedSprite.h"
+#include "ui/sprite/SlicedSprite.h"
 
 class CaptainStar : public InteractiveObject {
 public:

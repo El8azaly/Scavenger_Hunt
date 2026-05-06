@@ -7,17 +7,85 @@
 #include <QDebug>
 #include <algorithm>
 
-Level::Level(QObject* parent) : QObject(parent) {}
+Level::Level(const QString& levelImagePath,
+             const QString& collisionJsonPath,
+             const QString& trapJsonPath,
+             const QString& dataKey,
+             std::unique_ptr<AnimatedSprite> bottomSprite,
+             std::unique_ptr<AnimatedSprite> topSprite,
+             QObject* parent, QColor bgColor)
+    : QObject(parent),
+      m_backgroundColor(bgColor),
+      m_levelImagePath(levelImagePath),
+      m_collisionJsonPath(collisionJsonPath),
+      m_trapJsonPath(trapJsonPath),
+      m_dataKey(dataKey),
+      m_bottomSprite(std::move(bottomSprite)),
+      m_topSprite(std::move(topSprite)) {
+}
+
+void Level::init() {
+    if (!m_levelImagePath.isEmpty()) {
+        m_levelImage.load(m_levelImagePath);
+    }
+
+    if (!m_collisionJsonPath.isEmpty()) {
+        loadCollisionData(m_collisionJsonPath, m_dataKey);
+    }
+
+    if (!m_trapJsonPath.isEmpty()) {
+        loadTrapData(m_trapJsonPath, m_dataKey);
+    }
+}
+
+void Level::update(int deltaTimeMs) {
+    m_animationAccumulator += deltaTimeMs;
+    if (m_animationAccumulator >= 250) {
+        if (m_bottomSprite) m_bottomSprite->update(m_animationAccumulator);
+        if (m_topSprite) m_topSprite->update(m_animationAccumulator);
+        m_animationAccumulator = 0;
+    }
+}
+
+void Level::drawBackLayer(QPainter& painter, const Camera& camera) {
+    if (!m_bottomSprite) return;
+
+    float scale = Constants::GAME_SCALE;
+    float yOffset = verticalOffset();
+
+    QRectF destRect(
+        camera.toScreenX(0),
+        camera.toScreenY(yOffset),
+        worldWidth(),
+        m_levelImage.height() * scale
+    );
+
+    m_bottomSprite->draw(painter, destRect, false);
+}
+
+void Level::drawFrontLayer(QPainter& painter, const Camera& camera) {
+    if (!m_topSprite) return;
+
+    float scale = Constants::GAME_SCALE;
+    float yOffset = verticalOffset();
+
+    QRectF destRect(
+        camera.toScreenX(0),
+        camera.toScreenY(yOffset),
+        worldWidth(),
+        m_levelImage.height() * scale
+    );
+
+    m_topSprite->draw(painter, destRect, false);
+}
 
 float Level::verticalOffset() const {
-
     float scaledH = m_levelImage.height() * Constants::GAME_SCALE;
     float offset = (Constants::WINDOW_HEIGHT - scaledH) / 2.0f;
     return (offset > 0) ? offset : 0.0f;
 }
 
 void Level::drawLevelLayer(QPainter& painter, const Camera& camera) {
-
     if (m_levelImage.isNull()) return;
 
     float scale = Constants::GAME_SCALE;

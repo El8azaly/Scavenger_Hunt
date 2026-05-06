@@ -3,7 +3,7 @@
 #include <QRectF>
 #include <QString>
 
-#include "../ui/sprite/AnimatedSprite.h"
+#include "ui/sprite/AnimatedSprite.h"
 
 class GameObject
 {

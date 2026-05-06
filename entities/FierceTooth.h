@@ -1,6 +1,6 @@
 #pragma once
 #include "entities/Enemy.h"
-#include "../ui/sprite/AnimatedSprite.h"
+#include "ui/sprite/AnimatedSprite.h"
 
 class FierceTooth : public Enemy {
 public:
@@ -10,7 +10,7 @@ public:
     void draw(QPainter& painter, float camX, float camY) override;
 
 private:
-    void updateAnimation();
+    void updateAnimation() override;
 
     AnimatedSprite* m_sprite;
     bool m_wasOnGround = true;

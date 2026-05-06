@@ -1,0 +1,389 @@
+{ "frames": [
+   {
+    "filename": "Crabby 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 1.aseprite",
+    "frame": { "x": 118, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 2.aseprite",
+    "frame": { "x": 236, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 3.aseprite",
+    "frame": { "x": 354, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 4.aseprite",
+    "frame": { "x": 472, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 5.aseprite",
+    "frame": { "x": 590, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 6.aseprite",
+    "frame": { "x": 708, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 7.aseprite",
+    "frame": { "x": 826, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 8.aseprite",
+    "frame": { "x": 944, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 9.aseprite",
+    "frame": { "x": 1062, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 10.aseprite",
+    "frame": { "x": 1180, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 11.aseprite",
+    "frame": { "x": 1298, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 12.aseprite",
+    "frame": { "x": 1416, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 13.aseprite",
+    "frame": { "x": 1534, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 14.aseprite",
+    "frame": { "x": 1652, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 15.aseprite",
+    "frame": { "x": 1770, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 16.aseprite",
+    "frame": { "x": 1888, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 17.aseprite",
+    "frame": { "x": 2006, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 5000
+   },
+   {
+    "filename": "Crabby 18.aseprite",
+    "frame": { "x": 2124, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 19.aseprite",
+    "frame": { "x": 2242, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 20.aseprite",
+    "frame": { "x": 2360, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 21.aseprite",
+    "frame": { "x": 2478, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 22.aseprite",
+    "frame": { "x": 2596, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 23.aseprite",
+    "frame": { "x": 2714, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 5000
+   },
+   {
+    "filename": "Crabby 24.aseprite",
+    "frame": { "x": 2832, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 25.aseprite",
+    "frame": { "x": 2950, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 26.aseprite",
+    "frame": { "x": 3068, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 27.aseprite",
+    "frame": { "x": 3186, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 28.aseprite",
+    "frame": { "x": 3304, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 29.aseprite",
+    "frame": { "x": 3422, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 30.aseprite",
+    "frame": { "x": 3540, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 31.aseprite",
+    "frame": { "x": 3658, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 5000
+   },
+   {
+    "filename": "Crabby 32.aseprite",
+    "frame": { "x": 3776, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 33.aseprite",
+    "frame": { "x": 3894, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 34.aseprite",
+    "frame": { "x": 4012, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 35.aseprite",
+    "frame": { "x": 4130, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 5000
+   },
+   {
+    "filename": "Crabby 36.aseprite",
+    "frame": { "x": 4248, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 37.aseprite",
+    "frame": { "x": 4366, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 38.aseprite",
+    "frame": { "x": 4484, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Crabby 39.aseprite",
+    "frame": { "x": 4602, "y": 0, "w": 118, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 118, "h": 32 },
+    "sourceSize": { "w": 118, "h": 32 },
+    "duration": 5000
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "crabby.png",
+  "format": "RGBA8888",
+  "size": { "w": 4720, "h": 32 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Idle", "from": 0, "to": 8, "direction": "forward", "color": "#000000ff" },
+   { "name": "Run", "from": 9, "to": 14, "direction": "forward", "color": "#000000ff" },
+   { "name": "Jump", "from": 15, "to": 17, "direction": "forward", "color": "#000000ff" },
+   { "name": "Fall", "from": 18, "to": 18, "direction": "forward", "color": "#000000ff" },
+   { "name": "Ground", "from": 19, "to": 20, "direction": "forward", "color": "#000000ff" },
+   { "name": "Anticipation", "from": 21, "to": 23, "direction": "forward", "color": "#000000ff" },
+   { "name": "Attack", "from": 24, "to": 27, "direction": "forward", "color": "#000000ff" },
+   { "name": "Hit", "from": 28, "to": 31, "direction": "forward", "color": "#000000ff" },
+   { "name": "Dead Hit", "from": 32, "to": 35, "direction": "forward", "color": "#000000ff" },
+   { "name": "Dead Ground", "from": 36, "to": 39, "direction": "forward", "color": "#000000ff" }
+  ],
+  "layers": [
+   { "name": "Crabby", "opacity": 255, "blendMode": "normal" },
+   { "name": "Effect", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

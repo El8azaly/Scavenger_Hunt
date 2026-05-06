@@ -11,9 +11,5 @@ void GameStateManager::setState(GameState newState) {
     GameState old = m_state;
     m_state = newState;
 
-    qDebug() << "[GameState] Transition:"
-             << static_cast<int>(old) << "->"
-             << static_cast<int>(newState);
-
     emit stateChanged(old, newState);
 }

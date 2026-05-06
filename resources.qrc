@@ -62,5 +62,9 @@
     <file>assets/sprites/levels/level1_collision_data.json</file>
     <file>assets/sprites/levels/level1_top.json</file>
     <file>assets/sprites/levels/level1_top.png</file>
+    <file>assets/sprites/enemy/crabby.png</file>
+    <file>assets/sprites/enemy/crabby.json</file>
+    <file>assets/sprites/enemy/cannon.json</file>
+    <file>assets/sprites/enemy/cannon.png</file>
   </qresource>
 </RCC>

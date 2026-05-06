@@ -1,6 +1,6 @@
 #include "MainMenuScreen.h"
 #include <QApplication>
-#include "../sprite/SpriteButton.h"
+#include "ui/sprite/SpriteButton.h"
 #include "core/Constants.h"
 #include <QPainter>
 #include <QTimer>
@@ -34,6 +34,7 @@ protected:
 MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
     m_background("window_bg"),
     m_levelScreenBg("level_screen_1x1"),
+    m_paperBg("paper_blank"),
     m_lockedWarning("unlock_level_warning_1x1") {
 
     m_skyBg = new SkyBackground();
@@ -70,12 +71,12 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
 
     int settingsBtnWidth = 16 * ui;
     int settingsBtnHeight = 16 * ui;
-    m_gridBtn = SpriteButton::createGreen("", this);
-    m_gridBtn->setIcon("grid_icon_1x1", 1);
-    m_gridBtn->setTextOffset(0,-1);
-    m_gridBtn->setFixedSize(settingsBtnWidth, settingsBtnHeight);
+    m_resetBtn = SpriteButton::createGreen("", this);
+    m_resetBtn->setIcon("restart_icon_1x1", 1);
+    m_resetBtn->setTextOffset(0,-1);
+    m_resetBtn->setFixedSize(settingsBtnWidth, settingsBtnHeight);
     int settingsX = (Constants::WINDOW_WIDTH - btnWidth) / 2 - ui * 16;
-    m_gridBtn->move(settingsX, 388);
+    m_resetBtn->move(settingsX, 388);
 
     m_exitBtn = new SpriteButton("scroll_button", this);
     m_exitBtn->setText("exit", 1, PixelFont::Dark);
@@ -85,6 +86,23 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
     m_exitBtn->setFixedSize(exitW, exitH);
     int exitX = (Constants::WINDOW_WIDTH - exitW) / 2 + ui * 40;
     m_exitBtn->move(exitX, 410);
+
+    int yesNoW = 60 * ui;
+    int yesNoH = 16 * ui;
+
+    m_yesBtn = SpriteButton::createGreen("", this);
+    m_yesBtn->setText("yes", 1, PixelFont::Dark);
+    m_yesBtn->setTextOffset(1, -1);
+    m_yesBtn->setFixedSize(yesNoW, yesNoH);
+    m_yesBtn->move((Constants::WINDOW_WIDTH / 2) - yesNoW - (-2 * ui), 390);
+    m_yesBtn->hide();
+
+    m_noBtn = SpriteButton::createYellow("", this);
+    m_noBtn->setText("no", 1, PixelFont::Dark);
+    m_noBtn->setTextOffset(1, -1);
+    m_noBtn->setFixedSize(yesNoW, yesNoH);
+    m_noBtn->move((Constants::WINDOW_WIDTH / 2) + (-2 * ui), 390);
+    m_noBtn->hide();
 
     m_backBtn = SpriteButton::createYellow("", this);
     m_backBtn->setFixedSize(16 * ui, 16 * ui);
@@ -147,7 +165,9 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
     }
 
     connect(m_playBtn, &SpriteButton::clicked, this, &MainMenuScreen::onPlayButtonClicked);
-    connect(m_gridBtn, &SpriteButton::clicked, this, &MainMenuScreen::showLevelScreen);
+    connect(m_resetBtn, &SpriteButton::clicked, this, &MainMenuScreen::showResetConfirm);
+    connect(m_yesBtn, &SpriteButton::clicked, this, &MainMenuScreen::performReset);
+    connect(m_noBtn, &SpriteButton::clicked, this, &MainMenuScreen::showMainMenu);
     connect(m_exitBtn, &SpriteButton::clicked, this, []{ QApplication::quit(); });
     connect(m_backBtn, &SpriteButton::clicked, this, &MainMenuScreen::showMainMenu);
 
@@ -196,6 +216,26 @@ void MainMenuScreen::paintEvent(QPaintEvent* event) {
         int bgY = (height() - bgHeight) / 2;
         m_levelScreenBg.draw(painter, bgX, bgY, bgWidth, bgHeight);
 
+    } else if (m_showingResetConfirm) {
+        int bgW = 170 * ui;
+        int bgH = 100 * ui;
+        int bgX = (width() - bgW) / 2;
+        int bgY = (height() - bgH) / 2;
+        m_paperBg.draw(painter, bgX, bgY, bgW, bgH);
+
+        int scale = ui;
+        QString line1 = "Reset Save";
+        QString line2 = "Are you sure";
+        int w1 = line1.length() * 11 * scale;
+        int w2 = line2.length() * 11 * scale;
+        int x1 = (width() - w1) / 2;
+        int x2 = (width() - w2) / 2;
+        int y1 = bgY + (25 * scale);
+        int y2 = y1 + (15 * scale);
+
+        m_font.drawText(painter, line1, x1, y1, scale, PixelFont::Dark, true);
+        m_font.drawText(painter, line2, x2, y2, scale, PixelFont::Dark, true);
+
     } else {
         int bgSize = 96 * ui;
         int bgX = (width() - bgSize) / 2;
@@ -218,24 +258,58 @@ void MainMenuScreen::paintEvent(QPaintEvent* event) {
 }
 
 void MainMenuScreen::onPlayButtonClicked() {
+    showLevelScreen();
+}
+
+void MainMenuScreen::showResetConfirm() {
+    m_showingResetConfirm = true;
+    m_showingLevels = false;
+
+    m_titlePanel->hide();
+    m_playBtn->hide();
+    m_resetBtn->hide();
+    m_exitBtn->hide();
+    m_backBtn->hide();
+
+    for(auto* btn : m_levelBtns) {
+        btn->hide();
+    }
+
+    m_yesBtn->show();
+    m_noBtn->show();
+
+    update();
+}
+
+void MainMenuScreen::performReset() {
     QSettings settings;
-    int targetLevel = settings.value("max_unlocked_level", 0).toInt();
+    settings.setValue("max_unlocked_level", 0);
+    settings.sync();
 
     QVector<int> registeredLevels = LevelLoader::getRegisteredLevels();
-    if (registeredLevels.contains(targetLevel)) {
-        emit levelSelected(targetLevel);
-    } else {
-        showLevelScreen();
+    for(int i = 0; i < m_levelBtns.size(); ++i) {
+        SpriteButton* btn = m_levelBtns[i];
+        int lvlNumber = registeredLevels[i];
+        if (lvlNumber == 0) {
+            btn->setText(QString::number(lvlNumber), 1, PixelFont::Dark);
+        } else {
+            btn->setText("!", 1, PixelFont::Dark);
+        }
     }
+
+    showMainMenu();
 }
 
 void MainMenuScreen::showLevelScreen() {
     m_showingLevels = true;
+    m_showingResetConfirm = false;
 
     m_titlePanel->hide();
     m_playBtn->hide();
-    m_gridBtn->hide();
+    m_resetBtn->hide();
     m_exitBtn->hide();
+    m_yesBtn->hide();
+    m_noBtn->hide();
 
     m_backBtn->show();
 
@@ -259,13 +333,16 @@ void MainMenuScreen::showLevelScreen() {
 
 void MainMenuScreen::showMainMenu() {
     m_showingLevels = false;
+    m_showingResetConfirm = false;
 
     m_titlePanel->show();
     m_playBtn->show();
-    m_gridBtn->show();
+    m_resetBtn->show();
     m_exitBtn->show();
 
     m_backBtn->hide();
+    m_yesBtn->hide();
+    m_noBtn->hide();
     for(auto* btn : m_levelBtns) {
         btn->hide();
     }

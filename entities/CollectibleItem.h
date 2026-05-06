@@ -1,7 +1,7 @@
 #pragma once
 #include "entities/GameObject.h"
 #include "data/ItemData.h"
-
+struct CollisionResult;
 class CollectibleItem : public GameObject {
 public:
     CollectibleItem(float x, float y, const Item& item);
@@ -15,7 +15,7 @@ public:
     void markCollected();
 
     void popOut(float startX, float startY);
-
+    void handleSolidCollision(const CollisionResult& cr);
 private:
     Item    m_item;
     bool    m_collected = false;

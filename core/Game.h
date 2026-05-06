@@ -11,7 +11,10 @@
 #include "data/LevelLoader.h"
 #include "core/Level.h"
 #include "entities/Entity.h"
-#include "../ui/sprite/SlicedSprite.h"
+#include "ui/sprite/SlicedSprite.h"
+#include <QTimer>
+
+#include "entities/Cannonball.h"
 
 class SkyBackground;
 class GameObject;
@@ -21,7 +24,6 @@ class CollectibleItem;
 class InventorySystem;
 class QuestSystem;
 class ScoreManager;
-#include <QTimer>
 class QPainter;
 
 class Game : public QObject
@@ -43,8 +45,6 @@ public:
     void pauseGame();
     void resumeGame();
     void exitToMenu();
-    void saveGame();
-    void loadGame();
 
     void onPuzzleSolved(const QString& objectId);
     void onPuzzleFailed(const QString& objectId);
@@ -100,14 +100,12 @@ private:
     bool m_isDying = false;
     std::unique_ptr<SlicedSprite> m_captainStarErrorPopup;
     std::unique_ptr<Level> m_currentLevelObj;
-
+    QVector<Cannonball*> m_cannonballsPool; // NEW: Track cannonballs explicitly
     QVector<GameObject*> m_entities;
 
     Player* m_player = nullptr;
     int m_currentLevel = 0;
-private:
     InteractiveObject* m_nearestInteractable = nullptr;
-
     SkyBackground* m_skyBg;
     QTimer* m_animationTimer;
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "entities/Entity.h"
 #include "engine/InputHandler.h"
-#include "../ui/sprite/AnimatedSprite.h"
+#include "ui/sprite/AnimatedSprite.h"
 
 class Player : public Entity {
 public:
@@ -20,9 +20,12 @@ public:
     void takeDamage(int amount);
     bool isAttacking() const { return m_attackTimer > 0; }
     int  getAttackTimer() const { return m_attackTimer; }
+    bool isDead() const { return m_isDead; }
     bool isFacingRight() const { return m_facingRight; }
     void setInTrap(bool inTrap);
     bool isInTrap() const { return m_inTrap; }
+    int getJumpCooldown() const { return m_jumpCooldownTimer; }
+    void setJumpCooldown(int cooldown) { m_jumpCooldownTimer = cooldown; }
 
 private:
     InputHandler* m_input;
@@ -42,4 +45,5 @@ private:
     int m_maxHealth = 100;
     bool m_inTrap = false;
     int m_trapDamageTimer = 0;
+    int m_jumpCooldownTimer = 0;
 };

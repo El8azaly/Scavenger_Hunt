@@ -1,5 +1,5 @@
 #include "GameOverlayScreen.h"
-#include "../sprite/SpriteButton.h"
+#include "ui/sprite/spritebutton.h"
 #include "core/Constants.h"
 #include "core/Game.h"
 #include "systems/ScoreManager.h"

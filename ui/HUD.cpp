@@ -40,7 +40,7 @@ void HUD::drawPlayerHud(QPainter &p, ScoreManager *score, Player *player, PixelF
 
     int hudW = 80 * scale;
     int hudH = 48 * scale;
-    int hudX = 12;
+    int hudX = -8*scale;
     int hudY = (Constants::WINDOW_HEIGHT - hudH - 12) - (5 * scale);
 
     SlicedSprite healthHud("health_hud");
@@ -51,7 +51,12 @@ void HUD::drawPlayerHud(QPainter &p, ScoreManager *score, Player *player, PixelF
     int heartW = 8 * scale;
     int heartH = 7 * scale;
     int gap = 3 * scale;
-    int heartsToDraw = hp / (maxHp / 3);
+    float ratio = (maxHp > 0) ? (float)hp / (float)maxHp : 0.0f;
+    int heartsToDraw = std::round(ratio * 3.0f);
+    heartsToDraw = std::clamp(heartsToDraw, 0, 3);
+    if (hp > 0 && heartsToDraw == 0) {
+        heartsToDraw = 1;
+    }
 
     SlicedSprite heart("heart");
     for (int i = 0; i < heartsToDraw; i++) {
@@ -156,17 +161,20 @@ void HUD::drawHotbar(QPainter &p, InventorySystem *inv, QuestSystem* quest) {
             qint64 elapsed = now - completionTime;
             if (elapsed < 8000) {
                 float opacity = 1.0f;
-                if (elapsed < 1000) {
-                    opacity = elapsed / 1000.0f;
+                const int fadeInTime = 300;
+                const int fadeOutStart = 7000;
+
+                if (elapsed < fadeInTime) {
+                    opacity = elapsed / (float)fadeInTime;
                 }
-                else if (elapsed > 7000) {
+                else if (elapsed > fadeOutStart) {
                     opacity = (8000.0f - elapsed) / 1000.0f;
                 }
                 int targetW = 160 * scale;
                 int targetH = 64 * scale;
 
                 int dialogX = Constants::WINDOW_WIDTH - targetW - 24;
-                int dialogY = hotbarY - targetH - (10 * scale);
+                int dialogY = hotbarY - targetH - (3 * scale);
 
                 p.save();
                 p.setOpacity(opacity);

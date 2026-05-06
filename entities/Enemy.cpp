@@ -1,7 +1,7 @@
 #include "entities/Enemy.h"
 #include "entities/Player.h"
 #include "entities/CollectibleItem.h"
-#include "../ui/sprite/AnimatedSprite.h"
+#include "ui/sprite/AnimatedSprite.h"
 #include <QPainter>
 #include <cmath>
 

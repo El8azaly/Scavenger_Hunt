@@ -22,20 +22,27 @@ protected:
 private:
     void showLevelScreen();
     void showMainMenu();
+    void showResetConfirm();
+    void performReset();
     void onPlayButtonClicked();
 
     SlicedSprite m_background;
     SlicedSprite m_levelScreenBg;
+    SlicedSprite m_paperBg;
     bool  m_isHovering = false;
     bool  m_showingLevels = false;
+    bool  m_showingResetConfirm = false;
 
     SkyBackground* m_skyBg;
     QTimer* m_animationTimer;
 
     SpriteButton* m_titlePanel;
     SpriteButton* m_playBtn;
-    SpriteButton* m_gridBtn;
+    SpriteButton* m_resetBtn;
     SpriteButton* m_exitBtn;
+    SpriteButton* m_yesBtn;
+    SpriteButton* m_noBtn;
+
     PixelFont m_font;
     SpriteButton* m_backBtn;
     QVector<SpriteButton*> m_levelBtns;

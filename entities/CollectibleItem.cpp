@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <cmath>
 #include <cstdlib>
+#include "engine/CollisionEngine.h"
 
 CollectibleItem::CollectibleItem(float x, float y, const Item& item)
     : GameObject(x, y, item.spriteWidth, item.spriteHeight), m_item(item) {
@@ -23,6 +24,41 @@ void CollectibleItem::popOut(float startX, float startY) {
     m_popStartY = startY;
 
     m_pickupDelay = 40;
+}
+
+void CollectibleItem::handleSolidCollision(const CollisionResult& cr) {
+    if (!cr.object) return;
+    QRectF solid = cr.object->boundingBox();
+    if (cr.fromTop) {
+        m_y = solid.top() - m_h;
+        m_velY = 0;
+        m_popping = false;
+        m_popStartY = m_y;
+    }
+    else if (cr.fromBottom) {
+        m_y = solid.bottom();
+        if (m_velY < 0) m_velY = 0;
+        if (!m_popping) {
+            m_popping = true;
+            m_popStartY = 99999.0f;
+        }
+    }
+    else if (cr.fromLeft) {
+        m_x = solid.left() - m_w;
+        m_velX = -m_velX;
+        if (!m_popping) {
+            m_popping = true;
+            m_popStartY = 99999.0f;
+        }
+    }
+    else if (cr.fromRight) {
+        m_x = solid.right();
+        m_velX = -m_velX;
+        if (!m_popping) {
+            m_popping = true;
+            m_popStartY = 99999.0f;
+        }
+    }
 }
 
 void CollectibleItem::update() {

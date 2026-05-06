@@ -61,8 +61,22 @@ void Camera::addShake(int durationFrames, float intensity) {
 void Camera::updateShake() {
     if (m_shakeTimer > 0) {
         m_shakeTimer--;
-
-        m_shakeOffsetX = ((std::rand() % 100) / 50.0f - 1.0f) * m_shakeIntensity;
+        float rawX = ((std::rand() % 100) / 50.0f - 1.0f) * m_shakeIntensity;
+        float rawY = ((std::rand() % 100) / 50.0f - 1.0f) * m_shakeIntensity;
+        if (m_worldW > 0) {
+            float minShakeX = -m_x;
+            float maxShakeX = (m_worldW - m_viewW) - m_x;
+            m_shakeOffsetX = std::clamp(rawX, minShakeX, maxShakeX);
+        } else {
+            m_shakeOffsetX = rawX;
+        }
+        if (m_worldH > 0) {
+            float minShakeY = -m_y;
+            float maxShakeY = (m_worldH - m_viewH) - m_y;
+            m_shakeOffsetY = std::clamp(rawY, minShakeY, maxShakeY);
+        } else {
+            m_shakeOffsetY = rawY;
+        }
 
     } else {
         m_shakeOffsetX = 0.0f;

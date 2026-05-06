@@ -122,6 +122,7 @@ void Player::update() {
         Entity::update();
         if (m_hitTimer > 0) m_hitTimer--;
         if (m_landTimer > 0) m_landTimer--;
+        if (m_jumpCooldownTimer > 0) m_jumpCooldownTimer--;
         if (m_inTrap) {
             m_trapDamageTimer++;
             if (m_trapDamageTimer >= 60) {

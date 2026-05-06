@@ -14,7 +14,6 @@
 #include "systems/ScoreManager.h"
 
 #include "data/LevelLoader.h"
-#include "data/SaveManager.h"
 
 #include "ui/HUD.h"
 #include "core/Constants.h"
@@ -22,10 +21,13 @@
 #include <QDebug>
 #include <algorithm>
 #include <QMap>
-#include "../ui/sprite/SkyBackground.h"
+#include "ui/sprite/SkyBackground.h"
 #include "data/levels/Level0.h"
 #include "data/levels/Level1.h"
 #include <QSettings>
+
+#include "entities/Cannon.h"
+#include "entities/Cannonball.h"
 #include "entities/CaptainStar.h"
 #include "entities/FierceTooth.h"
 
@@ -34,12 +36,12 @@ class SkyBackground;
 Game::Game(QObject* parent)
     : QObject(parent) {
     m_stateManager  = std::make_unique<GameStateManager>(this);
-    m_input         = std::make_unique<InputHandler>(this);
-    m_camera        = std::make_unique<Camera>();
-    m_collision     = std::make_unique<CollisionEngine>();
-    m_inventory     = std::make_unique<InventorySystem>(this);
-    m_quest         = std::make_unique<QuestSystem>(m_inventory.get(), this);
-    m_score         = std::make_unique<ScoreManager>(this);
+    m_input = std::make_unique<InputHandler>(this);
+    m_camera = std::make_unique<Camera>();
+    m_collision = std::make_unique<CollisionEngine>();
+    m_inventory = std::make_unique<InventorySystem>(this);
+    m_quest = std::make_unique<QuestSystem>(m_inventory.get(), this);
+    m_score = std::make_unique<ScoreManager>(this);
     m_interactPopup = std::make_unique<SlicedSprite>("interact_popup");
     m_captainStarPopup = std::make_unique<SlicedSprite>("captain_star_dialog_1x1");
     m_captainStarErrorPopup = std::make_unique<SlicedSprite>("captain_star_error_dialog_1x1");
@@ -59,6 +61,7 @@ Game::Game(QObject* parent)
     m_animationTimer = new QTimer(this);
     connect(m_animationTimer, &QTimer::timeout, this, [this]{ m_skyBg->update(16); });
     m_animationTimer->start(16);
+    m_cannonballsPool.reserve(64);
 }
 
 Game::~Game() {
@@ -74,7 +77,6 @@ void Game::startNewGame(int levelNumber) {
     m_score->reset();
     m_inventory->clear();
     m_isDying = false;
-    loadGame();
 
     LevelData data = LevelLoader::load(m_currentLevel);
     m_score->startTimer(data.timeLimitSec);
@@ -107,9 +109,6 @@ void Game::exitToMenu() {
     m_stateManager->setState(GameState::MAIN_MENU);
 }
 
-void Game::saveGame() { SaveManager::save(this, Constants::SAVES_DIR + "slot1.json"); }
-void Game::loadGame() { SaveManager::load(this, Constants::SAVES_DIR + "slot1.json"); }
-
 void Game::onPuzzleSolved(const QString& objectId) {
     InteractiveObject* obj = findInteractableById(objectId);
     if (!obj) return;
@@ -121,10 +120,10 @@ void Game::onPuzzleSolved(const QString& objectId) {
 
 void Game::onPuzzleFailed(const QString& objectId) { Q_UNUSED(objectId) }
 
-GameState        Game::currentState() const { return m_stateManager->current(); }
-InventorySystem* Game::inventory()    const { return m_inventory.get(); }
-QuestSystem* Game::quest()        const { return m_quest.get(); }
-ScoreManager* Game::score()        const { return m_score.get(); }
+GameState Game::currentState() const { return m_stateManager->current(); }
+InventorySystem *Game::inventory() const { return m_inventory.get(); }
+QuestSystem *Game::quest() const { return m_quest.get(); }
+ScoreManager *Game::score() const { return m_score.get(); }
 
 QString Game::getWorldPosString(const QPoint& screenPos) const {
     if (!m_camera) return "0, 0";
@@ -183,8 +182,10 @@ void Game::processInput() {
     if (m_input->isHeld(GameAction::MOVE_RIGHT)) velX =  currentSpeed;
     m_player->setVelocityX(velX);
 
-    if (m_input->isHeld(GameAction::JUMP) && m_player->isOnGround())
+    if (m_input->isHeld(GameAction::JUMP) && m_player->isOnGround() && m_player->getJumpCooldown() <= 0) {
         m_player->jump(Constants::JUMP_VELOCITY);
+        m_player->setJumpCooldown(24);
+    }
     if (m_input->wasJustPressed(GameAction::PAUSE)) {
         pauseGame();
     }
@@ -211,6 +212,13 @@ void Game::updateEntities() {
             if (CollectibleItem* dropped = enemy->takeDroppedItem()) {
                 newEntities.append(dropped);
             }
+            if (auto* cannon = dynamic_cast<Cannon*>(enemy)) {
+                QVector<Cannonball*> balls = cannon->takeNewProjectiles();
+                for (Cannonball* b : balls) {
+                    newEntities.append(b);
+                    m_cannonballsPool.append(b);
+                }
+            }
         }
 
         if (playerJustHit) {
@@ -235,10 +243,43 @@ void Game::updateEntities() {
 }
 void Game::runCollision() {
     for (GameObject* obj : m_entities) {
+        if (Cannonball* ball = dynamic_cast<Cannonball*>(obj)) {
+            if (!ball->hasExploded()) {
+                // Predict X movement for wall reflections
+                QRectF nextXBox = ball->boundingBox().translated(ball->getVelX(), 0);
+                auto solidHitsX = m_collision->checkSolid(nextXBox, m_entities);
+                if (!solidHitsX.isEmpty()) {
+                    ball->setVelX(-ball->getVelX() * 0.8f);
+                }
+
+                // Predict Y movement for floor bouncing
+                QRectF nextYBox = ball->boundingBox().translated(0, ball->getVelY());
+                auto solidHitsY = m_collision->checkSolid(nextYBox, m_entities);
+
+                if (!solidHitsY.isEmpty()) {
+                    ball->onGroundContact();
+
+                    if (std::abs(ball->getVelY()) < 2.5f) {
+                        ball->setVelY(0.0f);
+                        // INCREASED FRICTION: changed from 0.96f to 0.90f so it decelerates and explodes quicker
+                        ball->setVelX(ball->getVelX() * 0.90f);
+                    } else {
+                        ball->setVelY(-ball->getVelY() * 0.5f);
+                        ball->setVelX(ball->getVelX() * 0.95f);
+                    }
+                }
+            }
+        }
         if (Entity* entity = dynamic_cast<Entity*>(obj)) {
             auto solidHits = m_collision->checkSolid(entity->boundingBox(), m_entities);
             for (const CollisionResult& cr : solidHits) {
                 resolveSolidCollision(entity, cr);
+            }
+        }
+        else if (CollectibleItem* item = dynamic_cast<CollectibleItem*>(obj)) {
+            auto solidHits = m_collision->checkSolid(item->boundingBox(), m_entities);
+            for (const CollisionResult& cr : solidHits) {
+                item->handleSolidCollision(cr);
             }
         }
     }
@@ -327,46 +368,42 @@ void Game::removeInactiveEntities() {
 void Game::draw(QPainter& painter) {
     if (m_stateManager->isInMenu()) return;
     m_skyBg->draw(painter, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, m_camera->offsetX());
-
     if (m_currentLevelObj) {
         m_currentLevelObj->drawBackLayer(painter, *m_camera);
         m_currentLevelObj->drawLevelLayer(painter, *m_camera);
         m_currentLevelObj->drawMiddleLayer(painter, *m_camera);
     }
-
     QRectF view = m_camera->viewport();
-    float  camX = m_camera->offsetX();
-    float  camY = m_camera->offsetY();
-
+    float camX = m_camera->offsetX();
+    float camY = m_camera->offsetY();
     for (GameObject* obj : m_entities) {
         if (!obj || !obj->isActive()) continue;
         if (!view.intersects(obj->boundingBox())) continue;
-
         if (obj == m_player) continue;
-
+        if (dynamic_cast<Enemy*>(obj)) continue;
         bool isCollisionBox = obj->id().startsWith("level_collision_") ||
                               obj->id() == "floor" ||
                               obj->id() == "plat1";
 
-        #ifndef DEBUG_DRAW_COLLISIONS
-            if (isCollisionBox) {
-                continue;
-            }
-        #else
-            if (isCollisionBox) {
+        if (isCollisionBox) {
+            if (Constants::DRAW_COLLISION_BOXES)
                 obj->draw(painter, camX, camY);
-                continue;
-            }
-        #endif
+            continue;
+        }
 
         obj->draw(painter, camX, camY);
+    }
 
-        if (Enemy* enemy = dynamic_cast<Enemy*>(obj)) {
-            if (CollectibleItem* beltItem = enemy->getBeltItem()) {
-                beltItem->draw(painter, camX, camY);
-            }
-            enemy->drawDialog(painter, camX, camY);
+    for (GameObject* obj : m_entities) {
+        Enemy* enemy = dynamic_cast<Enemy*>(obj);
+        if (!enemy) continue;
+        if (!enemy->isActive()) continue;
+        if (!view.intersects(enemy->boundingBox())) continue;
+        enemy->draw(painter, camX, camY);
+        if (CollectibleItem* beltItem = enemy->getBeltItem()) {
+            beltItem->draw(painter, camX, camY);
         }
+        enemy->drawDialog(painter, camX, camY);
     }
 
     if (m_player && m_player->isActive() && view.intersects(m_player->boundingBox())) {
@@ -376,41 +413,41 @@ void Game::draw(QPainter& painter) {
     if (m_currentLevelObj) {
         m_currentLevelObj->drawFrontLayer(painter, *m_camera);
     }
-
     if (m_popupOpacity > 0.0f) {
         painter.save();
         painter.setOpacity(m_popupOpacity);
-
         if (m_lastPopupWasCaptainStar) {
-
-            int targetW = 160*Constants::UI_SCALE;
-            int targetH = 64*Constants::UI_SCALE;
-
-            float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f)  + 210;
+            int targetW = 160 * Constants::UI_SCALE;
+            int targetH = 64 * Constants::UI_SCALE;
+            float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 210;
             float sy = m_camera->toScreenY(m_lastPopupY) - targetH - 5;
-
             if (m_showStarError) {
                 m_captainStarErrorPopup->draw(painter, sx, sy, targetW, targetH);
             } else {
                 m_captainStarPopup->draw(painter, sx, sy, targetW, targetH);
             }
         } else {
-
             int targetW = 70 * Constants::UI_SCALE;
             int targetH = 13 * Constants::UI_SCALE;
-
             float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 70;
             float sy = m_camera->toScreenY(m_lastPopupY) + m_popupYOffset + 110;
 
             m_interactPopup->draw(painter, sx, sy, targetW, targetH);
         }
-
         painter.restore();
     }
 
     HUD::draw(painter, m_score.get(), m_inventory.get(), m_quest.get(), m_player, this);
 }
-void Game::handleKeyPress(int qtKey) { m_input->keyPressEvent(qtKey); }
+
+void Game::handleKeyPress(int qtKey) {
+    if ((m_stateManager->isPlaying() && m_player)
+        && (qtKey == Qt::Key_X || qtKey == Qt::Key_F)) {
+        if (m_player->attack()) m_camera->addShake(2, 8.0f);
+    }
+    m_input->keyPressEvent(qtKey);
+}
+
 void Game::handleKeyRelease(int qtKey) { m_input->keyReleaseEvent(qtKey); }
 void Game::spawnEntities(const LevelData& data) {
     float scale = 1.0f;
@@ -484,6 +521,22 @@ void Game::spawnEntities(const LevelData& data) {
 
                 obj = enemy;
             }
+            else if (enemyType == "cannon") {
+                float power = e.properties.value("shotPower", 6.0f).toFloat();
+                float range = e.properties.value("shotRange", 600.0f).toFloat();
+
+                auto* cannon = new Cannon(eX, eY, m_player, power, range);
+
+                float hxOffset = e.properties.value("hitboxOffsetX", 0.0f).toFloat();
+                float hyOffset = e.properties.value("hitboxOffsetY", 0.0f).toFloat();
+                cannon->setHitboxOffsets(hxOffset, hyOffset);
+
+                float sxOffset = e.properties.value("spawnOffsetX", -10.0f).toFloat();
+                float syOffset = e.properties.value("spawnOffsetY", 20.0f).toFloat();
+                cannon->setSpawnOffsets(sxOffset, syOffset);
+
+                obj = cannon;
+            }
         }
         else if (e.type == "collectible") {
             QString itemId = e.properties.value("itemId").toString();
@@ -530,11 +583,27 @@ void Game::spawnEntities(const LevelData& data) {
     }
 }
 void Game::clearLevel() {
-    for (GameObject* obj : m_entities) delete obj;
+    for (Cannonball* ball : m_cannonballsPool) {
+        if (ball) {
+            QTimer::singleShot(0, [ball]() {
+                delete ball;
+            });
+        }
+    }
+    m_cannonballsPool.clear();
+    for (GameObject* obj : m_entities) {
+        if (obj) {
+            QTimer::singleShot(0, [obj]() {
+                delete obj;
+            });
+        }
+    }
     m_entities.clear();
-    m_player = nullptr;
-    m_nearestInteractable = nullptr;
-    m_currentLevelObj.reset();
+
+    // Reset tracking flags
+    m_allTargetsFound = false;
+    m_showStarError = false;
+    m_popupOpacity = 0.0f;
 }
 
 void Game::spawnItemInWorld(const Item& item, float x, float y) {
