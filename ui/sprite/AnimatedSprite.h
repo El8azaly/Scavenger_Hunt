@@ -30,7 +30,7 @@ public:
 
     void setLoop(bool loop) { m_loop = loop; }
     bool isFinished() const { return m_finished; }
-
+    bool isSpriteSheetNull() const { return m_spriteSheet.isNull(); }
     void forceState(const QString& stateName);
 private:
     void loadData(const QString& jsonPath);

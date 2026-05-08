@@ -6,6 +6,7 @@
 #include "levels/Level1.h"
 #include "core/Game.h"
 #include "levels/Level2.h"
+#include "levels/Level3.h"
 
 static LevelData buildLevel0() {
     LevelData d;
@@ -84,11 +85,42 @@ static LevelData buildLevel2() {
 
     return d;
 }
+
+static LevelData buildLevel3() {
+    LevelData d;
+    d.levelNumber  = 1;
+    d.timeLimitSec = Constants::LEVEL1_TIME_SEC;
+    d.playerStartX = 61;
+    d.playerStartY = 88;
+
+    d.itemLibrary = ItemRegistry::allItems().values().toVector();
+    d.entities.append(EntityRegistry::spawnCaptainStar("capnstar",115, 87 ));
+    d.entities.append(EntityRegistry::spawnCollectible("sword_1", "sword", 167, 176));
+    d.entities.append(EntityRegistry::spawnCollectible("item_1", "emerald", 292, 71));
+    d.entities.append(EntityRegistry::spawnCollectible("item_2", "diamond", 292, 154));
+
+    d.entities.append(EntityRegistry::spawnDoor("door_1a", "a", 51, 671));
+    d.entities.append(EntityRegistry::spawnDoor("door_1b", "a", 50, 74));
+
+    d.entities.append(EntityRegistry::spawnDoor("door_2a", "b", 44, 565));
+    d.entities.append(EntityRegistry::spawnDoor("door_2b", "b", 289, 563));
+
+    d.entities.append(EntityRegistry::spawnDoor("door_3a", "c", 157, 330));
+    d.entities.append(EntityRegistry::spawnDoor("door_3b", "c", 288, 330));
+
+    d.entities.append(EntityRegistry::spawnDoor("door_4a", "d", 296, 96));
+    d.entities.append(EntityRegistry::spawnDoor("door_4b", "d", 44, 202));
+
+    d.targetIds.append({"green_potion", "emerald", "diamond", "silver_coin", "brass_key"});
+
+    return d;
+}
 const std::map<int, LevelRegistryEntry>& LevelLoader::getRegistry() {
     static const std::map<int, LevelRegistryEntry> registry = {
         {0, { buildLevel0, [](Game* g) { return std::make_unique<Level0>(g); } }},
         {1, { buildLevel1, [](Game* g) { return std::make_unique<Level1>(g); } }},
-        {2, { buildLevel2, [](Game* g) { return std::make_unique<Level2>(g); } }}
+        {2, { buildLevel2, [](Game* g) { return std::make_unique<Level2>(g); } }},
+        {3, { buildLevel3, [](Game* g) { return std::make_unique<Level3>(g); } }}
     };
     return registry;
 }

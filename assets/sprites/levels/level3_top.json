@@ -1,0 +1,92 @@
+{ "frames": [
+   {
+    "filename": "Sprite-0001 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0001 1.aseprite",
+    "frame": { "x": 880, "y": 0, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0001 2.aseprite",
+    "frame": { "x": 1760, "y": 0, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0001 3.aseprite",
+    "frame": { "x": 0, "y": 1120, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0001 4.aseprite",
+    "frame": { "x": 880, "y": 1120, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0001 5.aseprite",
+    "frame": { "x": 1760, "y": 1120, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0001 6.aseprite",
+    "frame": { "x": 0, "y": 2240, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0001 7.aseprite",
+    "frame": { "x": 880, "y": 2240, "w": 880, "h": 1120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 880, "h": 1120 },
+    "sourceSize": { "w": 880, "h": 1120 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "level3_top.png",
+  "format": "RGBA8888",
+  "size": { "w": 2640, "h": 3360 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Middleground", "opacity": 255, "blendMode": "normal" },
+   { "name": "Chains", "opacity": 255, "blendMode": "normal" },
+   { "name": "Lamps", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

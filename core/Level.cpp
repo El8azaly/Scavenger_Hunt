@@ -160,7 +160,7 @@ void Level::loadCollisionData(const QString& filepath, const QString& jsonKey) {
 
 void Level::loadTrapData(const QString& filepath, const QString& jsonKey) {
     m_trapRects.clear();
-
+    if (filepath.isEmpty()) return;
     QFile file(filepath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "[Level] Failed to open trap JSON:" << filepath;

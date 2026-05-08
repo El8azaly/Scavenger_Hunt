@@ -26,6 +26,7 @@
 #include "data/levels/Level1.h"
 #include <QSettings>
 
+#include "data/levels/Level3.h"
 #include "entities/Cannon.h"
 #include "entities/Cannonball.h"
 #include "entities/CaptainStar.h"
@@ -434,6 +435,9 @@ void Game::draw(QPainter& painter) {
         m_currentLevelObj->drawBackLayer(painter, *m_camera);
         m_currentLevelObj->drawLevelLayer(painter, *m_camera);
         m_currentLevelObj->drawMiddleLayer(painter, *m_camera);
+        if (getCurrentLevel() == 3) m_currentLevelObj->drawFrontLayer(painter, *m_camera);
+        if (Level3* lvl3 = dynamic_cast<Level3*>(m_currentLevelObj.get()))
+            lvl3->drawWindowLayer(painter, *m_camera);
     }
     QRectF view = m_camera->viewport();
     float camX = m_camera->offsetX();
@@ -479,7 +483,7 @@ void Game::draw(QPainter& painter) {
         }
     }
 
-    if (m_currentLevelObj) {
+    if (m_currentLevelObj && getCurrentLevel() != 3) {
         m_currentLevelObj->drawFrontLayer(painter, *m_camera);
     }
     if (m_popupOpacity > 0.0f) {
