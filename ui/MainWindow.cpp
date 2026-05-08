@@ -16,13 +16,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 }
 
 void MainWindow::buildUI() {
-    m_stack         = new QStackedWidget(this);
-    m_menuScreen    = new MainMenuScreen(this);
-    m_gameWidget    = new GameWidget(m_game, this);
-
-    m_pauseScreen   = new GameOverlayScreen(m_game, GameOverlayScreen::Type::Pause, this);
-    m_gameOverScreen= new GameOverlayScreen(m_game, GameOverlayScreen::Type::GameOver, this);
-    m_winScreen     = new GameOverlayScreen(m_game, GameOverlayScreen::Type::Victory, this);
+    m_stack = new QStackedWidget(this);
+    m_menuScreen = new MainMenuScreen(this);
+    m_gameWidget = new GameWidget(m_game, this);
+    m_pauseScreen = new GameOverlayScreen(m_game, GameOverlayScreen::Type::Pause, this);
+    m_gameOverScreen = new GameOverlayScreen(m_game, GameOverlayScreen::Type::GameOver, this);
+    m_winScreen = new GameOverlayScreen(m_game, GameOverlayScreen::Type::Victory, this);
 
     m_stack->addWidget(m_menuScreen);
     m_stack->addWidget(m_gameWidget);

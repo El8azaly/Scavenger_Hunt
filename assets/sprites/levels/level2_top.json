@@ -1,0 +1,108 @@
+{ "frames": [
+   {
+    "filename": "level2 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 1.aseprite",
+    "frame": { "x": 1152, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 2.aseprite",
+    "frame": { "x": 2304, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 3.aseprite",
+    "frame": { "x": 3456, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 4.aseprite",
+    "frame": { "x": 4608, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 5.aseprite",
+    "frame": { "x": 5760, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 6.aseprite",
+    "frame": { "x": 6912, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 7.aseprite",
+    "frame": { "x": 8064, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 8.aseprite",
+    "frame": { "x": 9216, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   },
+   {
+    "filename": "level2 9.aseprite",
+    "frame": { "x": 10368, "y": 0, "w": 1152, "h": 416 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1152, "h": 416 },
+    "sourceSize": { "w": 1152, "h": 416 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "level2_top.png",
+  "format": "RGBA8888",
+  "size": { "w": 11520, "h": 416 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Top", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

@@ -15,6 +15,7 @@
 #include <QTimer>
 
 #include "entities/Cannonball.h"
+#include "entities/Door.h"
 
 class SkyBackground;
 class GameObject;
@@ -100,9 +101,14 @@ private:
     bool m_isDying = false;
     std::unique_ptr<SlicedSprite> m_captainStarErrorPopup;
     std::unique_ptr<Level> m_currentLevelObj;
-    QVector<Cannonball*> m_cannonballsPool; // NEW: Track cannonballs explicitly
     QVector<GameObject*> m_entities;
-
+    enum class DoorPhase { None, WaitingForOpenAnim, FadingOut, FadingIn };
+    DoorPhase m_doorPhase       = DoorPhase::None;
+    Door*     m_activeDoor      = nullptr;
+    float     m_doorFadeOpacity = 1.0f;
+    int       m_doorFadeTimeMs  = 500;
+    int       m_doorFadeElapsed = 0;
+    bool      m_lastPopupWasDoor = false;
     Player* m_player = nullptr;
     int m_currentLevel = 0;
     InteractiveObject* m_nearestInteractable = nullptr;

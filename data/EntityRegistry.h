@@ -40,9 +40,8 @@ public:
     }
 
     static EntitySpawnData spawnCannon(const QString& id, float x, float y,
-                                       float shotPower = 6.0f, float shotRange = 600.0f,
-                                       float hitboxOffsetX = 0.0f, float hitboxOffsetY = 0.0f,
-                                       float spawnOffsetX = -10.0f, float spawnOffsetY = 20.0f) {
+                                       float maxSpeed = 10.0f, float shotRange = 1000.0f,
+                                       bool hasTarget = false, float targetX = 0.0f, float targetY = 0.0f) {
         EntitySpawnData e;
         e.type = "enemy";
         e.id = id;
@@ -52,16 +51,31 @@ public:
         e.h = 64.0f;
 
         e.properties["enemyType"] = "cannon";
-        e.properties["shotPower"] = shotPower;
+        e.properties["maxSpeed"] = maxSpeed;
         e.properties["shotRange"] = shotRange;
-        e.properties["hitboxOffsetX"] = hitboxOffsetX;
-        e.properties["hitboxOffsetY"] = hitboxOffsetY;
-        e.properties["spawnOffsetX"] = spawnOffsetX;
-        e.properties["spawnOffsetY"] = spawnOffsetY;
+
+        e.properties["hasTarget"] = hasTarget;
+        e.properties["targetX"] = targetX;
+        e.properties["targetY"] = targetY;
 
         return e;
     }
 
+    static EntitySpawnData spawnDoor(const QString& id, const QString& groupId,
+                                      float x, float y,
+                                      float w = 82.0f, float h = 98.0f,
+                                      int fadeTimeMs = 500) {
+        EntitySpawnData e;
+        e.type = "door";
+        e.id   = id;
+        e.x    = x;
+        e.y    = y;
+        e.w    = w;
+        e.h    = h;
+        e.properties["groupId"]    = groupId;
+        e.properties["fadeTimeMs"] = fadeTimeMs;
+        return e;
+    }
     static EntitySpawnData spawnContainer(const QString& id, const QString& containerType, float x, float y, const QStringList& contents = {}) {
         EntitySpawnData e;
         e.type = "container";

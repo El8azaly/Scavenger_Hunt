@@ -18,7 +18,6 @@ public:
 
     void explode(bool hitPlayerDirectly);
 
-    // NEW: Method to trigger the 2-second timer
     void onGroundContact();
 
     float getVelX() const { return m_velX; }
@@ -37,7 +36,6 @@ private:
     float m_startX;
     float m_range;
 
-    // NEW: Tracking ground contact and lifespan
     bool m_hasTouchedGround;
     int m_groundTimer;
 };

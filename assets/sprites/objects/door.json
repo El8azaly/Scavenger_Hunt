@@ -1,0 +1,120 @@
+{ "frames": [
+   {
+    "filename": "Decorations 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 1.aseprite",
+    "frame": { "x": 41, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 2.aseprite",
+    "frame": { "x": 82, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 3.aseprite",
+    "frame": { "x": 123, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 4.aseprite",
+    "frame": { "x": 164, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 5.aseprite",
+    "frame": { "x": 205, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 6.aseprite",
+    "frame": { "x": 246, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 7.aseprite",
+    "frame": { "x": 287, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 8.aseprite",
+    "frame": { "x": 328, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 9.aseprite",
+    "frame": { "x": 369, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   },
+   {
+    "filename": "Decorations 10.aseprite",
+    "frame": { "x": 410, "y": 0, "w": 41, "h": 49 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 41, "h": 49 },
+    "sourceSize": { "w": 41, "h": 49 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.x-dev",
+  "image": "door.png",
+  "format": "RGBA8888",
+  "size": { "w": 451, "h": 49 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Idle", "from": 0, "to": 0, "direction": "forward", "color": "#57b9f2ff" },
+   { "name": "Opening", "from": 1, "to": 5, "direction": "forward", "color": "#57b9f2ff" },
+   { "name": "Closing", "from": 6, "to": 10, "direction": "forward", "color": "#57b9f2ff" }
+  ],
+  "layers": [
+   { "name": "Decorations", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

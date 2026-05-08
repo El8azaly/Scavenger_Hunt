@@ -5,6 +5,8 @@
 #include "levels/Level0.h"
 #include "levels/Level1.h"
 #include "core/Game.h"
+#include "levels/Level2.h"
+
 static LevelData buildLevel0() {
     LevelData d;
     d.levelNumber  = 0;
@@ -35,19 +37,14 @@ static LevelData buildLevel1() {
     LevelData d;
     d.levelNumber  = 1;
     d.timeLimitSec = Constants::LEVEL1_TIME_SEC;
-    d.playerStartX = 71;
+    d.playerStartX = 111;
     d.playerStartY = 193;
 
     d.itemLibrary = ItemRegistry::allItems().values().toVector();
     d.entities.append(EntityRegistry::spawnCaptainStar("capnstar",158, 193 ));
     d.entities.append(EntityRegistry::spawnCollectible("sword_1", "sword", 286, 196));
 
-    // Existing fierce tooth enemy
     d.entities.append(EntityRegistry::spawnEnemy("fiercetooth_1", "fiercetooth", 668, 104, "skull"));
-
-    // NEW: Spawn the Cannon on the right side of the level to shoot horizontally at the player
-    // It uses the default parameters for hitboxes and projectile spawns
-    d.entities.append(EntityRegistry::spawnCannon("cannon_1", 493, 151));
 
     d.entities.append(EntityRegistry::spawnContainer(
         "chest_1", "chest", 558, 193,
@@ -63,10 +60,35 @@ static LevelData buildLevel1() {
 
     return d;
 }
+static LevelData buildLevel2() {
+    LevelData d;
+    d.levelNumber  = 1;
+    d.timeLimitSec = Constants::LEVEL1_TIME_SEC;
+    d.playerStartX = 116;
+    d.playerStartY = 182;
+
+    d.itemLibrary = ItemRegistry::allItems().values().toVector();
+    d.entities.append(EntityRegistry::spawnCaptainStar("capnstar",66, 214 ));
+    d.entities.append(EntityRegistry::spawnCollectible("sword_1", "sword", 167, 176));
+    d.entities.append(EntityRegistry::spawnCannon("cannon_1", 411, 112, 11.0f, 200.0f, true, 353, 110));
+    d.entities.append(EntityRegistry::spawnEnemy("fiercetooth_1", "fiercetooth", 723, 195, "green_potion"));
+    d.entities.append(EntityRegistry::spawnCollectible("item_1", "emerald", 292, 71));
+    d.entities.append(EntityRegistry::spawnCollectible("item_2", "diamond", 292, 154));
+
+    d.entities.append(EntityRegistry::spawnContainer(
+        "chest_1", "chest", 62, 22,
+        {"silver_coin", "brass_key"}
+    ));
+
+    d.targetIds.append({"green_potion", "emerald", "diamond", "silver_coin", "brass_key"});
+
+    return d;
+}
 const std::map<int, LevelRegistryEntry>& LevelLoader::getRegistry() {
     static const std::map<int, LevelRegistryEntry> registry = {
         {0, { buildLevel0, [](Game* g) { return std::make_unique<Level0>(g); } }},
-        {1, { buildLevel1, [](Game* g) { return std::make_unique<Level1>(g); } }}
+        {1, { buildLevel1, [](Game* g) { return std::make_unique<Level1>(g); } }},
+        {2, { buildLevel2, [](Game* g) { return std::make_unique<Level2>(g); } }}
     };
     return registry;
 }

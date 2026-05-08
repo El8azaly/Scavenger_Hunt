@@ -31,6 +31,7 @@ public:
     void setLoop(bool loop) { m_loop = loop; }
     bool isFinished() const { return m_finished; }
 
+    void forceState(const QString& stateName);
 private:
     void loadData(const QString& jsonPath);
 

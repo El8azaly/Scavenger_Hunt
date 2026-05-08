@@ -61,7 +61,6 @@ Game::Game(QObject* parent)
     m_animationTimer = new QTimer(this);
     connect(m_animationTimer, &QTimer::timeout, this, [this]{ m_skyBg->update(16); });
     m_animationTimer->start(16);
-    m_cannonballsPool.reserve(64);
 }
 
 Game::~Game() {
@@ -142,6 +141,65 @@ QString Game::getWorldPosString(const QPoint& screenPos) const {
 void Game::update(int deltaTimeMs) {
     if (!m_stateManager->isPlaying()) return;
 
+    if (m_doorPhase != DoorPhase::None) {
+
+        for (GameObject* obj : m_entities) {
+            if (!obj || !obj->isActive()) continue;
+            if (Door* door = dynamic_cast<Door*>(obj)) {
+                door->notifyDelta(deltaTimeMs);
+                door->update();
+            }
+        }
+
+        if (m_doorPhase == DoorPhase::WaitingForOpenAnim) {
+
+            if (m_activeDoor && m_activeDoor->isOpenAnimDone()) {
+
+                m_doorPhase       = DoorPhase::FadingOut;
+                m_doorFadeElapsed = 0;
+                m_doorFadeOpacity = 1.0f;
+            }
+        }
+        else if (m_doorPhase == DoorPhase::FadingOut) {
+            m_doorFadeElapsed += deltaTimeMs;
+            float t = qMin(1.0f, (float)m_doorFadeElapsed / (float)m_doorFadeTimeMs);
+            m_doorFadeOpacity = 1.0f - t;
+
+            if (t >= 1.0f) {
+
+                m_doorFadeOpacity = 0.0f;
+                if (m_activeDoor && m_player) {
+                    QPointF dest = m_activeDoor->teleportDestination();
+                    m_player->setPosition(dest.x(), dest.y());
+                    m_camera->snapTo(m_player->centreX(), m_player->centreY());
+                    m_activeDoor->onFadeOutComplete();
+                }
+                m_doorPhase       = DoorPhase::FadingIn;
+                m_doorFadeElapsed = 0;
+            }
+        }
+        else if (m_doorPhase == DoorPhase::FadingIn) {
+            m_doorFadeElapsed += deltaTimeMs;
+            float t = qMin(1.0f, (float)m_doorFadeElapsed / (float)m_doorFadeTimeMs);
+            m_doorFadeOpacity = t;
+
+            if (t >= 1.0f) {
+                m_doorFadeOpacity = 1.0f;
+
+                if (m_activeDoor)
+                    m_activeDoor->onFadeInComplete();
+
+                m_activeDoor = nullptr;
+                m_doorPhase  = DoorPhase::None;
+            }
+        }
+
+        if (m_player) m_player->updateAnimation();
+        advanceCamera();
+        m_input->endFrame();
+        return;
+    }
+
     processInput();
     updateEntities();
     runCollision();
@@ -151,19 +209,21 @@ void Game::update(int deltaTimeMs) {
 
     advanceCamera();
     removeInactiveEntities();
+
     bool showPopup = (m_nearestInteractable != nullptr && m_nearestInteractable->isInteractable());
     if (showPopup) {
         m_popupOpacity += 0.25f;
         if (m_popupOpacity > 1.0f) m_popupOpacity = 1.0f;
         m_lastPopupX = m_nearestInteractable->centreX();
         m_lastPopupY = m_nearestInteractable->y();
-
         m_lastPopupWasCaptainStar = (dynamic_cast<CaptainStar*>(m_nearestInteractable) != nullptr);
+        m_lastPopupWasDoor        = (dynamic_cast<Door*>(m_nearestInteractable) != nullptr);
     } else {
         m_popupOpacity -= 0.25f;
         if (m_popupOpacity < 0.0f) m_popupOpacity = 0.0f;
     }
     m_input->endFrame();
+
     if (m_player && m_player->getHealth() <= 0) {
         if (m_stateManager->current() != GameState::GAME_OVER && !m_isDying) {
             m_isDying = true;
@@ -173,7 +233,6 @@ void Game::update(int deltaTimeMs) {
         }
     }
 }
-
 void Game::processInput() {
     if (!m_player) return;
     float currentSpeed = m_player->isInTrap() ? (Constants::PLAYER_SPEED * 0.5f) : Constants::PLAYER_SPEED;
@@ -206,6 +265,10 @@ void Game::updateEntities() {
     for (GameObject* obj : m_entities) {
         if (!obj || !obj->isActive()) continue;
 
+        if (Door* door = dynamic_cast<Door*>(obj)) {
+            door->notifyDelta(16);
+        }
+
         obj->update();
 
         if (Enemy* enemy = dynamic_cast<Enemy*>(obj)) {
@@ -216,7 +279,6 @@ void Game::updateEntities() {
                 QVector<Cannonball*> balls = cannon->takeNewProjectiles();
                 for (Cannonball* b : balls) {
                     newEntities.append(b);
-                    m_cannonballsPool.append(b);
                 }
             }
         }
@@ -241,18 +303,18 @@ void Game::updateEntities() {
         m_entities.append(newObj);
     }
 }
+
 void Game::runCollision() {
     for (GameObject* obj : m_entities) {
         if (Cannonball* ball = dynamic_cast<Cannonball*>(obj)) {
             if (!ball->hasExploded()) {
-                // Predict X movement for wall reflections
+
                 QRectF nextXBox = ball->boundingBox().translated(ball->getVelX(), 0);
                 auto solidHitsX = m_collision->checkSolid(nextXBox, m_entities);
                 if (!solidHitsX.isEmpty()) {
                     ball->setVelX(-ball->getVelX() * 0.8f);
                 }
 
-                // Predict Y movement for floor bouncing
                 QRectF nextYBox = ball->boundingBox().translated(0, ball->getVelY());
                 auto solidHitsY = m_collision->checkSolid(nextYBox, m_entities);
 
@@ -261,7 +323,7 @@ void Game::runCollision() {
 
                     if (std::abs(ball->getVelY()) < 2.5f) {
                         ball->setVelY(0.0f);
-                        // INCREASED FRICTION: changed from 0.96f to 0.90f so it decelerates and explodes quicker
+
                         ball->setVelX(ball->getVelX() * 0.90f);
                     } else {
                         ball->setVelY(-ball->getVelY() * 0.5f);
@@ -407,7 +469,14 @@ void Game::draw(QPainter& painter) {
     }
 
     if (m_player && m_player->isActive() && view.intersects(m_player->boundingBox())) {
-        m_player->draw(painter, camX, camY);
+        if (m_doorFadeOpacity < 1.0f) {
+            painter.save();
+            painter.setOpacity(m_doorFadeOpacity);
+            m_player->draw(painter, camX, camY);
+            painter.restore();
+        } else {
+            m_player->draw(painter, camX, camY);
+        }
     }
 
     if (m_currentLevelObj) {
@@ -416,24 +485,33 @@ void Game::draw(QPainter& painter) {
     if (m_popupOpacity > 0.0f) {
         painter.save();
         painter.setOpacity(m_popupOpacity);
+
         if (m_lastPopupWasCaptainStar) {
             int targetW = 160 * Constants::UI_SCALE;
             int targetH = 64 * Constants::UI_SCALE;
             float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 210;
             float sy = m_camera->toScreenY(m_lastPopupY) - targetH - 5;
-            if (m_showStarError) {
+            if (m_showStarError)
                 m_captainStarErrorPopup->draw(painter, sx, sy, targetW, targetH);
-            } else {
+            else
                 m_captainStarPopup->draw(painter, sx, sy, targetW, targetH);
-            }
+
+        } else if (m_lastPopupWasDoor) {
+
+            int targetW = 70 * Constants::UI_SCALE;
+            int targetH = 13 * Constants::UI_SCALE;
+            float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 5;
+            float sy = m_camera->toScreenY(m_lastPopupY) - targetH - 5;
+            m_interactPopup->draw(painter, sx, sy, targetW, targetH);
+
         } else {
             int targetW = 70 * Constants::UI_SCALE;
             int targetH = 13 * Constants::UI_SCALE;
             float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 70;
             float sy = m_camera->toScreenY(m_lastPopupY) + m_popupYOffset + 110;
-
             m_interactPopup->draw(painter, sx, sy, targetW, targetH);
         }
+
         painter.restore();
     }
 
@@ -522,18 +600,15 @@ void Game::spawnEntities(const LevelData& data) {
                 obj = enemy;
             }
             else if (enemyType == "cannon") {
-                float power = e.properties.value("shotPower", 6.0f).toFloat();
-                float range = e.properties.value("shotRange", 600.0f).toFloat();
-
-                auto* cannon = new Cannon(eX, eY, m_player, power, range);
-
-                float hxOffset = e.properties.value("hitboxOffsetX", 0.0f).toFloat();
-                float hyOffset = e.properties.value("hitboxOffsetY", 0.0f).toFloat();
-                cannon->setHitboxOffsets(hxOffset, hyOffset);
-
-                float sxOffset = e.properties.value("spawnOffsetX", -10.0f).toFloat();
-                float syOffset = e.properties.value("spawnOffsetY", 20.0f).toFloat();
-                cannon->setSpawnOffsets(sxOffset, syOffset);
+                float maxSpeed = e.properties.value("maxSpeed", 10.0f).toFloat();
+                float shotRange = e.properties.value("shotRange", 1000.0f).toFloat();
+                auto* cannon = new Cannon(eX, eY, m_player, maxSpeed, shotRange);
+                bool hasTarget = e.properties.value("hasTarget", false).toBool();
+                if (hasTarget) {
+                    float tx = e.properties.value("targetX", 0.0f).toFloat();
+                    float ty = e.properties.value("targetY", 0.0f).toFloat();
+                    cannon->setTrajectoryTarget(tx * scale, ty * scale + yOffset);
+                }
 
                 obj = cannon;
             }
@@ -574,6 +649,12 @@ void Game::spawnEntities(const LevelData& data) {
             }
             obj = ha;
         }
+        else if (e.type == "door") {
+            int fadeMs = e.properties.value("fadeTimeMs", 500).toInt();
+            auto* door = new Door(eX, eY, eW, eH, fadeMs);
+            door->setGroupId(e.properties.value("groupId").toString());
+            obj = door;
+        }
 
         if (obj) {
             obj->setId(e.id);
@@ -581,29 +662,25 @@ void Game::spawnEntities(const LevelData& data) {
             m_entities.append(obj);
         }
     }
+    QMap<QString, QVector<Door*>> doorGroups;
+    for (GameObject* obj : m_entities) {
+        if (Door* d = dynamic_cast<Door*>(obj)) {
+            doorGroups[d->groupId()].append(d);
+        }
+    }
+    for (auto& group : doorGroups) {
+        if (group.size() == 2) {
+            group[0]->setPartner(group[1]);
+            group[1]->setPartner(group[0]);
+        }
+    }
 }
 void Game::clearLevel() {
-    for (Cannonball* ball : m_cannonballsPool) {
-        if (ball) {
-            QTimer::singleShot(0, [ball]() {
-                delete ball;
-            });
-        }
-    }
-    m_cannonballsPool.clear();
-    for (GameObject* obj : m_entities) {
-        if (obj) {
-            QTimer::singleShot(0, [obj]() {
-                delete obj;
-            });
-        }
-    }
+    for (GameObject* obj : m_entities) delete obj;
     m_entities.clear();
-
-    // Reset tracking flags
-    m_allTargetsFound = false;
-    m_showStarError = false;
-    m_popupOpacity = 0.0f;
+    m_player = nullptr;
+    m_nearestInteractable = nullptr;
+    m_currentLevelObj.reset();
 }
 
 void Game::spawnItemInWorld(const Item& item, float x, float y) {
@@ -614,12 +691,22 @@ void Game::spawnItemInWorld(const Item& item, float x, float y) {
 void Game::triggerInteraction(InteractiveObject* obj) {
     if (!obj) return;
 
+    if (Door* door = dynamic_cast<Door*>(obj)) {
+        if (!door->isInteractable()) return;
+        door->interact();
+        m_activeDoor      = door;
+        m_doorPhase       = DoorPhase::WaitingForOpenAnim;
+        m_doorFadeTimeMs  = door->fadeTimeMs();
+        m_doorFadeElapsed = 0;
+        m_doorFadeOpacity = 1.0f;
+        return;
+    }
+
     if (auto* captain = dynamic_cast<CaptainStar*>(obj)) {
         captain->interact();
 
         if (m_allTargetsFound) {
             m_showStarError = false;
-
             QTimer::singleShot(1000, this, [this]() {
                 QSettings settings;
                 int maxUnlocked = settings.value("max_unlocked_level", 0).toInt();
@@ -632,9 +719,7 @@ void Game::triggerInteraction(InteractiveObject* obj) {
                 m_stateManager->setState(GameState::WIN);
             });
         } else {
-
             m_showStarError = true;
-
             QTimer::singleShot(4000, this, [this]() {
                 m_showStarError = false;
             });

@@ -50,7 +50,13 @@ void AnimatedSprite::setState(const QString& stateName) {
     m_elapsedTime = 0;
     m_finished = false;
 }
-
+void AnimatedSprite::forceState(const QString& stateName) {
+    if (!m_tags.contains(stateName)) return;
+    m_currentState      = stateName;
+    m_currentFrameIndex = m_tags[m_currentState].from;
+    m_elapsedTime       = 0;
+    m_finished          = false;
+}
 void AnimatedSprite::update(int deltaTimeMs) {
     if (m_frames.isEmpty() || !m_tags.contains(m_currentState)) return;
     if (m_finished) return;

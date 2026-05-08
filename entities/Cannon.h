@@ -6,40 +6,37 @@ class Cannonball;
 
 class Cannon : public Enemy {
 public:
-    Cannon(float x, float y, Player* player, float shotPower, float shotRange);
-
+    Cannon(float x, float y, Player* player, float maxSpeed, float shotRange);
     ~Cannon();
 
     void updateAnimation() override;
     void draw(QPainter& painter, float camX, float camY) override;
 
-    // We use this to expose newly fired cannonballs to the Game state
     QVector<Cannonball*> takeNewProjectiles();
 
-    void setHitboxOffsets(float xOffset, float yOffset) {
-        m_hitboxOffsetX = xOffset;
-        m_hitboxOffsetY = yOffset;
-    }
-
-    void setSpawnOffsets(float xOffset, float yOffset) {
-        m_spawnOffsetX = xOffset;
-        m_spawnOffsetY = yOffset;
+    void setTrajectoryTarget(float targetX, float targetY) {
+        m_targetX = targetX;
+        m_targetY = targetY;
+        m_hasTarget = true;
     }
 
 protected:
     void updateBehavior() override;
 
 private:
-    float m_hitboxOffsetX;
-    float m_hitboxOffsetY;
 
-    float m_spawnOffsetX;
-    float m_spawnOffsetY;
-    float m_shotPower;
+    static constexpr float SPAWN_OFFSET_X = -10.0f;
+    static constexpr float SPAWN_OFFSET_Y = 20.0f;
+
+    float m_maxSpeed;
     float m_shotRange;
     int m_fireTimer;
     int m_fireCooldown;
     bool m_isFiring;
+
+    bool m_hasTarget = false;
+    float m_targetX = 0.0f;
+    float m_targetY = 0.0f;
 
     QVector<Cannonball*> m_pendingProjectiles;
 };

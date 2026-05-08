@@ -66,5 +66,14 @@
     <file>assets/sprites/enemy/crabby.json</file>
     <file>assets/sprites/enemy/cannon.json</file>
     <file>assets/sprites/enemy/cannon.png</file>
+    <file>assets/sprites/objects/door.json</file>
+    <file>assets/sprites/objects/door.png</file>
+    <file>assets/sprites/levels/level2.png</file>
+    <file>assets/sprites/levels/level2_bottom.json</file>
+    <file>assets/sprites/levels/level2_bottom.png</file>
+    <file>assets/sprites/levels/level2_trap_data.json</file>
+    <file>assets/sprites/levels/level2_collision_data.json</file>
+    <file>assets/sprites/levels/level2_top.json</file>
+    <file>assets/sprites/levels/level2_top.png</file>
   </qresource>
 </RCC>
