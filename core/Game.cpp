@@ -86,7 +86,9 @@ void Game::startNewGame(int levelNumber) {
     spawnEntities(data);
     m_stateManager->setState(GameState::PLAYING);
 }
-
+void Game::startNextLevel() {
+    startNewGame(m_currentLevel + 1);
+}
 void Game::restartLevel() { startNewGame(m_currentLevel); }
 
 void Game::pauseGame() {

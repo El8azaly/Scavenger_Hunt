@@ -26,7 +26,7 @@ protected:
     signals:
         void resumeRequested();
     void restartRequested();
-    void nextLevelRequested();
+    void nextLevelRequested(int level);
     void exitRequested();
 
 private:

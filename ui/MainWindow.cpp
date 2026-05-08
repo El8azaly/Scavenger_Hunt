@@ -61,7 +61,7 @@ void MainWindow::connectSignals() {
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
 
     connect(m_winScreen, &GameOverlayScreen::nextLevelRequested,
-            this, [this](){ m_game->startNewGame(1); m_gameLoop->start(); });
+            this, [this](){ m_game->startNextLevel(); m_gameLoop->start(); });
     connect(m_winScreen, &GameOverlayScreen::exitRequested,
             this, [this](){ m_gameLoop->stop(); m_game->exitToMenu(); });
 

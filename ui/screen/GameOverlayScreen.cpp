@@ -72,7 +72,9 @@ void GameOverlayScreen::setupUI() {
             m_nextLevelBtn = SpriteButton::createYellow("", this);
             m_nextLevelBtn->setIcon("resume_icon_1x1", 1);
             m_nextLevelBtn->setTextOffset(0, -1);
-            connect(m_nextLevelBtn, &SpriteButton::clicked, this, &GameOverlayScreen::nextLevelRequested);
+            connect(m_nextLevelBtn, &SpriteButton::clicked, this, [this]() {
+                if (m_game) emit nextLevelRequested(m_game->getCurrentLevel() + 1);
+            });
             if (hasNextLevel) {
                 restartBtn->setFixedSize(16 * ui, 16 * ui);
                 restartBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 26 * ui, panelY + 67 * ui);

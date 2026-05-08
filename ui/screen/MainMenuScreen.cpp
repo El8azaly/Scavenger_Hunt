@@ -149,6 +149,7 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
             int currentMaxUnlocked = settings.value("max_unlocked_level", 0).toInt();
 
             if (lvlNumber <= currentMaxUnlocked || lvlNumber == 0) {
+                showMainMenu();
                 emit levelSelected(lvlNumber);
             } else {
 

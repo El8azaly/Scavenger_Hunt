@@ -42,6 +42,7 @@ public:
     void handleMousePress(int qtMouseButton);
 
     void startNewGame(int levelNumber = 1);
+    void startNextLevel();
     void restartLevel();
     void pauseGame();
     void resumeGame();
