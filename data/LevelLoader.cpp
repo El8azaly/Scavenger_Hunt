@@ -95,23 +95,21 @@ static LevelData buildLevel3() {
 
     d.itemLibrary = ItemRegistry::allItems().values().toVector();
     d.entities.append(EntityRegistry::spawnCaptainStar("capnstar",115, 87 ));
-    d.entities.append(EntityRegistry::spawnCollectible("sword_1", "sword", 167, 176));
-    d.entities.append(EntityRegistry::spawnCollectible("item_1", "emerald", 292, 71));
-    d.entities.append(EntityRegistry::spawnCollectible("item_2", "diamond", 292, 154));
-
+    d.entities.append(EntityRegistry::spawnCollectible("item_1", "emerald", 409, 93));
+    d.entities.append(EntityRegistry::spawnCollectible("item_2", "diamond", 349, 177));
+    d.entities.append(EntityRegistry::spawnCollectible("item_1", "map", 327, 574));
+    d.entities.append(EntityRegistry::spawnCollectible("item_1", "skull", 371, 390));
+    d.entities.append(EntityRegistry::spawnCollectible("item_2", "green_potion", 173, 645));
     d.entities.append(EntityRegistry::spawnDoor("door_1a", "a", 51, 671));
     d.entities.append(EntityRegistry::spawnDoor("door_1b", "a", 50, 74));
-
     d.entities.append(EntityRegistry::spawnDoor("door_2a", "b", 44, 565));
     d.entities.append(EntityRegistry::spawnDoor("door_2b", "b", 289, 563));
-
     d.entities.append(EntityRegistry::spawnDoor("door_3a", "c", 157, 330));
     d.entities.append(EntityRegistry::spawnDoor("door_3b", "c", 288, 330));
-
     d.entities.append(EntityRegistry::spawnDoor("door_4a", "d", 296, 96));
     d.entities.append(EntityRegistry::spawnDoor("door_4b", "d", 44, 202));
 
-    d.targetIds.append({"green_potion", "emerald", "diamond", "silver_coin", "brass_key"});
+    d.targetIds.append({"emerald", "diamond", "map", "skull", "green_potion"});
 
     return d;
 }

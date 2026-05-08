@@ -12,8 +12,7 @@ Level3::Level3(QObject* parent)
             ":/assets/sprites/levels/level3_top.png"
         ),
         parent
-    )
-{
+    ) {
     m_windowSprite = std::make_unique<AnimatedSprite>(
         ":/assets/sprites/objects/window.json",
         ":/assets/sprites/objects/window.png"

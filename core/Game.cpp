@@ -390,8 +390,11 @@ void Game::resolveSolidCollision(Entity* subject, const CollisionResult& cr) {
 }
 void Game::resolveProximity(const QVector<GameObject*>& nearby) {
     m_nearestInteractable = nullptr;
+    float minDistanceSq = 1e9f;
+
     for (GameObject* obj : nearby) {
         if (!obj) continue;
+
         if (obj->isCollectible()) {
             auto* item = static_cast<CollectibleItem*>(obj);
             if (!item->isCollected() && m_player->boundingBox().intersects(obj->boundingBox())) {
@@ -408,11 +411,22 @@ void Game::resolveProximity(const QVector<GameObject*>& nearby) {
             continue;
         }
 
-        if (obj->isInteractable()) m_nearestInteractable = static_cast<InteractiveObject*>(obj);
+        if (obj->isInteractable()) {
+
+            float dx = m_player->centreX() - obj->centreX();
+            float dy = m_player->centreY() - obj->centreY();
+            float distSq = (dx * dx) + (dy * dy);
+
+            if (distSq < minDistanceSq) {
+                minDistanceSq = distSq;
+                m_nearestInteractable = static_cast<InteractiveObject*>(obj);
+            }
+        }
     }
 
-    if (m_nearestInteractable && m_input->wasJustPressed(GameAction::INTERACT))
+    if (m_nearestInteractable && m_input->wasJustPressed(GameAction::INTERACT)) {
         triggerInteraction(m_nearestInteractable);
+    }
 }
 
 void Game::advanceCamera() {
