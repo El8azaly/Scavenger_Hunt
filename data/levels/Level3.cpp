@@ -40,7 +40,9 @@ void Level3::drawWindowLayer(QPainter& painter, const Camera& camera) {
     const std::vector<QPointF> points = {
         {130, 75}, {194, 75},
         {178, 818}, {519, 808},
-        {485, 458}, {549, 458}
+        {485, 458}, {549, 458},
+        {498, 110}, {562, 110},
+        {738,110}
     };
 
     float windowWidth = 29 * scale;
