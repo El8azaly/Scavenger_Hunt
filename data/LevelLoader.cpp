@@ -22,12 +22,12 @@ static LevelData buildLevel0() {
     d.entities.append(EntityRegistry::spawnContainer(
         "chest_1", "chest", 280, 150,
         {"map"}
-    ));
+        ));
 
     d.entities.append(EntityRegistry::spawnContainer(
         "box_1", "box", 210, 150,
         {"diamond"}
-    ));
+        ));
 
     d.targetIds.append({"diamond", "map", "brass_key"});
 
@@ -50,12 +50,13 @@ static LevelData buildLevel1() {
     d.entities.append(EntityRegistry::spawnContainer(
         "chest_1", "chest", 558, 193,
         {"blue_potion"}
-    ));
+        ));
 
     d.entities.append(EntityRegistry::spawnContainer(
         "barrel_1", "barrel", 92, 22,
         {"ruby"}
-    ));
+        ));
+
 
     d.targetIds.append({"blue_potion", "ruby", "skull"});
 
@@ -73,13 +74,21 @@ static LevelData buildLevel2() {
     d.entities.append(EntityRegistry::spawnCollectible("sword_1", "sword", 167, 176));
     d.entities.append(EntityRegistry::spawnCannon("cannon_1", 411, 112, 11.0f, 200.0f, true, 353, 110));
     d.entities.append(EntityRegistry::spawnEnemy("fiercetooth_1", "fiercetooth", 723, 195, "green_potion"));
-    d.entities.append(EntityRegistry::spawnCollectible("item_1", "emerald", 292, 71));
+    d.entities.append(EntityRegistry::spawnQuizNpc(
+        "quiz_keeper_2", 280, 66, "emerald",
+        {
+            "pass=2",
+            "Which key do you press to interact with objects?|E|F|Space|Escape|1",
+            "What item lets the player attack enemies?|Map|Sword|Ruby|Potion|2",
+            "Who should you talk to after collecting all quest items?|Cannon|Fierce Tooth|Captain Star|Door|3"
+        }
+        ));
     d.entities.append(EntityRegistry::spawnCollectible("item_2", "diamond", 292, 154));
 
     d.entities.append(EntityRegistry::spawnContainer(
         "chest_1", "chest", 62, 22,
         {"silver_coin", "brass_key"}
-    ));
+        ));
 
     d.targetIds.append({"green_potion", "emerald", "diamond", "silver_coin", "brass_key"});
 

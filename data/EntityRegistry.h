@@ -39,6 +39,20 @@ public:
         return e;
     }
 
+    static EntitySpawnData spawnQuizNpc(const QString& id, float x, float y, const QString& rewardItemId, const QStringList& quizData) {
+        EntitySpawnData e;
+        e.type = "quiz_npc";
+        e.id = id;
+        e.x = x;
+        e.y = y;
+        e.w = 40.0f;
+        e.h = 60.0f;
+        e.properties["rewardItemId"] = rewardItemId;
+        e.properties["quizType"] = "quiz";
+        e.properties["quizData"] = quizData;
+        return e;
+    }
+
     static EntitySpawnData spawnCannon(const QString& id, float x, float y,
                                        float maxSpeed = 10.0f, float shotRange = 1000.0f,
                                        bool hasTarget = false, float targetX = 0.0f, float targetY = 0.0f) {
@@ -62,9 +76,9 @@ public:
     }
 
     static EntitySpawnData spawnDoor(const QString& id, const QString& groupId,
-                                      float x, float y,
-                                      float w = 82.0f, float h = 98.0f,
-                                      int fadeTimeMs = 500) {
+                                     float x, float y,
+                                     float w = 82.0f, float h = 98.0f,
+                                     int fadeTimeMs = 500) {
         EntitySpawnData e;
         e.type = "door";
         e.id   = id;

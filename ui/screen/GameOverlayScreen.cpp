@@ -1,5 +1,5 @@
 #include "GameOverlayScreen.h"
-#include "ui/sprite/spritebutton.h"
+#include "ui/sprite/SpriteButton.h"
 #include "core/Constants.h"
 #include "core/Game.h"
 #include "systems/ScoreManager.h"
@@ -10,10 +10,10 @@ constexpr auto ui = Constants::UI_SCALE;
 
 GameOverlayScreen::GameOverlayScreen(Game* game, Type type, QWidget* p)
     : QWidget(p),
-      m_game(game),
-      m_type(type),
-      m_panel("game_over_screen_1x1"),
-      m_titleLabel("paused_label_1x1") {
+    m_game(game),
+    m_type(type),
+    m_panel("game_over_screen_1x1"),
+    m_titleLabel("paused_label_1x1") {
     setFocusPolicy(Qt::StrongFocus);
     setupUI();
 }
@@ -22,81 +22,81 @@ void GameOverlayScreen::setupUI() {
     int panelH = 91 * ui;
     int panelY = (Constants::WINDOW_HEIGHT - panelH) / 2;
     switch (m_type) {
-        case Type::Pause:
-            m_titleLabel = SlicedSprite("paused_label_1x1");
-            break;
-        case Type::GameOver:
-            m_titleLabel = SlicedSprite("game_over_label_1x1");
-            break;
-        case Type::Victory:
-            m_titleLabel = SlicedSprite("victory_label_1x1");
-            break;
+    case Type::Pause:
+        m_titleLabel = SlicedSprite("paused_label_1x1");
+        break;
+    case Type::GameOver:
+        m_titleLabel = SlicedSprite("game_over_label_1x1");
+        break;
+    case Type::Victory:
+        m_titleLabel = SlicedSprite("victory_label_1x1");
+        break;
     }
 
     switch (m_type) {
-        case Type::Pause: {
-            auto* restartBtn = SpriteButton::createYellow("", this);
-            restartBtn->setIcon("restart_icon_1x1", 1);
-            restartBtn->setTextOffset(0, -1);
+    case Type::Pause: {
+        auto* restartBtn = SpriteButton::createYellow("", this);
+        restartBtn->setIcon("restart_icon_1x1", 1);
+        restartBtn->setTextOffset(0, -1);
+        restartBtn->setFixedSize(16 * ui, 16 * ui);
+        restartBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 26 * ui, panelY + 67 * ui);
+        connect(restartBtn, &SpriteButton::clicked, this, &GameOverlayScreen::restartRequested);
+
+        auto* resumeBtn = SpriteButton::createYellow("", this);
+        resumeBtn->setIcon("play_icon_1x1", 1);
+        resumeBtn->setTextOffset(0, -1);
+        resumeBtn->setFixedSize(34 * ui, 16 * ui);
+        resumeBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 10 * ui, panelY + 67 * ui);
+        connect(resumeBtn, &SpriteButton::clicked, this, &GameOverlayScreen::resumeRequested);
+        break;
+    }
+    case Type::GameOver: {
+        auto* restartBtn = SpriteButton::createYellow("", this);
+        restartBtn->setIcon("restart_icon_1x1", 1);
+        restartBtn->setTextOffset(0, -1);
+        restartBtn->setFixedSize(34 * ui, 16 * ui);
+        restartBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 10 * ui, panelY + 67 * ui);
+        connect(restartBtn, &SpriteButton::clicked, this, &GameOverlayScreen::restartRequested);
+        break;
+    }
+    case Type::Victory: {
+        bool hasNextLevel = false;
+        if (m_game) {
+            int nextLevel = m_game->getCurrentLevel() + 1;
+            hasNextLevel = LevelLoader::getRegisteredLevels().contains(nextLevel);
+        }
+        auto* restartBtn = SpriteButton::createYellow("", this);
+        restartBtn->setIcon("restart_icon_1x1", 1);
+        restartBtn->setTextOffset(0, -1);
+        connect(restartBtn, &SpriteButton::clicked, this, &GameOverlayScreen::restartRequested);
+        m_nextLevelBtn = SpriteButton::createYellow("", this);
+        m_nextLevelBtn->setIcon("resume_icon_1x1", 1);
+        m_nextLevelBtn->setTextOffset(0, -1);
+        connect(m_nextLevelBtn, &SpriteButton::clicked, this, [this]() {
+            if (m_game) emit nextLevelRequested(m_game->getCurrentLevel() + 1);
+        });
+        if (hasNextLevel) {
             restartBtn->setFixedSize(16 * ui, 16 * ui);
             restartBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 26 * ui, panelY + 67 * ui);
-            connect(restartBtn, &SpriteButton::clicked, this, &GameOverlayScreen::restartRequested);
 
-            auto* resumeBtn = SpriteButton::createYellow("", this);
-            resumeBtn->setIcon("play_icon_1x1", 1);
-            resumeBtn->setTextOffset(0, -1);
-            resumeBtn->setFixedSize(34 * ui, 16 * ui);
-            resumeBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 10 * ui, panelY + 67 * ui);
-            connect(resumeBtn, &SpriteButton::clicked, this, &GameOverlayScreen::resumeRequested);
-            break;
-        }
-        case Type::GameOver: {
-            auto* restartBtn = SpriteButton::createYellow("", this);
-            restartBtn->setIcon("restart_icon_1x1", 1);
-            restartBtn->setTextOffset(0, -1);
+            m_nextLevelBtn->setFixedSize(34 * ui, 16 * ui);
+            m_nextLevelBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 10 * ui, panelY + 67 * ui);
+            m_nextLevelBtn->show();
+        } else {
             restartBtn->setFixedSize(34 * ui, 16 * ui);
             restartBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 10 * ui, panelY + 67 * ui);
-            connect(restartBtn, &SpriteButton::clicked, this, &GameOverlayScreen::restartRequested);
-            break;
+            m_nextLevelBtn->hide();
         }
-        case Type::Victory: {
-            bool hasNextLevel = false;
-            if (m_game) {
-                int nextLevel = m_game->getCurrentLevel() + 1;
-                hasNextLevel = LevelLoader::getRegisteredLevels().contains(nextLevel);
-            }
-            auto* restartBtn = SpriteButton::createYellow("", this);
-            restartBtn->setIcon("restart_icon_1x1", 1);
-            restartBtn->setTextOffset(0, -1);
-            connect(restartBtn, &SpriteButton::clicked, this, &GameOverlayScreen::restartRequested);
-            m_nextLevelBtn = SpriteButton::createYellow("", this);
-            m_nextLevelBtn->setIcon("resume_icon_1x1", 1);
-            m_nextLevelBtn->setTextOffset(0, -1);
-            connect(m_nextLevelBtn, &SpriteButton::clicked, this, [this]() {
-                if (m_game) emit nextLevelRequested(m_game->getCurrentLevel() + 1);
-            });
-            if (hasNextLevel) {
-                restartBtn->setFixedSize(16 * ui, 16 * ui);
-                restartBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 26 * ui, panelY + 67 * ui);
+        auto* exitBtn = SpriteButton::createYellow("", this);
+        exitBtn->setIcon("home_icon_1x1", 1);
+        exitBtn->setTextOffset(0, -1);
+        exitBtn->setFixedSize(16 * ui, 16 * ui);
+        int exitX = (Constants::WINDOW_WIDTH - 16 * ui) / 2 + 28 * ui;
+        exitBtn->move(exitX, panelY + 67 * ui);
+        connect(exitBtn, &SpriteButton::clicked, this, &GameOverlayScreen::exitRequested);
 
-                m_nextLevelBtn->setFixedSize(34 * ui, 16 * ui);
-                m_nextLevelBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 10 * ui, panelY + 67 * ui);
-                m_nextLevelBtn->show();
-            } else {
-                restartBtn->setFixedSize(34 * ui, 16 * ui);
-                restartBtn->move((Constants::WINDOW_WIDTH - 16 * ui) / 2 - 10 * ui, panelY + 67 * ui);
-                m_nextLevelBtn->hide();
-            }
-            auto* exitBtn = SpriteButton::createYellow("", this);
-            exitBtn->setIcon("home_icon_1x1", 1);
-            exitBtn->setTextOffset(0, -1);
-            exitBtn->setFixedSize(16 * ui, 16 * ui);
-            int exitX = (Constants::WINDOW_WIDTH - 16 * ui) / 2 + 28 * ui;
-            exitBtn->move(exitX, panelY + 67 * ui);
-            connect(exitBtn, &SpriteButton::clicked, this, &GameOverlayScreen::exitRequested);
-
-            break;
-        }
+        break;
+    }
     }
 
     auto* exitBtn = new SpriteButton("scroll_button", this);

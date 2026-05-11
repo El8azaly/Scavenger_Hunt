@@ -31,6 +31,7 @@
 #include "entities/Cannonball.h"
 #include "entities/CaptainStar.h"
 #include "entities/FierceTooth.h"
+#include "entities/QuizNpc.h"
 
 class SkyBackground;
 
@@ -221,6 +222,7 @@ void Game::update(int deltaTimeMs) {
         m_lastPopupY = m_nearestInteractable->y();
         m_lastPopupWasCaptainStar = (dynamic_cast<CaptainStar*>(m_nearestInteractable) != nullptr);
         m_lastPopupWasDoor        = (dynamic_cast<Door*>(m_nearestInteractable) != nullptr);
+        m_lastPopupWasQuizNpc     = (dynamic_cast<QuizNpc*>(m_nearestInteractable) != nullptr);
     } else {
         m_popupOpacity -= 0.25f;
         if (m_popupOpacity < 0.0f) m_popupOpacity = 0.0f;
@@ -524,6 +526,13 @@ void Game::draw(QPainter& painter) {
             float sy = m_camera->toScreenY(m_lastPopupY) - targetH - 5;
             m_interactPopup->draw(painter, sx, sy, targetW, targetH);
 
+        } else if (m_lastPopupWasQuizNpc) {
+            int targetW = 70 * Constants::UI_SCALE;
+            int targetH = 13 * Constants::UI_SCALE;
+            float sx = m_camera->toScreenX(m_lastPopupX) - (targetW / 2.0f) + 75;
+            float sy = m_camera->toScreenY(m_lastPopupY) - targetH - 5;
+            m_interactPopup->draw(painter, sx, sy, targetW, targetH);
+
         } else {
             int targetW = 70 * Constants::UI_SCALE;
             int targetH = 13 * Constants::UI_SCALE;
@@ -658,6 +667,20 @@ void Game::spawnEntities(const LevelData& data) {
         }
         else if (e.type == "npc_star") {
             obj = new CaptainStar(eX, eY);
+        }
+        else if (e.type == "quiz_npc") {
+            auto* quizNpc = new QuizNpc(eX, eY);
+
+            const QString rewardItemId = e.properties.value("rewardItemId").toString();
+            Item rewardItem = itemLib.value(rewardItemId, Item::null());
+            if (!rewardItem.isNull()) {
+                quizNpc->addRewardItem(rewardItem);
+            }
+
+            const QString quizType = e.properties.value("quizType", "quiz").toString();
+            const QStringList quizData = e.properties.value("quizData").toStringList();
+            quizNpc->setLocked(quizType, quizData);
+            obj = quizNpc;
         }
         else if (e.type == "hidden_area") {
             int triggers = e.properties.value("requiredTriggers", Constants::DEFAULT_TRIGGER_COUNT).toInt();
