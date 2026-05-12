@@ -5,10 +5,10 @@ diagrams:
   all:
     type: class
     glob:
-      - "./core/*.cpp"
-      - "./engine/*.cpp"
-      - "./entities/*.cpp"
-      - "./systems/*.cpp"
-      - "./data/*.cpp"
-      - "./ui/*.cpp"
+      - "./core/**/*.cpp"
+      - "./engine/**/*.cpp"
+      - "./entities/**/*.cpp"
+      - "./systems/**/*.cpp"
+      - "./data/**/*.cpp"
+      - "./ui/**/*.cpp"
       - "./main.cpp"
