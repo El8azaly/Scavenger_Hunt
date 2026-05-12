@@ -13,14 +13,12 @@ QuizDialog::QuizDialog(Game* game, QWidget* parent)
     : QWidget(parent),
     m_game(game),
     m_panel("window_bg"),
-    m_paper("paper_blank")
-{
+    m_paper("paper_blank") {
     setFocusPolicy(Qt::StrongFocus);
     setFixedSize(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 }
 
-void QuizDialog::startQuiz(const PuzzleData& puzzle)
-{
+void QuizDialog::startQuiz(const PuzzleData& puzzle) {
     clearButtons();
 
     m_objectId = puzzle.objectId;
@@ -37,8 +35,7 @@ void QuizDialog::startQuiz(const PuzzleData& puzzle)
     update();
 }
 
-void QuizDialog::parsePuzzleData(const PuzzleData& puzzle)
-{
+void QuizDialog::parsePuzzleData(const PuzzleData& puzzle) {
     for (const QString& rawLine : puzzle.data) {
         const QString line = rawLine.trimmed();
         if (line.isEmpty()) continue;
@@ -106,8 +103,7 @@ void QuizDialog::parsePuzzleData(const PuzzleData& puzzle)
     }
 }
 
-void QuizDialog::showCurrentQuestion()
-{
+void QuizDialog::showCurrentQuestion() {
     clearButtons();
     m_showingResult = false;
 
@@ -124,7 +120,6 @@ void QuizDialog::showCurrentQuestion()
         auto* optionButton = SpriteButton::createYellow(optionText, this);
         optionButton->setText(optionText, 1, PixelFont::Dark);
 
-        // Moves the answer text just a little lower so it looks centered.
         optionButton->setTextOffset(0, 1);
 
         optionButton->setCursor(Qt::PointingHandCursor);
@@ -145,8 +140,7 @@ void QuizDialog::showCurrentQuestion()
     update();
 }
 
-void QuizDialog::answerCurrentQuestion(int selectedIndex)
-{
+void QuizDialog::answerCurrentQuestion(int selectedIndex) {
     if (m_currentQuestion >= m_questions.size()) return;
 
     if (selectedIndex == m_questions[m_currentQuestion].correctIndex) {
@@ -157,8 +151,7 @@ void QuizDialog::answerCurrentQuestion(int selectedIndex)
     showCurrentQuestion();
 }
 
-void QuizDialog::showResultScreen()
-{
+void QuizDialog::showResultScreen() {
     clearButtons();
 
     m_showingResult = true;
@@ -181,8 +174,7 @@ void QuizDialog::showResultScreen()
     update();
 }
 
-void QuizDialog::clearButtons()
-{
+void QuizDialog::clearButtons() {
     for (auto* button : m_answerButtons) {
         if (button) {
             button->hide();
@@ -199,8 +191,7 @@ void QuizDialog::clearButtons()
     }
 }
 
-QRect QuizDialog::panelRect() const
-{
+QRect QuizDialog::panelRect() const {
     const int panelW = 268 * ui;
     const int panelH = 220 * ui;
 
@@ -212,8 +203,7 @@ QRect QuizDialog::panelRect() const
         );
 }
 
-QRect QuizDialog::questionRect() const
-{
+QRect QuizDialog::questionRect() const {
     const QRect panel = panelRect();
 
     return QRect(
@@ -224,8 +214,7 @@ QRect QuizDialog::questionRect() const
         );
 }
 
-void QuizDialog::layoutButtons()
-{
+void QuizDialog::layoutButtons() {
     const QRect panel = panelRect();
     const QRect questionBox = questionRect();
 
@@ -246,10 +235,8 @@ void QuizDialog::layoutButtons()
     const int buttonH = 19 * ui;
     const int buttonX = panel.x() + 28 * ui;
 
-    // Moved slightly upward so the final answer box stays inside the panel.
     const int startY = questionBox.bottom();
 
-    // Small clean space between boxes, but not enough to push the last one out.
     const int gap = 19 * ui;
 
     for (int i = 0; i < m_answerButtons.size(); ++i) {
@@ -260,8 +247,7 @@ void QuizDialog::layoutButtons()
     }
 }
 
-QStringList QuizDialog::wrapText(const QString& text, int maxChars) const
-{
+QStringList QuizDialog::wrapText(const QString& text, int maxChars) const {
     QStringList words = text.toLower().split(' ', Qt::SkipEmptyParts);
     QStringList lines;
     QString current;
@@ -286,8 +272,7 @@ QStringList QuizDialog::wrapText(const QString& text, int maxChars) const
     return lines;
 }
 
-void QuizDialog::paintEvent(QPaintEvent* event)
-{
+void QuizDialog::paintEvent(QPaintEvent* event) {
     Q_UNUSED(event);
 
     QPainter painter(this);
@@ -455,8 +440,7 @@ void QuizDialog::paintEvent(QPaintEvent* event)
     }
 }
 
-void QuizDialog::keyPressEvent(QKeyEvent* event)
-{
+void QuizDialog::keyPressEvent(QKeyEvent* event) {
     if (!m_showingResult) {
         int selected = -1;
 

@@ -3,8 +3,7 @@
 #include <QTimer>
 #include "core/Constants.h"
 
-class GameLoop : public QObject
-{
+class GameLoop : public QObject {
     Q_OBJECT
 public:
     explicit GameLoop(QObject* parent = nullptr);

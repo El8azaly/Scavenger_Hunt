@@ -9,8 +9,7 @@ enum class GameState {
     WIN
 };
 
-class GameStateManager : public QObject
-{
+class GameStateManager : public QObject {
     Q_OBJECT
 public:
     explicit GameStateManager(QObject* parent = nullptr);

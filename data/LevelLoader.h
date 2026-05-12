@@ -38,8 +38,7 @@ struct LevelRegistryEntry {
     std::function<LevelData()> dataBuilder;
     std::function<std::unique_ptr<Level>(Game*)> instanceCreator;
 };
-class LevelLoader
-{
+class LevelLoader {
 public:
 
     static LevelData load(int levelNumber);

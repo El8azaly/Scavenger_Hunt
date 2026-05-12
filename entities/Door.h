@@ -4,8 +4,7 @@
 #include <QPointF>
 #include <QString>
 
-class Door : public InteractiveObject
-{
+class Door : public InteractiveObject {
 public:
     explicit Door(float x, float y, float w, float h, int fadeTimeMs = 500);
     ~Door();

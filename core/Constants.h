@@ -1,8 +1,7 @@
 #pragma once
 #include <QString>
 
-namespace Constants
-{
+namespace Constants {
     constexpr bool DRAW_COLLISION_BOXES  = false;
     constexpr int WINDOW_WIDTH  = 1280;
     constexpr int WINDOW_HEIGHT = 720;

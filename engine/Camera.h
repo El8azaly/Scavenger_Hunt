@@ -3,8 +3,7 @@
 #include <QRectF>
 #include "core/Constants.h"
 
-class Camera
-{
+class Camera {
 public:
     Camera(int viewWidth  = Constants::WINDOW_WIDTH,
            int viewHeight = Constants::WINDOW_HEIGHT);

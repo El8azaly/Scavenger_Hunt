@@ -13,8 +13,7 @@ struct CollisionResult {
     bool        fromRight   = false;
 };
 
-class CollisionEngine
-{
+class CollisionEngine {
 public:
 
     QVector<CollisionResult> checkSolid(const QRectF& playerRect,

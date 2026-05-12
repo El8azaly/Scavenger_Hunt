@@ -3,9 +3,8 @@
 #include <QPainter>
 
 QuizNpc::QuizNpc(float x, float y, float w, float h)
-    : InteractiveObject(x, y, w, h)
-{
-    // Reuse the Captain Star sprite as the quiz-giver NPC so no new art asset is needed.
+    : InteractiveObject(x, y, w, h) {
+
     m_sprite = new AnimatedSprite(":/assets/sprites/enemy/crabby.json",
                                   ":/assets/sprites/enemy/crabby.png");
     m_sprite->setState("Idle");
@@ -17,27 +16,23 @@ QuizNpc::QuizNpc(float x, float y, float w, float h)
     m_spriteOffsetY = m_h - m_spriteHeight +4 ;
 }
 
-void QuizNpc::update()
-{
+void QuizNpc::update() {
     if (m_sprite) {
         m_sprite->update(16);
     }
 }
 
-void QuizNpc::draw(QPainter& painter, float camX, float camY)
-{
+void QuizNpc::draw(QPainter& painter, float camX, float camY) {
     drawSprite(painter, camX, camY, false);
 }
 
-void QuizNpc::addRewardItem(const Item& item)
-{
+void QuizNpc::addRewardItem(const Item& item) {
     if (!item.isNull()) {
         m_rewards.append(item);
     }
 }
 
-InteractionResult QuizNpc::interact()
-{
+InteractionResult QuizNpc::interact() {
     InteractionResult result;
 
     if (m_rewardGiven) {

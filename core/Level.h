@@ -11,8 +11,7 @@
 
 class QPainter;
 const QColor DEFAULT_COLOR = QColor(30, 30, 45);
-class Level : public QObject
-{
+class Level : public QObject {
     Q_OBJECT
 public:
     Level(const QString& levelImagePath,

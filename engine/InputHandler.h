@@ -14,8 +14,7 @@ enum class GameAction {
     ATTACK
 };
 
-class InputHandler : public QObject
-{
+class InputHandler : public QObject {
     Q_OBJECT
 public:
     explicit InputHandler(QObject* parent = nullptr);

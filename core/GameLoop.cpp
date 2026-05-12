@@ -21,7 +21,6 @@ void GameLoop::resume() {
     start();
 }
 
-bool GameLoop::isRunning() const
-{
+bool GameLoop::isRunning() const {
     return m_timer.isActive();
 }

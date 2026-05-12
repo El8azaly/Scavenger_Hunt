@@ -27,8 +27,7 @@ class QuestSystem;
 class ScoreManager;
 class QPainter;
 
-class Game : public QObject
-{
+class Game : public QObject {
     Q_OBJECT
 public:
     explicit Game(QObject* parent = nullptr);

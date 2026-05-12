@@ -6,8 +6,7 @@ InputHandler::InputHandler(QObject* parent)
     : QObject(parent)
 {}
 
-std::optional<GameAction> InputHandler::keyToAction(int k) const
-{
+std::optional<GameAction> InputHandler::keyToAction(int k) const {
     switch (k) {
     case Qt::Key_A:     case Qt::Key_Left:  return GameAction::MOVE_LEFT;
     case Qt::Key_D:     case Qt::Key_Right: return GameAction::MOVE_RIGHT;
@@ -56,8 +55,7 @@ void InputHandler::keyReleaseEvent(int qtKey) {
     m_justPressedKeys.remove(qtKey);
 }
 
-bool InputHandler::isHeld(GameAction action) const
-{
+bool InputHandler::isHeld(GameAction action) const {
 
     switch (action) {
     case GameAction::MOVE_LEFT:   return m_heldKeys.contains(Qt::Key_A)
@@ -71,8 +69,7 @@ bool InputHandler::isHeld(GameAction action) const
     }
 }
 
-bool InputHandler::wasJustPressed(GameAction action) const
-{
+bool InputHandler::wasJustPressed(GameAction action) const {
     switch (action) {
     case GameAction::MOVE_LEFT:       return m_justPressedKeys.contains(Qt::Key_A)
                                           || m_justPressedKeys.contains(Qt::Key_Left);

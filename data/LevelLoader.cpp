@@ -57,7 +57,6 @@ static LevelData buildLevel1() {
         {"ruby"}
         ));
 
-
     d.targetIds.append({"blue_potion", "ruby", "skull"});
 
     return d;

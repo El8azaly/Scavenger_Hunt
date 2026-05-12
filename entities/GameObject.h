@@ -5,8 +5,7 @@
 
 #include "ui/sprite/AnimatedSprite.h"
 
-class GameObject
-{
+class GameObject {
 public:
     explicit GameObject(float x, float y, float w, float h);
 
