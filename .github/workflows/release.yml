@@ -1,0 +1,92 @@
+name: Release Scavenger Hunt
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+            arch: x86_64
+            artifact_pattern: "build/*.exe"
+          - os: macos-latest
+            platform: macos
+            arch: arm64
+            artifact_pattern: "build/*.dmg"
+          - os: ubuntu-latest
+            platform: linux
+            arch: x86_64
+            artifact_pattern: "build/*.deb"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Get Version from CMake
+        id: get_version
+        shell: bash
+        run: |
+          # Extracts the version number from project(ScavengerHunt VERSION X.X)
+          VER=$(grep -m 1 "project(ScavengerHunt VERSION" CMakeLists.txt | grep -oE "[0-9.]+")
+          echo "VERSION=$VER" >> $GITHUB_OUTPUT
+          echo "Detected Version: $VER"
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.x.x'
+          host: ${{ matrix.platform }}
+
+      - name: Install Linux Deps
+        if: matrix.platform == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y build-essential libgl1-mesa-dev libxkbcommon-x11-0 libxcb-cursor0
+
+      - name: Configure and Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+
+      - name: Package
+        working-directory: build
+        run: cpack -C Release
+
+      - name: Upload Artifacts to Job
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.platform }}
+          path: ${{ matrix.artifact_pattern }}
+
+  create_release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          pattern: binaries-*
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.build.outputs.version }}
+          name: Scavenger Hunt v${{ needs.build.outputs.version }}
+          body_path: Changelog.md
+          files: release-artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
