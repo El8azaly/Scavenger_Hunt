@@ -16,6 +16,8 @@ QuizDialog::QuizDialog(Game* game, QWidget* parent)
     m_paper("paper_blank") {
     setFocusPolicy(Qt::StrongFocus);
     setFixedSize(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
+
+    startTimer(16);
 }
 
 void QuizDialog::startQuiz(const PuzzleData& puzzle) {
@@ -208,7 +210,7 @@ QRect QuizDialog::questionRect() const {
 
     return QRect(
         panel.x() + 30 * ui,
-        panel.y() + 70 * ui,
+        panel.y() + 50 * ui,
         panel.width() - 60 * ui,
         60 * ui
         );
@@ -220,7 +222,7 @@ void QuizDialog::layoutButtons() {
 
     if (m_showingResult && m_continueButton) {
         const int buttonW = 104 * ui;
-        const int buttonH = 24 * ui;
+        const int buttonH = 32 * ui;
 
         m_continueButton->setFixedSize(buttonW, buttonH);
         m_continueButton->move(
@@ -232,12 +234,12 @@ void QuizDialog::layoutButtons() {
     }
 
     const int buttonW = panel.width() - 56 * ui;
-    const int buttonH = 19 * ui;
+    const int buttonH = 28 * ui;
     const int buttonX = panel.x() + 28 * ui;
 
-    const int startY = questionBox.bottom();
+    const int startY = questionBox.bottom()- 10*ui;
 
-    const int gap = 19 * ui;
+    const int gap = 26 * ui;
 
     for (int i = 0; i < m_answerButtons.size(); ++i) {
         SpriteButton* button = m_answerButtons[i];
@@ -292,7 +294,7 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
         panel.y(),
         panel.width(),
         panel.height()
-        );
+    );
 
     m_paper.draw(
         painter,
@@ -300,7 +302,7 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
         questionBox.y(),
         questionBox.width(),
         questionBox.height()
-        );
+    );
 
     const QString title = "quiz keeper";
     const int titleScale = ui;
@@ -314,7 +316,7 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
         titleScale,
         PixelFont::Dark,
         true
-        );
+    );
 
     const QString hint = m_showingResult
                              ? "press enter or click continue"
@@ -326,22 +328,22 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
         painter,
         hint,
         panel.x() + (panel.width() - hintW) / 2,
-        panel.y() + 38 * ui,
+        panel.y() + 53 * ui,
         ui,
         PixelFont::Dark
-        );
+    );
 
     const QRect questionContent(
         questionBox.x() + 12 * ui,
         questionBox.y() + 12 * ui,
         questionBox.width() - 24 * ui,
         questionBox.height() - 24 * ui
-        );
+    );
 
     if (m_showingResult) {
         const QString scoreLine = QString("score: %1/%2")
-        .arg(m_score)
-            .arg(m_questions.size());
+                                      .arg(m_score)
+                                      .arg(m_questions.size());
 
         const int scoreW = scoreLine.length() * 6 * ui;
 
@@ -349,10 +351,10 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
             painter,
             scoreLine,
             panel.x() + (panel.width() - scoreW) / 2,
-            questionBox.y() - 24 * ui,
+            questionBox.y() - 9 * ui,
             ui,
             PixelFont::Dark
-            );
+        );
 
         const QString resultText = m_passed
                                        ? "nice work. the emerald is yours."
@@ -361,7 +363,7 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
         const int resultMaxChars = qMax(
             14,
             (questionContent.width() / (6 * ui)) - 3
-            );
+        );
 
         QStringList lines = wrapText(resultText, resultMaxChars);
 
@@ -369,8 +371,7 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
         const int lineStep = 8 * ui;
         const int totalH = lines.size() * lineStep - (lineStep - textH);
 
-        int y = questionContent.y()
-                + qMax(0, (questionContent.height() - totalH) / 2);
+        int y = questionContent.y() + qMax(0, (questionContent.height() - totalH) / 2);
 
         for (const QString& line : lines) {
             const int lineW = line.length() * 6 * ui;
@@ -382,7 +383,7 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
                 y,
                 ui,
                 PixelFont::Dark
-                );
+            );
 
             y += lineStep;
         }
@@ -392,8 +393,8 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
 
     if (m_currentQuestion < m_questions.size()) {
         const QString progress = QString("question %1 of %2")
-        .arg(m_currentQuestion + 1)
-            .arg(m_questions.size());
+                                     .arg(m_currentQuestion + 1)
+                                     .arg(m_questions.size());
 
         const int progressW = progress.length() * 6 * ui;
 
@@ -401,27 +402,26 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
             painter,
             progress,
             panel.x() + (panel.width() - progressW) / 2,
-            questionBox.y() - 24 * ui,
+            questionBox.y() - 9 * ui,
             ui,
             PixelFont::Dark
-            );
+        );
 
         const int questionMaxChars = qMax(
             14,
             (questionContent.width() / (6 * ui)) - 3
-            );
+        );
 
         QStringList lines = wrapText(
             m_questions[m_currentQuestion].question,
             questionMaxChars
-            );
+        );
 
         const int textH = 6 * ui;
         const int lineStep = 8 * ui;
         const int totalH = lines.size() * lineStep - (lineStep - textH);
 
-        int y = questionContent.y()
-                + qMax(0, (questionContent.height() - totalH) / 2);
+        int y = questionContent.y() + qMax(0, (questionContent.height() - totalH) / 2);
 
         for (const QString& line : lines) {
             const int lineW = line.length() * 6 * ui;
@@ -433,7 +433,7 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
                 y,
                 ui,
                 PixelFont::Dark
-                );
+            );
 
             y += lineStep;
         }
@@ -441,25 +441,33 @@ void QuizDialog::paintEvent(QPaintEvent* event) {
 }
 
 void QuizDialog::keyPressEvent(QKeyEvent* event) {
+    bool handled = false;
     if (!m_showingResult) {
         int selected = -1;
-
         if (event->key() >= Qt::Key_1 && event->key() <= Qt::Key_9) {
             selected = event->key() - Qt::Key_1;
         }
-
         if (selected >= 0 && selected < m_answerButtons.size()) {
             answerCurrentQuestion(selected);
-            return;
+            handled = true;
         }
-    } else if (
-        event->key() == Qt::Key_Return ||
-        event->key() == Qt::Key_Enter ||
-        event->key() == Qt::Key_Space
-        ) {
-        emit quizFinished(m_passed, m_objectId);
-        return;
+    } else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Space) {
+        handled = true;
     }
-
+    if (!handled && m_game) {
+        m_game->handleKeyPress(event->key());
+    }
     QWidget::keyPressEvent(event);
+}
+
+void QuizDialog::keyReleaseEvent(QKeyEvent* event) {
+    if (m_game) {
+        m_game->handleKeyRelease(event->key());
+    }
+    QWidget::keyReleaseEvent(event);
+}
+
+void QuizDialog::timerEvent(QTimerEvent* event) {
+    Q_UNUSED(event);
+    update();
 }

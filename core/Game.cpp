@@ -93,12 +93,13 @@ void Game::startNextLevel() {
 void Game::restartLevel() { startNewGame(m_currentLevel); }
 
 void Game::pauseGame() {
+    if (m_puzzleActive) return;
+
     if (m_stateManager->isPlaying()) {
         m_score->stopTimer();
         m_stateManager->setState(GameState::PAUSED);
     }
 }
-
 void Game::resumeGame() {
     if (m_stateManager->isPaused()) {
         m_score->startTimer(m_score->timeLeft());
@@ -113,6 +114,7 @@ void Game::exitToMenu() {
 }
 
 void Game::onPuzzleSolved(const QString& objectId) {
+    m_puzzleActive = false;
     InteractiveObject* obj = findInteractableById(objectId);
     if (!obj) return;
     obj->unlock();
@@ -121,7 +123,10 @@ void Game::onPuzzleSolved(const QString& objectId) {
     m_score->addScore(Constants::SCORE_PUZZLE_SOLVED);
 }
 
-void Game::onPuzzleFailed(const QString& objectId) { Q_UNUSED(objectId) }
+void Game::onPuzzleFailed(const QString& objectId) {
+    m_puzzleActive = false;
+    Q_UNUSED(objectId)
+}
 
 GameState Game::currentState() const { return m_stateManager->current(); }
 InventorySystem *Game::inventory() const { return m_inventory.get(); }
@@ -776,9 +781,10 @@ void Game::triggerInteraction(InteractiveObject* obj) {
 
 void Game::processInteractionResult(const InteractionResult& result, InteractiveObject* obj) {
     switch (result.type) {
-    case InteractionResult::Type::ShowPuzzle:
-        emit puzzleRequired(result.puzzle);
-        break;
+        case InteractionResult::Type::ShowPuzzle:
+            m_puzzleActive = true;
+            emit puzzleRequired(result.puzzle);
+            break;
 
     case InteractionResult::Type::RevealItems: {
         float spawnX = obj->x() + (obj->width() / 2.0f) - 18.0f;

@@ -74,14 +74,14 @@ static LevelData buildLevel2() {
     d.entities.append(EntityRegistry::spawnCannon("cannon_1", 411, 112, 11.0f, 200.0f, true, 353, 110));
     d.entities.append(EntityRegistry::spawnEnemy("fiercetooth_1", "fiercetooth", 723, 195, "green_potion"));
     d.entities.append(EntityRegistry::spawnQuizNpc(
-        "quiz_keeper_2", 280, 66, "emerald",
-        {
-            "pass=2",
-            "Which key do you press to interact with objects?|E|F|Space|Escape|1",
-            "What item lets the player attack enemies?|Map|Sword|Ruby|Potion|2",
-            "Who should you talk to after collecting all quest items?|Cannon|Fierce Tooth|Captain Star|Door|3"
-        }
-        ));
+    "quiz_keeper_2", 280, 66, "emerald",
+    {
+        "pass=3",
+        "What does a pointer store in C++?|A value|A memory address|A file|A class|2",
+        "Which data structure uses FIFO order?|Stack|Queue|Tree|Graph|2",
+        "What is the time complexity of binary search?|O(n)|O(log n)|O(n log n)|O(1)|2"
+    }
+));
     d.entities.append(EntityRegistry::spawnCollectible("item_2", "diamond", 292, 154));
 
     d.entities.append(EntityRegistry::spawnContainer(

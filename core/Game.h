@@ -110,6 +110,7 @@ private:
     int       m_doorFadeElapsed = 0;
     bool      m_lastPopupWasDoor = false;
     bool      m_lastPopupWasQuizNpc = false;
+    bool m_puzzleActive = false;
     Player* m_player = nullptr;
     int m_currentLevel = 0;
     InteractiveObject* m_nearestInteractable = nullptr;
