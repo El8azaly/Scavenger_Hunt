@@ -2,6 +2,19 @@
 #include "data/LevelLoader.h"
 #include <QString>
 #include <QStringList>
+struct QuizQuestion {
+    QString question;
+    QStringList options;
+    int correctIndex;
+    QString serialize() const {
+        return question + "|" + options.join("|") + "|" + QString::number(correctIndex);
+    }
+};
+
+struct QuizSettings {
+    int passThreshold;
+    QList<QuizQuestion> questions;
+};
 
 class EntityRegistry {
 public:
@@ -39,7 +52,9 @@ public:
         return e;
     }
 
-    static EntitySpawnData spawnQuizNpc(const QString& id, float x, float y, const QString& rewardItemId, const QStringList& quizData) {
+    static EntitySpawnData spawnQuizNpc(const QString& id, float x, float y,
+                                       const QString& rewardItemId,
+                                       const QuizSettings& settings) {
         EntitySpawnData e;
         e.type = "quiz_npc";
         e.id = id;
@@ -47,9 +62,15 @@ public:
         e.y = y;
         e.w = 40.0f;
         e.h = 60.0f;
+
+        QStringList formattedData;
+        formattedData << QString("pass=%1").arg(settings.passThreshold);
+        for (const auto& q : settings.questions) {
+            formattedData << q.serialize();
+        }
         e.properties["rewardItemId"] = rewardItemId;
         e.properties["quizType"] = "quiz";
-        e.properties["quizData"] = quizData;
+        e.properties["quizData"] = formattedData;
         return e;
     }
 

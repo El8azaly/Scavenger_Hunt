@@ -202,6 +202,25 @@ MainMenuScreen::MainMenuScreen(QWidget* p) : QWidget(p),
     });
 }
 
+void MainMenuScreen::drawCredits(QPainter& painter) {
+    int scale = ui;
+    int charSize = 6 * scale;
+    int lineSpacing = 2 * scale;
+    int padding = 20 * scale;
+    int boxW = 140 * scale;
+    int boxH = (m_credits.size() * (charSize + lineSpacing)) + (padding * 2);
+    int boxX = (width() - boxW) / 2;
+    int boxY = height() - boxH - (2 * scale);
+    m_paperBg.draw(painter, boxX, boxY, boxW, boxH);
+    for (int i = 0; i < m_credits.size(); ++i) {
+        QString name = m_credits[i];
+        int textWidth = name.length() * charSize;
+        int tx = (width() - textWidth) / 2;
+        int ty = boxY + padding + (i * (charSize + lineSpacing));
+        m_font.drawText(painter, name, tx, ty, scale, PixelFont::Dark, false);
+    }
+}
+
 void MainMenuScreen::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     static QPixmap vignetteCache;
@@ -253,6 +272,7 @@ void MainMenuScreen::paintEvent(QPaintEvent* event) {
         int y2 = y1 + (13 * scale);
         m_font.drawText(painter, line1, x1, y1, scale, PixelFont::Dark, true);
         m_font.drawText(painter, line2, x2, y2, scale, PixelFont::Dark, true);
+        drawCredits(painter);
     }
 
     QWidget::paintEvent(event);

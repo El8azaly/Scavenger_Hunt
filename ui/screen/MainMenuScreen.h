@@ -33,6 +33,15 @@ private:
     bool  m_showingLevels = false;
     bool  m_showingResetConfirm = false;
 
+    void drawCredits(QPainter& painter);
+    const QStringList m_credits = {
+        "Omar Salam",
+        "Mahmoud Elghazaly",
+        "Mohamed Mohamed",
+        "Omar Amer",
+        "Ibrahim Talal"
+    };
+
     SkyBackground* m_skyBg;
     QTimer* m_animationTimer;
 
