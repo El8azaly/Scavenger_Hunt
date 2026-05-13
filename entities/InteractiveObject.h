@@ -10,7 +10,6 @@ public:
 
     void setLocked(const QString& pType, const QStringList& pData);
     void unlock();
-    virtual void update() {}
     bool isLocked() const { return m_isLocked; }
     void setShowHint(bool s) { m_showHint = s; }
 
