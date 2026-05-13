@@ -48,7 +48,7 @@ void PixelFont::drawText(QPainter& painter, const QString& text, int x, int y, i
     QString lowerText = text.toLower();
     int currentX = x;
 
-    int charW = isBig ? BIG_CHAR_WIDTH : CHAR_WIDTH;
+    int charW = isBig ? BIG_CHAR_WIDTH : GLYPH_WIDTH;
     int charH = isBig ? BIG_CHAR_HEIGHT : CHAR_HEIGHT;
     QHash<QChar, int>& currentMap = isBig ? m_bigCharMap : m_charMap;
     for (QChar c : lowerText) {

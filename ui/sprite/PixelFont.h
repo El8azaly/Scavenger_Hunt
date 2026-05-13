@@ -21,7 +21,7 @@ private:
     QPixmap m_spriteSheet;
     QPixmap m_bigSpriteSheet;
 
-    static const int CHAR_WIDTH = 6;
+    static const int GLYPH_WIDTH = 6;
     static const int CHAR_HEIGHT = 6;
 
     static const int BIG_CHAR_WIDTH = 11;

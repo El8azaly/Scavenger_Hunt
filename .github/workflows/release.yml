@@ -19,17 +19,17 @@ jobs:
           - os: windows-latest
             platform: windows
             qt_host: windows
-            arch: x86_64
+            qt_arch: win64_msvc2022_64 # <-- FIX: Explicitly request MSVC 2022
             artifact_pattern: "build/*.exe"
-          - os: macos-latest # Apple Silicon
+          - os: macos-latest
             platform: macos
             qt_host: mac
-            arch: arm64
+            qt_arch: clang_64          # <-- Explicit for macOS
             artifact_pattern: "build/*.dmg"
           - os: ubuntu-latest
             platform: linux
             qt_host: linux
-            arch: x86_64
+            qt_arch: gcc_64            # <-- Explicit for Linux
             artifact_pattern: "build/*.deb"
 
     steps:
@@ -46,11 +46,10 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.8.0' # Pinned version to avoid '6.x.x' error
-          host: ${{ matrix.qt_host }} # Uses 'mac' instead of 'macos'
+          version: '6.8.0'
+          host: ${{ matrix.qt_host }}
           target: 'desktop'
-          # On macOS, this ensures we get the clang_64 binaries compatible with ARM
-          arch: ${{ matrix.platform == 'macos' && 'clang_64' || '' }}
+          arch: ${{ matrix.qt_arch }} # <-- Applies the architecture fix here
 
       - name: Install Linux Dependencies
         if: matrix.platform == 'linux'
