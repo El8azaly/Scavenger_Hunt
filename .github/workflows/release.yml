@@ -19,17 +19,17 @@ jobs:
           - os: windows-latest
             platform: windows
             qt_host: windows
-            qt_arch: win64_msvc2022_64 # <-- FIX: Explicitly request MSVC 2022
+            qt_arch: win64_msvc2022_64 # Required for Windows
             artifact_pattern: "build/*.exe"
           - os: macos-latest
             platform: macos
             qt_host: mac
-            qt_arch: clang_64          # <-- Explicit for macOS
+            qt_arch: clang_64          # Required for macOS
             artifact_pattern: "build/*.dmg"
           - os: ubuntu-latest
             platform: linux
             qt_host: linux
-            qt_arch: gcc_64            # <-- Explicit for Linux
+            qt_arch: ''                # <-- FIX: Leave empty for Linux default
             artifact_pattern: "build/*.deb"
 
     steps:
@@ -49,13 +49,17 @@ jobs:
           version: '6.8.0'
           host: ${{ matrix.qt_host }}
           target: 'desktop'
-          arch: ${{ matrix.qt_arch }} # <-- Applies the architecture fix here
+          arch: ${{ matrix.qt_arch }}
 
       - name: Install Linux Dependencies
         if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential libgl1-mesa-dev libxkbcommon-x11-0 libxcb-cursor0 libxcb-util1
+
+      - name: Install NSIS (Windows)
+        if: matrix.platform == 'windows'
+        run: choco install nsis
 
       - name: Configure and Build
         shell: bash
@@ -94,7 +98,7 @@ jobs:
         with:
           tag_name: v${{ needs.build.outputs.version }}
           name: Scavenger Hunt v${{ needs.build.outputs.version }}
-          body_path: Changelog.md
+          body_path: changelog.md
           files: release-artifacts/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
