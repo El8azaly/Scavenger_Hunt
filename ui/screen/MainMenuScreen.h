@@ -35,7 +35,7 @@ private:
 
     void drawCredits(QPainter& painter);
     const QStringList m_credits = {
-        "Omar Salam",
+        "Omar Salem",
         "Mahmoud Elghazaly",
         "Mohamed Mohamed",
         "Omar Amer",
