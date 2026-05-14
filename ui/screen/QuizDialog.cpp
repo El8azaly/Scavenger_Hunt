@@ -70,10 +70,10 @@ void QuizDialog::parsePuzzleData(const PuzzleData& puzzle) {
 
         if (question.question.isEmpty() || question.options.size() < 2) continue;
 
-        if (parsedCorrect >= 1 && parsedCorrect <= question.options.size()) {
+        if (parsedCorrect == 0) {
+            question.correctIndex = -1;
+        } else if (parsedCorrect >= 1 && parsedCorrect <= question.options.size()) {
             question.correctIndex = parsedCorrect - 1;
-        } else if (parsedCorrect >= 0 && parsedCorrect < question.options.size()) {
-            question.correctIndex = parsedCorrect;
         } else {
             continue;
         }
@@ -145,7 +145,8 @@ void QuizDialog::showCurrentQuestion() {
 void QuizDialog::answerCurrentQuestion(int selectedIndex) {
     if (m_currentQuestion >= m_questions.size()) return;
 
-    if (selectedIndex == m_questions[m_currentQuestion].correctIndex) {
+    if (m_questions[m_currentQuestion].correctIndex == -1 ||
+        selectedIndex == m_questions[m_currentQuestion].correctIndex) {
         ++m_score;
     }
 
