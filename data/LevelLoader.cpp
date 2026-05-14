@@ -79,7 +79,7 @@ static LevelData buildLevel2() {
             3, {
                 {"What does a pointer store in C++?", {"A value", "A memory address", "A file", "A class"}, 2},
                 {"Which data structure uses FIFO order?", {"Stack", "Queue", "Tree", "Graph"}, 2},
-                {"What is the time complexity of binary search?", {"O(n)", "O(log n)", "O(n log n)", "O(1)"}, 2}
+                {"Who is the best doctor at AUC?", {"Dr Howaida", "Dr Howaida", "Dr Howaida", "Dr Howaida"}, 1}
             }
         }
     ));
